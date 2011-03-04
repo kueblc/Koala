@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<title>the koala project</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		<div id='header'>
+			<h1>the koala project</h1>
+		</div>
+		<div id='content'>
+			<div id='content_left'>
+				<div class='panel'>
+					<h2>boxes</h2>
+					<ul id='files'>
+						<li>Main Box - square one</li>
+						<li>Hello</li>
+						<li>World!</li>
+						<li>ABC</li>
+						<li>123</li>
+						<li>test</li>
+					</ul>
+				</div>
+			</div>
+			<div id='content_center'>
+				<div class='panel'>
+					<h2>script</h2>
+					<div class='menu'>
+						<button>new</button><button>&#x25BE;</button>
+						<button>save</button>
+						<button>download</button>
+					</div>
+					<form method='post' action='backend/dl.php'>
+						<p>title
+							<input name='title' type='text' id='title' class='input'>
+						</p>
+						<p>author
+							<input name='author' type='text' id='author' class='input'>
+						</p>
+						<p>code
+							<textarea name='code' id='code' class='input'></textarea>
+						</p>
+						<p>
+							<button type='reset' id='clear'>Clear</button>
+							<button type='submit' id='save'>Save</button>
+						</p>
+					</form>
+				</div>
+			</div>
+			<div id='content_right'>
+				<div class='panel'>
+					<h2>workbench</h2>
+					<div id='canvas'><span>design your app's layout here!</span></div>
+				</div>
+				<div class='panel'>
+					<h2>properties</h2>
+					<div class='tab'><button>name</button><button class='current'>placement</button><button>colors</button></div>
+					<div id='tabs'></div>
+				</div>
+			</div>
+			<div class='clearfix'></div>
+		</div>
+	</body>
+</html>
