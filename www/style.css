@@ -40,11 +40,6 @@ h1 {
 }
 
 #content {
-/*	border: 1px solid #888;
-	-moz-box-shadow: 0 8px 16px #ccc;
-	-webkit-box-shadow: 0 8px 16px #ccc;
-	-moz-border-radius: 16px 0 16px 0;
-	-webkit-border-radius: 16px 0 16px 0;*/
 	padding-right: 16px;
 }
 
@@ -223,6 +218,7 @@ form {
 	-webkit-box-sizing:border-box;
 }
 
+/*
 .input:hover {
 	border: 1px solid #888;
 }
@@ -231,6 +227,7 @@ form {
 	border: 1px solid #cc1;
 	color: #555;
 }
+*/
 
 .comment {
 	border: 1px solid #aaa;
