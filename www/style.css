@@ -12,6 +12,7 @@ body {
 	/*width: 900px;
 	margin: 24px auto;*/
 	color: #444;
+	overflow: hidden;
 }
 
 h1 {
@@ -29,6 +30,9 @@ h1 {
 	border-bottom: 1px solid #888;
 	padding: 2px 16px;
 	text-shadow: 0 1px #fff;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.14);
 }
 
 #nav {
@@ -86,9 +90,9 @@ h1 {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
 	overflow: hidden;
-	box-shadow: 0 4px 12px #ddd, 0 -4px 8px #eee inset;
-	-moz-box-shadow: 0 4px 12px #ddd, 0 -4px 8px #eee inset;
-	-webkit-box-shadow: 0 4px 12px #ddd, 0 -4px 8px #eee inset;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 -4px 8px #eee inset;
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 -4px 8px #eee inset;
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 -4px 8px #eee inset;
 }
 
 .panel > h2 {
