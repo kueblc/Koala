@@ -33,6 +33,7 @@ Where am I?
      ├── index.html - Contains the structural information
      ├── style.css - The main stylesheet, defines the look and feel
      ├── favicon.ico - Icon displayed in the address bar representing koala
+     ├── .htaccess - Apache control file, disables directory listing
      └── backend/ - Files used by the server running koala
          └── dl.php - Generates a download prompt
 
