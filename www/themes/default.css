@@ -1,3 +1,7 @@
+body {
+	color: #444;
+}
+
 #header {
 	background: #eee;
 	background: -moz-linear-gradient(top, #eee, #ccc);
