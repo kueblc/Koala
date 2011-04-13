@@ -58,12 +58,24 @@ h1 {
 #files > li {
 	float: left;
 	list-style-type: none;
-	margin: 8px 8px 24px;
+	margin: 8px;
+	width: 128px;
+	height: 128px;
+	background: #eee;
+}
+
+#files div {
+	margin: 4px 16px;
 	width: 96px;
 	height: 96px;
 	background: #ccc;
+}
+
+#files input[type=text] {
+	border: none;
+	width: 100%;
 	text-align: center;
-	line-height: 214px;
+	background: none;
 }
 
 .clearfix {
