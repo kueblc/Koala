@@ -51,7 +51,7 @@ h1 {
 
 #files {
 	overflow: auto;
-	margin: 8px;
+	padding: 8px;
 	height: 300px;
 }
 
@@ -61,7 +61,10 @@ h1 {
 	margin: 8px;
 	width: 128px;
 	height: 128px;
-	background: #eee;
+}
+
+#files > li:hover {
+	background: #f5f5f5;
 }
 
 #files div {
