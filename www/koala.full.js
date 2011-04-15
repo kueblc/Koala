@@ -49,4 +49,18 @@ window.onload = function(){
 		//koala.theme.current = document.styleSheets[ document.styleSheets.length-1 ];
 		koala.theme.current.disabled = false;*/
 	}
+	// TODO
+	// temporary function testing only, not real button actions
+	$("btn_text").onclick = function(){
+		alert(koala.editor.textContent || koala.editor.innerText); };
+	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
+	$("btn_hl").onclick = function(){
+		koala.editor.innerHTML = koala.editor.innerHTML
+		.replace( /\b(say|yell)\b/mg, "<span class='command'>$1</span>" )
+		.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
+		.replace( /(\[.*?\])/mg, "<span class='string'>$1</span>" )
+		.replace( /(\/\/.*?)<br>/mg, "<span class='comment'>$1</span><br>" )
+		//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
+		//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
+	;};
 };
