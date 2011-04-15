@@ -54,18 +54,7 @@ window.onload = function(){
 	$("btn_text").onclick = function(){
 		alert(koala.editor.textContent || koala.editor.innerText); };
 	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
-	$("btn_hl").onclick = function(){
-		koala.editor.innerHTML = koala.editor.innerHTML
-		.replace( /(<br>|<\/div>)/mg, "\n" )
-		.replace( /<.*?>/mg, "" )
-		.replace( /\b(say|yell)\b/mg, "<span class='command'>$1</span>" )
-		.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
-		.replace( /\[(.*?)\]/mg, "<span class='string'>[$1]</span>" )
-		.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span><br>" )
-		.replace( /\n/mg, "<br>" )
-		//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
-		//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
-	;};
+	$("btn_hl").onclick = hl();
 	koala.editor.onkeydown = function(e){
 		e = e || window.event;
 		var k = e.keyCode || e.which;
@@ -93,6 +82,11 @@ window.onload = function(){
 			}
 			window.document.execCommand("inserthtml",false,"&nbsp;<span></span>");
 			return false;*/
+			//window.document.execCommand("inserthtml",false,"~");
+			//hl();
+			//window.getSelection().extend($("cur"),0);
+			//window.getSelection().collapseToEnd();
+			//koala.editor.focus();
 		}
 		if( k === 9 ){ /* tab */
 			document.execCommand("inserthtml",false,"&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -104,25 +98,8 @@ window.onload = function(){
 		var k = e.keyCode || e.which;
 		if( k === 32 || k === 13 ){
 			//window.document.execCommand("forecolor",false,"black");
-			var n = window.getSelection().focusNode;
+			//var n = window.getSelection().focusNode;
 			//var n = document.selection.createRange().parentElement;
-			/*switch( n.textContent.charAt(0) ){
-				case 'r':
-					n.parentNode.style.color="red";
-					break;
-				case 'g':
-					n.parentNode.style.color="green";
-					break;
-				case 'b':
-					n.parentNode.style.color="blue";
-					break;
-				case 'w':
-					n.parentNode.style.color="white";
-					break;
-				default:
-					n.parentNode.style.color="black";
-					break;
-				}*/
 			//window.document.execCommand("inserthtml",false,"<span></span>");
 			//window.document.execCommand("bold",false,null);
 			/*for( i = 0; i < koala.editor.childNodes.length; i++ ){
@@ -143,9 +120,29 @@ window.onload = function(){
 				o = o-r.textContent.length+1;
 				s.collapse(koala.editor,o);
 			}*/
+			/*window.document.execCommand("inserthtml",false,"~");
+			hl();
+			window.getSelection().collapse($("cur"),0);*/
 		}
 	}
 	koala.editor.focus();
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
 };
+
+// testing...
+function hl(){
+		var marker = $("cur");
+		if( marker ) koala.editor.removeChild(marker);
+		koala.editor.innerHTML = koala.editor.innerHTML
+		.replace( /(<br>|<\/div>)/mg, "\n" )
+		.replace( /<.*?>/mg, "" )
+		.replace( /\b(say|yell)\b/mg, "<span class='command'>$1</span>" )
+		.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
+		.replace( /\[(.*?)\]/mg, "<span class='string'>[$1]</span>" )
+		.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span><br>" )
+		.replace( /\n/mg, "<br>" )
+		//.replace( /~/mg, "<span id='cur'><span>" )
+		//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
+		//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
+	;};
