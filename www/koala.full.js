@@ -56,11 +56,96 @@ window.onload = function(){
 	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
 	$("btn_hl").onclick = function(){
 		koala.editor.innerHTML = koala.editor.innerHTML
+		.replace( /(<br>|<\/div>)/mg, "\n" )
+		.replace( /<.*?>/mg, "" )
 		.replace( /\b(say|yell)\b/mg, "<span class='command'>$1</span>" )
 		.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
-		.replace( /(\[.*?\])/mg, "<span class='string'>$1</span>" )
-		.replace( /(\/\/.*?)<br>/mg, "<span class='comment'>$1</span><br>" )
+		.replace( /\[(.*?)\]/mg, "<span class='string'>[$1]</span>" )
+		.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span><br>" )
+		.replace( /\n/mg, "<br>" )
 		//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
 		//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
 	;};
+	koala.editor.onkeydown = function(e){
+		e = e || window.event;
+		var k = e.keyCode || e.which;
+		if( k === 32 || k === 13 ){
+			//window.document.execCommand("bold",false,null);
+			//window.document.execCommand("inserthtml",false,"&nbsp;");
+			//var n = window.getSelection().focusNode;
+			//var n = document.selection.createRange().parentElement;
+			/*switch( n.textContent.charAt(0) ){
+				case 'r':
+					n.parentNode.style.color="red";
+					break;
+				case 'g':
+					n.parentNode.style.color="green";
+					break;
+				case 'b':
+					n.parentNode.style.color="blue";
+					break;
+				case 'w':
+					n.parentNode.style.color="white";
+					break;
+				default:
+					n.parentNode.style.color="black";
+					break;
+			}
+			window.document.execCommand("inserthtml",false,"&nbsp;<span></span>");
+			return false;*/
+		}
+		if( k === 9 ){ /* tab */
+			document.execCommand("inserthtml",false,"&nbsp;&nbsp;&nbsp;&nbsp;");
+			return false;
+		}
+	};
+	koala.editor.onkeyup = function(e){
+		e = e || window.event;
+		var k = e.keyCode || e.which;
+		if( k === 32 || k === 13 ){
+			//window.document.execCommand("forecolor",false,"black");
+			var n = window.getSelection().focusNode;
+			//var n = document.selection.createRange().parentElement;
+			/*switch( n.textContent.charAt(0) ){
+				case 'r':
+					n.parentNode.style.color="red";
+					break;
+				case 'g':
+					n.parentNode.style.color="green";
+					break;
+				case 'b':
+					n.parentNode.style.color="blue";
+					break;
+				case 'w':
+					n.parentNode.style.color="white";
+					break;
+				default:
+					n.parentNode.style.color="black";
+					break;
+				}*/
+			//window.document.execCommand("inserthtml",false,"<span></span>");
+			//window.document.execCommand("bold",false,null);
+			/*for( i = 0; i < koala.editor.childNodes.length; i++ ){
+				if( koala.editor.childNodes[i].nodeType === 3 ){
+					var r = document.createElement("b");
+					r.textContent = koala.editor.childNodes[i].textContent;
+					koala.editor.replaceChild(r,koala.editor.childNodes[i]);
+				}
+			}*/
+			/*var s = window.getSelection();
+			var o = s.focusOffset, n = s.focusNode;
+			alert(o);
+			alert(n);
+			if( n.nodeType === 3 ){
+				var r = document.createElement("b");
+				r.textContent = n.textContent;
+				koala.editor.replaceChild(r,n);
+				o = o-r.textContent.length+1;
+				s.collapse(koala.editor,o);
+			}*/
+		}
+	}
+	koala.editor.focus();
+	//window.document.execCommand("inserthtml",false,"<span></span>");
+	//window.document.execCommand("bold",false,null);
 };
