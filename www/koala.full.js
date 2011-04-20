@@ -15,7 +15,7 @@ function hl(){
 	.replace( /\b(say|put|in)\b/mg, "<span class='command'>$1</span>" )
 	.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
 	.replace( /\[(.*?)\]/mg, "<span class='string'>[$1]</span>" )
-	.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span><br>" )
+	.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span>\n" )
 //	.replace( /\n/mg, "<br>" )
 	.replace( /\x1f/m, "<span id='cur'><span>" )
 	//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
@@ -31,40 +31,10 @@ window.onload = function(){
 	koala.editor.contentEditable = true;
 	
 	koala.theme = $("theme");
-	for( var i = 1; i < document.styleSheets.length; i++ ){
-		document.styleSheets[i].disabled = true;
-	}
+	koala.theme.selector = $("theme_sel");
 	
-	koala.theme.current = document.styleSheets[2];
-	koala.theme.current.disabled = false;
-	koala.theme.options[1].selected = "selected";
-	
-	koala.theme.onchange = function(){
-		koala.theme.current.disabled = true;
-		koala.theme.current = document.styleSheets[ this.selectedIndex+1 ]
-		koala.theme.current.disabled = false;
-		// TODO
-		// the following method doesn't seem to work in webkit
-		// for now, all the stylesheets are loaded and then disabled
-		// find a better way to load stylesheets dynamically
-		/*koala.theme.current.disabled = true;
-		for( var i = 1; i < document.styleSheets.length; i++ ){
-			if( document.styleSheets[i].title == this.value ){
-				document.styleSheets[i].disabled = false;
-				koala.theme.current = document.styleSheets[i];
-				return;
-			}
-		}
-		var e = document.createElement("link");
-		e.setAttribute("type","text/css");
-		e.setAttribute("rel","stylesheet");
-		e.setAttribute("href","themes/" + this.value + ".css");
-		e.setAttribute("title",this.value);
-		document.getElementsByTagName("head")[0].appendChild(e);
-		//.innerHTML+="<link type='text/css' rel='stylesheet' href='themes/"+this.value+".css' title='"+this.value+"'>";
-		koala.theme.current = e.sheet;
-		//koala.theme.current = document.styleSheets[ document.styleSheets.length-1 ];
-		koala.theme.current.disabled = false;*/
+	koala.theme.selector.onchange = function(){
+		koala.theme.href = "themes/" + this.value + ".css";
 	}
 	// TODO
 	// temporary function testing only, not real button actions
