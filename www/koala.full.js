@@ -12,7 +12,7 @@ function hl(){
 	koala.editor.innerHTML = koala.editor.innerHTML
 	.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
 	.replace( /<.*?>/mg, "" )
-	.replace( /\b(say|put|in)\b/mg, "<span class='command'>$1</span>" )
+	.replace( /\b(say|put|in|dojs)\b/mg, "<span class='command'>$1</span>" )
 	.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
 	.replace( /\[(.*?)\]/mg, "<span class='string'>[$1]</span>" )
 	.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span>\n" )
@@ -51,6 +51,10 @@ window.onload = function(){
 				i++;
 				var str = lex[i].textContent || lex[i].innerText;
 				alert( str.slice(1,-1) );
+			}else if( lex[i].innerHTML === "dojs" ){
+				i++;
+				var str = lex[i].textContent || lex[i].innerText;
+				eval( str.slice(1,-1) );
 			}
 		}
 	};
@@ -133,4 +137,41 @@ window.onload = function(){
 	koala.editor.focus();
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
+	$("btn_dl").onclick = function(){
+		ewfeff;
+		//bsod("Error: 0x08 NotImplemented");
+	};
 };
+
+// just for kicks
+function bsod(msg){
+	document.body.style.background="blue";
+	document.body.innerHTML="<div id='bsod'><h1>the koala project</h1><p>A fatal error has occurred.</p><p>"+msg+"</p><p>Press any key to continue</p></div>";
+	document.body.onkeyup = function(){ location.reload(); };
+}
+
+window.onerror = function( msg, url, line ){
+	document.body.style.background="blue";
+	var error = ""
+	if( navigator ){
+		for( p in navigator ){
+			error += p+": "+navigator[p]+"<br>";
+		}
+	}
+	document.body.innerHTML=
+		"<div id='bsod'><h1>the koala project</h1><p>A fatal error has occurred.</p><p>"+
+		msg+"</p><p>url: "+url+"</p><p>line: "+line+"</p><p>"+hex(error)+"</p><p>Press any key to continue</p></div>";
+	document.body.onkeyup = function(){ location.reload(); };
+	return true;
+};
+
+hex = function(text){
+	var output = "";
+	var b16 = "0123456789ABCDEF";
+	for( var i = 0; i < text.length; i++ ){
+		var c = text.charCodeAt(i);
+		output += b16.charAt(c>>4) + b16.charAt(c&15) + " ";
+	}
+	return output;
+}
+

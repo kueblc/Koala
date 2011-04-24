@@ -14,7 +14,7 @@ body {
 	overflow: hidden;
 }
 
-h1 {
+#header > h1 {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
@@ -237,3 +237,29 @@ button:active {
 #footer {
 	
 }
+
+#bsod {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 480px;
+	width: 640px;
+	margin: -240px -320px;
+	color: white;
+	font-size: 16px;
+	font-family: monospace;
+	text-align: center;
+}
+
+#bsod > h1 {
+	display: inline;
+	background: white;
+	color: blue;
+	font-weight: normal;
+	font-size: inherit;
+}
+
+#bsod > p {
+	margin-top: 16px;
+}
+
