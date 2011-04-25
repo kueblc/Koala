@@ -79,6 +79,7 @@ body {
 	width: 100%;
 	text-align: center;
 	background: none;
+	outline: none;
 }
 
 .clearfix {
@@ -104,6 +105,7 @@ button {
 	font-size: 14px;
 	padding: 2px 4px;
 	margin-right: 1px;
+	outline: none;
 }
 
 button:hover {
