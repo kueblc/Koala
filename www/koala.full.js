@@ -138,15 +138,15 @@ window.onload = function(){
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
 	$("btn_dl").onclick = function(){
-		throw "0x08 NotImplemented";
+		throw new Error("NotImplemented");
 	};
 };
 
 window.onerror = function( msg, url, line ){
 	document.body.style.background="blue";
-	var error = "<p>"+url+":"+line+": "+msg+"</p><p>"+navigator.userAgent+"</p>";
+	var error = url.substring(url.lastIndexOf('/')+1)+":"+line+": "+msg+"\n"+navigator.userAgent;
 	document.body.innerHTML=
-		"<div id='bsod'><h1>the koala project</h1><p>A fatal error has occurred. An error report is being filed. Report details:</p>"+error+"<p>Press any key to continue</p></div>";
+		"<div id='bsod'><h1>the koala project</h1><p>A fatal error has occurred. An error report is being filed. Report details:</p><pre>"+error+"</pre><p>Press any key to continue</p></div>";
 	document.body.onkeyup = function(){ location.reload(); };
 	return true;
 };
