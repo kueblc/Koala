@@ -10,17 +10,63 @@ function hl(){
 	//var marker = $("cur");
 	//if( marker ) koala.editor.removeChild(marker);
 	koala.editor.innerHTML = koala.editor.innerHTML
-//	.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
+	.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
 	.replace( /<.*?>/mg, "" )
 	.replace( /\b(say|put|in|dojs)\b/mg, "<span class='command'>$1</span>" )
 	.replace( /\b(\d+)\b/mg, "<span class='number'>$1</span>" )
 	.replace( /\[(.*?)\]/mg, "<span class='string'>[$1]</span>" )
 	.replace( /(\/\/.*?)\n/mg, "<span class='comment'>$1</span>\n" )
-//	.replace( /\n/mg, "<br>" )
+	.replace( /\n/mg, "<br>" )
 	.replace( /\x1f/m, "<span id='cur'><span>" )
 	//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
 	//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
 ;};
+
+koala.lang = {};
+koala.lang.rules = {
+	command: /^((say|put|in|dojs)\b)/i,
+	number: /^(\d+\b)/,
+	string: /^(\[.*?\])/,
+	comment: /^(\/\/.*?\n)/,
+	error: /^(.*?\n)/
+};
+
+// TODO: use match or exec?
+// considerations: browser support, speed, return type
+koala.lang.parse = function(){
+	var input = koala.editor.innerHTML
+		.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
+		.replace( /<.*?>/mg, "" );
+	var output = "";
+	while( input.length > 0 ){
+		var h = true;
+		// clear whitespace
+		var ws = input.match( /^(\s)/ );
+		//var ws = /^(\s)/.exec( input );
+		if( ws ){//&& ws[0] ){
+			input = input.substr(ws[0].length);
+			output += ws[0];
+		}
+		// tokenize
+		for( var rule in koala.lang.rules ){
+			var match = input.match( koala.lang.rules[rule] );
+			//var match = koala.lang.rules[rule].exec( input );
+			if( match ){//&& match[0] ){
+				input = input.substr(match[0].length);
+				output += "<span class='"+rule+"'>"+match[0]+"</span>";
+				h = false;
+				break;
+			}
+		}
+		// determine when to stop
+		if( h ){
+			output += input;
+			break;
+		}
+	}
+	koala.editor.innerHTML = output
+		.replace( /\n/mg, "<br>" );
+};
 
 window.onload = function(){
 	// TODO
@@ -93,15 +139,15 @@ window.onload = function(){
 		}
 		if( k === 9 ){ /* tab */
 			try {
-				document.execCommand("inserthtml",false,"    ");
+				document.execCommand("inserthtml",false,"&nbsp;&nbsp;&nbsp;&nbsp;");
 				return false;
 			} catch(e){}
 		}
 	};
-	koala.editor.onkeyup = function(e){
+	/*koala.editor.onkeyup = function(e){
 		e = e || window.event;
-		var k = e.keyCode || e.which;
-		if( k === 32 || k === 13 ){
+		var k = e.keyCode || e.which;*/
+		//if( k === 32 || k === 13 ){
 			//window.document.execCommand("forecolor",false,"black");
 			//var n = window.getSelection().focusNode;
 			//var n = document.selection.createRange().parentElement;
@@ -124,16 +170,25 @@ window.onload = function(){
 				koala.editor.replaceChild(r,n);
 				o = o-r.textContent.length+1;
 				s.collapse(koala.editor,o);
-			}*/
+			}*//*
 			try {
 				document.execCommand("inserthtml",false,"\x1f");
 				hl();
 				window.getSelection().collapse($("cur"),0);
 			} catch(e) {
 				hl();
-			}
+			}*/
+		//}
+	//}
+	koala.editor.onchange = function(){
+		try {
+			document.execCommand("inserthtml",false,"\x1f");
+			hl();
+			window.getSelection().collapse($("cur"),0);
+		} catch(e) {
+			hl();
 		}
-	}
+	};
 	koala.editor.focus();
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
