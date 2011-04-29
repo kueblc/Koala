@@ -202,12 +202,11 @@ button:hover {
 }
 
 /* syntax highlighting */
-span.command { color: green; }
-span.string { color: blue; }
-span.number { color: navy; }
-span.comment { color: gray; }
-span.error { background: red; }
-span.word { font-weight: bold; }
+span.cmd { color: green; }
+span.num { color: navy; }
+span.str { color: blue; }
+span.cmt { color: gray; }
+span.err { background: red; }
 
 /*
 button {

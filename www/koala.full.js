@@ -24,12 +24,106 @@ function hl(){
 
 koala.lang = {};
 koala.lang.rules = {
-	command: /^((say|put|in|dojs)\b)/i,
-	number: /^(\d+\b)/,
-	string: /^(\[.*?\])/,
-	comment: /^(\/\/.*?\n)/,
-	error: /^(.*?\n)/
+	wsp: /^(\s+)/,
+	cmd: /^((say|put|in|dojs)\b)/i,
+	num: /^(\d+\b)/,
+	str: /^(\[.*?\])/,
+	cmt: /^(\/\/.*?)\n/,
+	err: /^(\S+)/
 };
+
+function assoc(t){
+	for( var rule in koala.lang.rules ){
+		if( koala.lang.rules[rule].test( t ) ){
+			return rule;
+		}
+	}
+};
+
+function speedtest_qp(){
+	var rulesrc = [];
+	for( var rule in koala.lang.rules ){
+		rulesrc.push( koala.lang.rules[rule].source.substr(1) );
+	}
+	var re = new RegExp( rulesrc.join('|'), "gi" );
+	var start = new Date();
+	for( i = 0; i < 10000; i++ ){
+		var input = "say [hello]\n//comment\nerror\nsay 42";
+		result = "";
+		var m = input.match(re);
+		for( var n = 0; n < m.length; n++ ){
+			//result += "<span class='"+assoc(m[n])+"'>"+m[n]+"</span>";
+			for( var rule in koala.lang.rules ){
+				if( koala.lang.rules[rule].test( m[n] ) ){
+					result += "<span class='"+rule+"'>"+m[n]+"</span>";
+					break;
+				}
+			}
+		}
+	}
+	return (new Date()-start);
+};
+
+function speedtest_twp(){
+	var start = new Date();
+	for( i = 0; i < 10000; i++ ){
+		var input = "say [hello]\n//comment\nerror\nsay 42";
+		output = "";
+		while( input.length > 0 ){
+			var h = true;
+			//var ws = /^(\s)/.exec( input );
+			if( /^(\s+)/.test(input) ){//&& ws[0] ){
+				input = input.substr(RegExp.$1.length);
+				output += RegExp.$1;
+			}
+			// tokenize
+			for( var rule in koala.lang.rules ){
+				//var match = input.match( koala.lang.rules[rule] );
+				//var match = koala.lang.rules[rule].exec( input );
+				if( koala.lang.rules[rule].test( input ) ){//&& match[0] ){
+					input = input.substr(RegExp.$1.length);
+					output += "<span class='"+rule+"'>"+RegExp.$1+"</span>";
+					h = false;
+					break;
+				}
+			}
+			// determine when to stop
+			if( h ){
+				output += input;
+				break;
+			}
+		}
+	}
+	return (new Date()-start);
+}
+
+function speedtest_tp(){
+	var start = new Date();
+	for( i = 0; i < 10000; i++ ){
+		var input = "say [hello]\n//comment\nerror\nsay 42";
+		output = "";
+		while( input.length > 0 ){
+			var h = true;
+			// tokenize
+			for( var rule in koala.lang.rules ){
+				//var match = input.match( koala.lang.rules[rule] );
+				//var match = koala.lang.rules[rule].exec( input );
+				if( koala.lang.rules[rule].test( input ) ){//&& match[0] ){
+					input = input.substr(RegExp.$1.length);
+					output += "<span class='"+rule+"'>"+RegExp.$1+"</span>";
+					h = false;
+					break;
+				}
+			}
+			// determine when to stop
+			if( h ){
+				output += input;
+				break;
+			}
+		}
+	}
+	return (new Date()-start);
+}
 
 // TODO: use match or exec?
 // considerations: browser support, speed, return type
@@ -41,7 +135,7 @@ koala.lang.parse = function(){
 	while( input.length > 0 ){
 		var h = true;
 		// clear whitespace
-		var ws = input.match( /^(\s)/ );
+		var ws = input.match( /^(\s*)/ );
 		//var ws = /^(\s)/.exec( input );
 		if( ws ){//&& ws[0] ){
 			input = input.substr(ws[0].length);
@@ -73,7 +167,7 @@ window.onload = function(){
 	// testing...
 	koala.editor = $("code");
 	// trigger designmode
-	koala.editor.designMode = 'on';
+	//koala.editor.designMode = 'on';
 	koala.editor.contentEditable = true;
 	
 	koala.theme = $("theme");
@@ -107,7 +201,7 @@ window.onload = function(){
 	koala.editor.onkeydown = function(e){
 		e = e || window.event;
 		var k = e.keyCode || e.which;
-		if( k === 32 || k === 13 ){
+		if( k === 13 ){
 			//window.document.execCommand("bold",false,null);
 			//window.document.execCommand("inserthtml",false,"&nbsp;");
 			//var n = window.getSelection().focusNode;
@@ -139,7 +233,7 @@ window.onload = function(){
 		}
 		if( k === 9 ){ /* tab */
 			try {
-				document.execCommand("inserthtml",false,"&nbsp;&nbsp;&nbsp;&nbsp;");
+				document.execCommand("inserthtml",false,"\t");
 				return false;
 			} catch(e){}
 		}
@@ -180,7 +274,7 @@ window.onload = function(){
 			}*/
 		//}
 	//}
-	koala.editor.onchange = function(){
+	/*koala.editor.onkeyup = function(){
 		try {
 			document.execCommand("inserthtml",false,"\x1f");
 			hl();
@@ -188,7 +282,7 @@ window.onload = function(){
 		} catch(e) {
 			hl();
 		}
-	};
+	};*/
 	koala.editor.focus();
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
