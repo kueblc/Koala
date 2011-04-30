@@ -205,6 +205,7 @@ button:hover {
 span.cmd { color: green; }
 span.num { color: navy; }
 span.str { color: blue; }
+span.box { color: red; }
 span.cmt { color: gray; }
 span.err { background: red; }
 

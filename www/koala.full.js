@@ -5,7 +5,7 @@ var koala = {};
 
 function $(e){ return document.getElementById(e); };
 
-// testing...
+/* testing...
 function hl(){
 	//var marker = $("cur");
 	//if( marker ) koala.editor.removeChild(marker);
@@ -20,14 +20,15 @@ function hl(){
 	.replace( /\x1f/m, "<span id='cur'><span>" )
 	//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
 	//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
-;};
+;};*/
 
 koala.lang = {};
 koala.lang.rules = {
 	wsp: /^(\s+)/,
 	cmd: /^((say|put|in|dojs)\b)/i,
 	num: /^(\d+\b)/,
-	str: /^(\[.*?\])/,
+	str: /^("(\\.|[^"])*"|'(\\.|[^'])*')/,
+	box: /^(\[.*?\])/,
 	cmt: /^(\/\/.*?)\n/,
 	err: /^(\S+)/
 };
@@ -39,6 +40,29 @@ function assoc(t){
 		}
 	}
 };
+
+function hl(){
+	var rulesrc = [];
+	for( var rule in koala.lang.rules ){
+		rulesrc.push( koala.lang.rules[rule].source.substr(1) );
+	}
+	var re = new RegExp( rulesrc.join('|'), "gi" );
+	var input = koala.editor.innerHTML
+		.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
+		.replace( /<.*?>/mg, "" );
+	var output = "";
+	var m = input.match(re);
+	for( var i = 0; i < m.length; i++ ){
+		for( var rule in koala.lang.rules ){
+			if( koala.lang.rules[rule].test( m[i] ) ){
+				output += "<span class='"+rule+"'>"+m[i]+"</span>";
+				break;
+			}
+		}
+	}
+	koala.editor.innerHTML = output
+		.replace( /\n/mg, "<br>" );
+}
 
 function speedtest_qp(){
 	var rulesrc = [];
@@ -289,6 +313,7 @@ window.onload = function(){
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
+	$("btn_hl").onclick = function(){ hl(); };
 };
 
 window.onerror = function( msg, url, line ){
