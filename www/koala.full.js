@@ -1,9 +1,59 @@
 // koala.full.js
 // the koala project
 
-var koala = {};
-
 function $(e){ return document.getElementById(e); };
+
+koala = {
+	version: 0.01,
+	lang: {
+		commands: {
+			
+		},
+		rules: {
+			wsp: /^(\s+)/,
+			cmd: /^((say|put|in|dojs)\b)/i,
+			num: /^(\d+\b)/,
+			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
+			box: /^(\[[^\]]*\]?)/,
+			cmt: /^(\/\/[^\n]*)/,
+			err: /^(\S+)/
+		},
+		parse: function(){
+			var input = koala.editor.innerHTML
+				.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
+				.replace( /<.*?>/mg, "" );
+			var output = "";
+			while( input.length > 0 ){
+				var h = true;
+				// clear whitespace
+				var ws = input.match( /^(\s*)/ );
+				//var ws = /^(\s)/.exec( input );
+				if( ws ){//&& ws[0] ){
+					input = input.substr(ws[0].length);
+					output += ws[0];
+				}
+				// tokenize
+				for( var rule in koala.lang.rules ){
+					var match = input.match( koala.lang.rules[rule] );
+					//var match = koala.lang.rules[rule].exec( input );
+					if( match ){//&& match[0] ){
+						input = input.substr(match[0].length);
+						output += "<span class='"+rule+"'>"+match[0]+"</span>";
+						h = false;
+						break;
+					}
+				}
+				// determine when to stop
+				if( h ){
+					output += input;
+					break;
+				}
+			}
+			koala.editor.innerHTML = output
+				.replace( /\n/mg, "<br>" );
+		}
+	}
+};
 
 /* testing...
 function hl(){
@@ -21,7 +71,7 @@ function hl(){
 	//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
 	//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
 ;};*/
-
+/*
 koala.lang = {};
 koala.lang.rules = {
 	wsp: /^(\s+)/,
@@ -31,7 +81,7 @@ koala.lang.rules = {
 	box: /^(\[[^\]]*\]?)/,
 	cmt: /^(\/\/[^\n]*)/,
 	err: /^(\S+)/
-};
+};*/
 
 function assoc(t){
 	for( var rule in koala.lang.rules ){
@@ -149,42 +199,6 @@ function speedtest_tp(){
 	return (new Date()-start);
 }
 
-// TODO: use match or exec?
-// considerations: browser support, speed, return type
-koala.lang.parse = function(){
-	var input = koala.editor.innerHTML
-		.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
-		.replace( /<.*?>/mg, "" );
-	var output = "";
-	while( input.length > 0 ){
-		var h = true;
-		// clear whitespace
-		var ws = input.match( /^(\s*)/ );
-		//var ws = /^(\s)/.exec( input );
-		if( ws ){//&& ws[0] ){
-			input = input.substr(ws[0].length);
-			output += ws[0];
-		}
-		// tokenize
-		for( var rule in koala.lang.rules ){
-			var match = input.match( koala.lang.rules[rule] );
-			//var match = koala.lang.rules[rule].exec( input );
-			if( match ){//&& match[0] ){
-				input = input.substr(match[0].length);
-				output += "<span class='"+rule+"'>"+match[0]+"</span>";
-				h = false;
-				break;
-			}
-		}
-		// determine when to stop
-		if( h ){
-			output += input;
-			break;
-		}
-	}
-	koala.editor.innerHTML = output
-		.replace( /\n/mg, "<br>" );
-};
 
 window.onload = function(){
 	// TODO
