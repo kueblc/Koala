@@ -11,8 +11,8 @@ koala = {
 		},
 		rules: {
 			wsp: /^(\s+)/,
-			cmd: /^((say|put|in|dojs)\b)/i,
-			num: /^(\d+\b)/,
+			cmd: /^(\b(say|put|in|dojs)\b)/i,
+			num: /^(-?(\d+\.?\d*|\.\d+))/,
 			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
 			box: /^(\[[^\]]*\]?)/,
 			cmt: /^(\/\/[^\n]*)/,
@@ -71,17 +71,6 @@ function hl(){
 	//.replace( /(\*\/.*?\*\/)/mg, "<span class='error'>$1</span>" )
 	//.replace( /(\b\w+?\b)/mg, "<span class='word'>$1</span>" )
 ;};*/
-/*
-koala.lang = {};
-koala.lang.rules = {
-	wsp: /^(\s+)/,
-	cmd: /^((say|put|in|dojs)\b)/i,
-	num: /^(\d+\b)/,
-	str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
-	box: /^(\[[^\]]*\]?)/,
-	cmt: /^(\/\/[^\n]*)/,
-	err: /^(\S+)/
-};*/
 
 function assoc(t){
 	for( var rule in koala.lang.rules ){
