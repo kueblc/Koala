@@ -7,23 +7,40 @@ koala = {
 	version: 0.01,
 	lang: {
 		commands: {
-			
+			say: null,
+			put: null,
+			in: null,
+			dojs: null
 		},
 		rules: {
-			wsp: /^(\s+)/,
-			cmd: /^(\b(say|put|in|dojs)\b)/i,
+			//wsp: /^(\s+)/,
+			cmd: null,///^(\b(say|put|in|dojs)\b)/i,
 			num: /^(-?(\d+\.?\d*|\.\d+))/,
 			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
 			box: /^(\[[^\]]*\]?)/,
 			cmt: /^(\/\/[^\n]*)/,
 			err: /^(\S+)/
 		},
+		parser: null,
+		genparser: function(){
+			var rulesrc = [];
+			for( var cmd in koala.lang.commands ){
+				rulesrc.push( cmd );
+			}
+			koala.lang.rules["cmd"] = new RegExp( rulesrc.join('|'), "i" );
+			rulesrc = ["(\\s+)"];
+			for( var rule in koala.lang.rules ){
+				rulesrc.push( koala.lang.rules[rule].source.substr(1) );
+			}
+			koala.lang.parser = new RegExp( rulesrc.join('|'), "gi" );
+		},
 		parse: function(){
+			if( !koala.lang.parser ) koala.lang.genparser();
 			var input = koala.editor.innerHTML
 				.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
 				.replace( /<.*?>/mg, "" );
 			var output = "";
-			while( input.length > 0 ){
+/*			while( input.length > 0 ){
 				var h = true;
 				// clear whitespace
 				var ws = input.match( /^(\s*)/ );
@@ -47,6 +64,19 @@ koala = {
 				if( h ){
 					output += input;
 					break;
+				}
+			}*/
+			var m = input.match(koala.lang.parser);
+			for( var i = 0; i < m.length; i++ ){
+				if( /^(\s+)/.test( m[i] ) ){
+					output += m[i];
+					continue;
+				}
+				for( var rule in koala.lang.rules ){
+					if( koala.lang.rules[rule].test( m[i] ) ){
+						output += "<span class='"+rule+"'>"+m[i]+"</span>";
+						break;
+					}
 				}
 			}
 			koala.editor.innerHTML = output
@@ -211,7 +241,8 @@ window.onload = function(){
 	$("btn_hl").onclick = function(){hl();};
 	$("btn_run").onclick = function(){
 		// for testing...
-		hl();
+		//hl();
+		koala.lang.parse();
 		var lex = koala.editor.getElementsByTagName("span");
 		for( var i = 0; i < lex.length; i++ ){
 			if( lex[i].innerHTML === "say" ){
@@ -316,7 +347,7 @@ window.onload = function(){
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ hl(); };
+	$("btn_hl").onclick = function(){ koala.lang.parse(); };//hl(); };
 };
 
 window.onerror = function( msg, url, line ){
