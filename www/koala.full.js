@@ -7,10 +7,10 @@ koala = {
 	version: 0.01,
 	lang: {
 		commands: {
-			say: null,
-			put: null,
-			in: null,
-			dojs: null
+			"say": null,
+			"put": null,
+			"in": null,
+			"dojs": null
 		},
 		rules: {
 			//wsp: /^(\s+)/,
@@ -34,11 +34,11 @@ koala = {
 			}
 			koala.lang.parser = new RegExp( rulesrc.join('|'), "gi" );
 		},
-		parse: function(){
+		parse: function(input){
 			if( !koala.lang.parser ) koala.lang.genparser();
-			var input = koala.editor.innerHTML
-				.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
-				.replace( /<.*?>/mg, "" );
+			//var input = koala.editor.innerHTML
+			//	.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
+			//	.replace( /<.*?>/mg, "" );
 			var output = "";
 /*			while( input.length > 0 ){
 				var h = true;
@@ -79,8 +79,9 @@ koala = {
 					}
 				}
 			}
-			koala.editor.innerHTML = output
-				.replace( /\n/mg, "<br>" );
+			return output+"<br>";
+			//koala.editor.innerHTML = output
+			//	.replace( /\n/mg, "<br>" );
 		}
 	}
 };
@@ -223,9 +224,16 @@ window.onload = function(){
 	// TODO
 	// testing...
 	koala.editor = $("code");
+	code_input = $("code_input");
+	code_display = $("code_display");
+	code_input.oninput = function(){
+		//alert("fired");
+		code_display.innerHTML = koala.lang.parse( code_input.value );
+	}
+	
 	// trigger designmode
 	//koala.editor.designMode = 'on';
-	koala.editor.contentEditable = true;
+	//koala.editor.contentEditable = true;
 	
 	koala.theme = $("theme");
 	koala.theme.selector = $("theme_sel");
@@ -347,7 +355,9 @@ window.onload = function(){
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ koala.lang.parse(); };//hl(); };
+	$("btn_hl").onclick = function(){
+		code_display.innerHTML = koala.lang.parse( code_input.value );
+	};// koala.lang.parse(); };//hl(); };
 };
 
 window.onerror = function( msg, url, line ){
