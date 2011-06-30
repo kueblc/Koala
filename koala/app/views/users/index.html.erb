@@ -1,0 +1,29 @@
+<table id='project_listing'>
+	<tr>
+		<td>
+			<strong>Username</strong>
+		</td>
+		<td>
+			<strong>Join Date</strong>
+		</td>
+		<td>
+			<strong>Email</strong>
+		</td>
+		<td>
+			<strong>Projects</strong>
+		</td>
+	</tr>
+	<% for user in @users %>
+	<tr>
+		<td>
+			<%= link_to user.username, user, :class => 'regLink' %>
+		</td>
+		<td>
+			<%= user.join_date %>
+		</td>
+		<td>
+			17 <!-- UPDATE LATER -->
+		</td>
+	</tr>
+	<% end %>
+</table>

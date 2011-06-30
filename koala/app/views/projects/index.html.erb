@@ -1,0 +1,33 @@
+<%= link_to 'Editor', new_project_path, :class => 'navLink' %><br /><br />
+<table id='project_listing'>
+	<tr>
+		<td>
+			<strong>Title</strong>
+		</td>
+		<td>
+			<strong>Author</strong>
+		</td>
+		<td>
+			<strong>Created</strong>
+		</td>
+		<td>
+			<strong>Modified</strong>
+		</td>
+	</tr>
+	<% for project in @projects %>
+	<tr>
+		<td>
+			<%= link_to project.title, project, :class => 'regLink' %>
+		</td>
+		<td>
+			<%= project.author %>
+		</td>
+		<td>
+			<%= project.published_at %>
+		</td>
+		<td>
+			<%= project.modified_at %>
+		</td>
+	</tr>
+	<% end %>
+</table>

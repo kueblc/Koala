@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%= stylesheet_link_tag :all %>
+  <%= javascript_include_tag :defaults %>
+  <%= csrf_meta_tag %>
+	<title>The Koala Project</title>
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Amaranth">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Gruppo">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Play">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cousine">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Metrophobic">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Terminal+Dosis+Light">
+</head>
+<body>
+	<div id='title'><%= link_to 'Koala', :home %></div>
+	<div id='bar'>
+		<a href='#'>Login</a>
+		<%= link_to 'Register', new_user_path %>
+		<%= link_to 'Editor', new_project_path %>
+		<%= link_to 'Projects', projects_path, :style => 'margin-right:30px;' %>
+	</div>
+	<div id='banner'>
+		<h1 id='h1'>Programming For Beginners</h1>
+		<img style='float:right;margin:50px;' src='/images/logo.png'>
+	</div>
+	<div id='banner_bottom'></div>
+	<div class='sect'>
+
+		<%= yield %>
+
+	</div>
+</body>
+</html>

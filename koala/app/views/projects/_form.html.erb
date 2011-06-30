@@ -1,0 +1,19 @@
+<%= form_for(@project) do |f| %>
+	<% if @project.errors.any? %>
+	<div class='error_box'>
+		<strong><%= pluralize(@project.errors.count, 'error') %> prevented this project from being submitted:</strong>
+		<ul>
+		<% for error in @project.errors.full_messages %>
+			<li><%= error %></li>
+		<% end %>
+		</ul>
+	</div>
+	<% end %>
+	
+	<strong><%= f.label :title %></strong>
+	<%= f.text_field :title, :class => 'box' %><br /><br />
+	<strong><%= f.label :Code %></strong><br>
+	<%= f.text_area :code, :class => 'code_input_box' %><br />
+	
+	<center><%= f.submit :value => 'Save', :class => 'button' %></center>
+<% end %>
