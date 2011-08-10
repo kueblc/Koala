@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Koala Project</title>
+	
+	<%= stylesheet_link_tag :all %>
+	<%= javascript_include_tag :defaults %>
+	<%= csrf_meta_tag %>
+	
+	<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Amaranth' rel='stylesheet' type='text/css'>
+	
+</head>
+<body>
+	<div id='koala_head'></div>
+	<div id='header'>
+		<a  href='#'>Register</a>
+		<a  href='#'>Login</a>
+	</div>
+	<div id='koala'>The Koala Project</div>
+	<div id='banner'>
+		<div id='boxes'></div>
+		<div id='scraggles'></div>
+	</div>
+	<div id='wrapper'>
+		
+		<% if flash[:notice] != nil %>
+			<%= flash[:notice].html_safe %>
+			<hr class='space'>
+		<% end %>
+		<%= yield %>
+		
+	</div>
+</body>
+</html>

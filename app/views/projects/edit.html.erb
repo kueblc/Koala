@@ -1,0 +1,58 @@
+<div class='col two-thirds'>
+	<span id='title'><%= @project.title %></span> <span class='elongated italic'>Editor</span>
+	<hr><hr class='space'>
+	
+	<table id='editor' cellspacing='0' cellpadding='0'>
+		
+		<!-- Project Title Tabs -->
+		<tr>
+			<% @project.Sources.each_with_index do |s, i| %>
+			<% if @project.Sources.size-1 == i %>
+			<td id='editor_tab' class='last_tab'>
+			<% else %>
+			<td id='editor_tab'>
+			<% end %>
+				<%= s.name %>
+			</td>
+			<% end %>
+		</tr>
+		
+		<!-- Project Code Editor -->
+		<% if @project.Sources.size > 0 %>
+		<tr>
+			<td colspan="<%= @project.Sources.size %>" id='editor_code_section'>
+				<div id='editor_header'>
+					<span class='quiet'> Editing <%= @project.Sources[0].name %></span>
+				</div>
+				<textarea><%= @project.Sources[0].source_code.html_safe %></textarea>
+			</td>
+		</tr>
+		<% end %>
+		
+	</table>
+</div>
+<div class='col one-third last'>
+	
+	<!-- Project Description Updater -->
+	<%= form_for @project do |f| %>
+	<span class='large elongated'>Project Details</span><hr>
+	<hr class='space'>
+	Description:<br />
+	<%= f.text_area :description, :style => 'width:100%;height:60px;' %><br />
+	<%= f.submit :value => 'Save Changes' %>
+	<input type='submit' value='New File'>
+	<input type='submit' value='Download'>
+	<hr class='space'>
+	<% end %>
+	
+	<!-- Project Contributors Listing -->
+	Contributors:<br />
+	<pre>
+	<% @project.authors.split(',').each do |a| %>
+	<%= a %><br />
+	<% end %>
+	</pre>
+	
+	
+	
+</div>
