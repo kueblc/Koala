@@ -39,10 +39,11 @@
 	border: 3px solid #;
 	background: #;
 }
-
-.error {
-	font-size: 10pt;
-	border: 3px solid #;
-	background: #;
-}
 */
+.errors {
+	font-size: 10pt;
+	padding: 5px;
+	text-align: center;
+	border: 2px solid #fbc2c4;
+	background: #fbe3e4;
+}

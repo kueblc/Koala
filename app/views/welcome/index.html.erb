@@ -9,11 +9,11 @@
 	<hr class='space'>
 	<pre>
 <a href='#'>Introduction</a>
-	<a href='#'>Editor Setup</a>
-	<a href='#'>Syntax Intro</a>
+	<%= link_to 'Editor Setup', :editor_setup %>
+	<%= link_to 'Syntax Intro', :syntax_intro %>
 <a href='#'>Using Others</a>
-	<a href='#'>Building on Other Projects</a>
-	<a href='#'>Using Other's Projects</a>
+	<%= link_to 'Build on Other Projects', :building %>
+	<%= link_to 'Using Other\'s Projects', :using %>
 <%= link_to 'Start Using', projects_path %>
 	<%= link_to 'Project Listing / Search', projects_path %>
 	<%= link_to 'Project Editor', new_project_path %>

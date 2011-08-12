@@ -1,4 +1,5 @@
 class ProjectsController < ApplicationController
+  before_filter :authenticate, :only => [:new, :create, :edit, :update]
   
   def index
     @projects = Project.find :all
@@ -29,6 +30,7 @@ class ProjectsController < ApplicationController
   
   def update
     @project = Project.find(params[:id])
+    @project.authors += ',' + User.find(session[:user_id]).name
     if @project.update_attributes(params[:project])
       flash[:notice] = "<div class='success'>Project Successfully Updated.</div>";
       redirect_to edit_project_path

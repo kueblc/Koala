@@ -16,8 +16,14 @@
 <body>
 	<div id='koala_head'></div>
 	<div id='header'>
-		<a  href='#'>Register</a>
-		<a  href='#'>Login</a>
+		<% if session[:user_id].blank? %>
+			<%= link_to 'Register', new_user_path %>
+			<%= link_to 'Login', :login %>
+		<% else %>
+			<div class='stack_horizontal_right' id='greeting'>
+				Hello <%= User.find(session[:user_id]).name %>! (<%= link_to 'Logout', :logout, :style => 'float:none;margin-right:0;' %>)
+			</div>
+		<% end %>
 	</div>
 	<div id='koala'>The Koala Project</div>
 	<div id='banner'>

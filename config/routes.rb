@@ -1,10 +1,22 @@
 Koala::Application.routes.draw do
   root :to => "welcome#index", :as => 'home'
   
+  resources :users
   resources :projects do
     resources :sources
     resources :comments
   end
+  
+  resource :session
+  match '/login' => 'sessions#new', :as => 'login'
+  match '/logout' => 'sessions#destroy', :as => 'logout'
+  
+  match '/beginner/editor' => "getting_started#editor", :as => 'editor_setup'
+  match '/beginner/syntax' => "getting_started#syntax_intro", :as => 'syntax_intro'
+  match '/beginner/building' => "getting_started#building_on_others", :as => 'building'
+  match '/beginner/using_others' => "getting_started#using_others", :as => 'using'
+  
+  
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

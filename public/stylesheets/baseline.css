@@ -86,3 +86,11 @@ body {
 	left: 0px;
 	background: URL('/images/koala_head.png');
 }
+#greeting {
+	color: #fff;
+	font-size: 12pt;
+	line-height: 50px;
+	margin-right: 30px;
+	letter-spacing: 1px;
+	font-family: "Amaranth", "Droid Sans", Sans-Serif;
+}
