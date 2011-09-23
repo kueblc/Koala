@@ -1,0 +1,12 @@
+<%= form_for @project do |f| %>
+<div class='stack_horizontal'>
+	<%= f.label :title %><br />
+	<%= f.label :description %>
+</div>
+<div class='stack_horizontal'>
+	<%= f.text_field :title %>
+	<%= f.text_area :description, :class => 'widest' %>
+</div>
+<hr class='space'>
+<%= f.submit :value => 'Create New Project', :class => 'long' %>
+<% end %>

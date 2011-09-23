@@ -1,0 +1,9 @@
+<div id='login_box'>
+	<div class='stack_horizontal_right'><%= link_to 'Home', :home %></div>
+	<span id='title'>Login</span><hr><hr class='space'>
+	<%= form_tag session_path do %>
+		Email: <%= text_field_tag :email %><br />
+		Password: <%= password_field_tag :password %><br />
+		<%= submit_tag 'Login' %>
+	<% end %>
+</div>

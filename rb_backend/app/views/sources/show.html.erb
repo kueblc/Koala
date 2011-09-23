@@ -1,0 +1,42 @@
+<div class='col two-thirds'>
+	
+	<div class='stack_horizontal'><span id='title' class='loud'><%= @source.name %></span></div>
+	<div class='stack_horizontal_right'><%= link_to 'Back', @project %></a></div>
+	<hr class='space'>
+	<hr>
+	<hr class='space'>
+	
+	<!-- Syntax Highlighting Preference -->
+	Highlighting: 
+	<input type='radio' name='highlighting' value='Syntax' checked='true'>Syntax 
+	<input type='radio' name='highlighting' value='Contributors'> Contributors
+	<hr class='space'>
+	
+	<!-- Code Viewer Window -->
+	<div id='code_viewer'>
+		<%= @source.source_code.gsub(/\n/, "<br>").html_safe %>
+	</div>
+	
+</div>
+<div class='col one-third last'>
+	
+	<span class='large elongated'>Details</span><hr>
+	<hr class='space'>
+	<span class='small quiet'>Created:</span> <%= @source.creation_time %><br />
+	<span class='small quiet'>Last Modified:</span> 
+	<% if @source.modified_time != nil %>
+		<%= @source.modified_time %><br />
+	<% else %>
+		<%= @source.creation_time %>
+	<% end %>
+	</span>
+	<hr class='space'>
+	<hr>
+	<hr class='space'>
+	Contributors:<br />
+	<pre>
+		<% @project.authors.split(',').each do |c| %>
+	<%= c %>
+		<% end %>
+	</pre>
+</div>

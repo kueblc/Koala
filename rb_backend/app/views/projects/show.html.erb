@@ -1,0 +1,55 @@
+<div class=' col two-thirds'>
+	<div class='stack_horizontal'>
+		<span id='title'><%= @project.title %></span> 
+		by <em><span class='loud'><%= @project.authors.split(",")[0] %></span></em>
+	</div>
+	<div class='stack_horizontal_right'>
+		<%= link_to 'Back', projects_path %>
+	</div>
+	<hr class='space'>
+	<hr><hr class='space'>
+	<span class='medium'>Files in <%= @project.title %>:</span><br />
+	
+	<!-- File Listing -->
+	<% if @project.Sources.size != 0 %>
+	<table id='file_listing'>
+		<% @project.Sources.each_with_index do |s, i| %>
+			<tr>
+				<% if i%2 == 0 %>
+				<td id='row_light'>
+				<% else %>
+				<td id='row_dark'>
+				<% end %>
+				
+				<div class='stack_horizontal'>
+					<%= link_to s.name, [@project, s] %>
+				</div>
+				<div class='stack_horizontal_right'>
+					<span class='small'>Last modified 
+					<% if s.modified_time != nil %>
+					<%= s.modified_time %>
+					<% else %>
+					<%= s.creation_time %>
+					<% end %>
+					</span>
+				</div>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+	<% else %><hr>None<% end %>
+	<hr class='space'>
+	
+	<!-- Feedback & Comments -->
+	<%= render :file => 'comments/new' %>
+	<% if @comments.size != 0 %><hr><% end %>
+	<% @comments.each do |comment| %>
+		<%= render comment %>
+	<% end %>
+	
+</div>
+<div class='col one-third last'>
+	<%= link_to 'Build on this project', edit_project_path, :class => 'medium' %><hr class='space'>
+	<a href='#' class='medium'>Use this project</a><hr class='space'>
+	<a href='#' class='medium'>Other shit</a>
+</div>

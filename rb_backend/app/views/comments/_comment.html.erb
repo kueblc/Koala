@@ -1,0 +1,8 @@
+<%= div_for comment do %>
+	<hr class='space'>
+	<div id='comment_box'>
+		On <%= comment.date_posted %>, <%= User.where("id = #{comment.user_id}").name %> said:
+		<hr>
+		<p><%= comment.content %></p>
+	</div>
+<% end %>
