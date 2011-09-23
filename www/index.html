@@ -48,9 +48,12 @@
 					</div>
 					<div class='panel_content'>
 						<!--<pre id='code' class='input'><br></pre>-->
-						<div id='code' class='input'><div>
-							<textarea id='code_input'></textarea>
+						<div id='richtextarea' class='input'><div id='rt_wrap'>
+							<div id='text_wrap'>
+								<textarea id='code_input' oninput='this.update()'></textarea>
+							</div>
 							<pre id='code_display'></pre>
+							<span id='code_cur'>&nbsp;</span>
 						</div></div>
 						<p>
 							<button id='btn_text'>Text</button>

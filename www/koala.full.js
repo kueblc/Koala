@@ -27,7 +27,7 @@ koala = {
 			for( var cmd in koala.lang.commands ){
 				rulesrc.push( cmd );
 			}
-			koala.lang.rules["cmd"] = new RegExp( rulesrc.join('|'), "i" );
+			koala.lang.rules["cmd"] = new RegExp( '^('+rulesrc.join('|')+')', "i" );
 			rulesrc = ["(\\s+)"];
 			for( var rule in koala.lang.rules ){
 				rulesrc.push( koala.lang.rules[rule].source.substr(1) );
@@ -79,9 +79,9 @@ koala = {
 					}
 				}
 			}
-			return output+"<br>";
+			return output//;
 			//koala.editor.innerHTML = output
-			//	.replace( /\n/mg, "<br>" );
+				.replace( /\n/mg, "<br>" )+"<br>";
 		}
 	}
 };
@@ -220,17 +220,82 @@ function speedtest_tp(){
 }
 
 
+var code_input, code_display;
+
+function fire( on, e, target ){
+	if( document.createEventObject ){
+		target.fireEvent(on, e);
+	} else {
+		var c = document.createEvent("MouseEvents");
+		c.initMouseEvent(
+			e.type, e.bubbles, e.cancelable, e.view, e.detail,
+			e.pageX || e.layerX, e.pageY || e.layerY,
+			e.clientX, e.clientY,
+			e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
+			e.button, e.relatedTarget);
+		target.dispatchEvent(c);
+	}
+};
+
 window.onload = function(){
 	// TODO
 	// testing...
-	koala.editor = $("code");
+	//koala.editor = $("code");
 	code_input = $("code_input");
 	code_display = $("code_display");
-	code_input.oninput = function(){
+	code_display.onmousedown = function(e){
+		alert('mousedown');
+		fire( 'onmousedown', e, code_input );
+	};
+	code_cur = $("code_cur");
+	cur_w = code_cur.clientWidth;
+	cur_h = code_cur.clientHeight;
+	code_input.update = function(){
 		//alert("fired");
-		code_display.innerHTML = koala.lang.parse( code_input.value );
-	}
-	
+		if( code_input.value === '' ){
+			code_display.innerHTML = "";
+			return;
+		}
+		code_display.innerHTML = koala.lang.parse( code_input.value
+			.replace( /&/g, "&amp;" )
+			.replace( /</g, "&lt;" )
+			.replace( />/g, "&gt;" ) );
+	};
+	code_input.update_cursor = function(){
+		var row = 0, col = 0, l = code_input.selectionStart, v = code_input.value;
+		for( var i = 0; i < l; i++ ){
+			if( v[i] === '\n' ){
+				col = 0;
+				row++;
+			} else {
+				col++;
+			}
+		}
+		code_cur.style.left = (col*cur_w)+'px';
+		code_cur.style.top = (row*cur_h)+'px';
+	};
+	code_input.onfocus = function(){
+		code_cur.visible = false;
+		code_cur.blink();
+	};
+	code_input.onblur = function(){
+		clearTimeout( code_cur.timer );
+		code_cur.style.visibility = 'hidden';
+	};
+	code_cur.blink = function(){
+		this.visible = !this.visible;
+		if( this.visible ){
+			code_cur.style.visibility = '';
+		} else {
+			code_cur.style.visibility = 'hidden';
+		}
+		this.timer = setTimeout( 'code_cur.blink()', 1000 );
+	};
+	code_input.oninput = function(){ this.update(); };
+	code_input.onkeyup = function(){ this.update_cursor(); };
+	code_input.onclick = function(){ this.update_cursor(); };
+	if( code_input.spellcheck ){ code_input.spellcheck = false; };
+	code_input.focus();
 	// trigger designmode
 	//koala.editor.designMode = 'on';
 	//koala.editor.contentEditable = true;
@@ -243,15 +308,15 @@ window.onload = function(){
 	}
 	// TODO
 	// temporary function testing only, not real button actions
-	$("btn_text").onclick = function(){
+	/*$("btn_text").onclick = function(){
 		alert(koala.editor.textContent || koala.editor.innerText); };
-	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
+	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };*/
 	$("btn_hl").onclick = function(){hl();};
 	$("btn_run").onclick = function(){
 		// for testing...
 		//hl();
-		koala.lang.parse();
-		var lex = koala.editor.getElementsByTagName("span");
+		//koala.lang.parse();
+		var lex = code_display.getElementsByTagName("span");//koala.editor.getElementsByTagName("span");
 		for( var i = 0; i < lex.length; i++ ){
 			if( lex[i].innerHTML === "say" ){
 				i++;
@@ -264,10 +329,10 @@ window.onload = function(){
 			}
 		}
 	};
-	koala.editor.onkeydown = function(e){
+	/*koala.editor.onkeydown = function(e){
 		e = e || window.event;
 		var k = e.keyCode || e.which;
-		if( k === 13 ){
+		if( k === 13 ){*/
 			//window.document.execCommand("bold",false,null);
 			//window.document.execCommand("inserthtml",false,"&nbsp;");
 			//var n = window.getSelection().focusNode;
@@ -296,14 +361,14 @@ window.onload = function(){
 			//window.getSelection().extend($("cur"),0);
 			//window.getSelection().collapseToEnd();
 			//koala.editor.focus();
-		}
-		if( k === 9 ){ /* tab */
+		/*}
+		if( k === 9 ){ *//* tab *//*
 			try {
 				document.execCommand("inserthtml",false,"\t");
 				return false;
 			} catch(e){}
 		}
-	};
+	};*/
 	/*koala.editor.onkeyup = function(e){
 		e = e || window.event;
 		var k = e.keyCode || e.which;*/
@@ -349,14 +414,15 @@ window.onload = function(){
 			hl();
 		}
 	};*/
-	koala.editor.focus();
+	//koala.editor.focus();
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
 	$("btn_hl").onclick = function(){
-		code_display.innerHTML = koala.lang.parse( code_input.value );
+		code_input.update();
+		//code_display.innerHTML = koala.lang.parse( code_input.value );
 	};// koala.lang.parse(); };//hl(); };
 };
 

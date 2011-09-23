@@ -193,7 +193,7 @@ button:hover {
 #author {
 }
 
-#code {
+#richtextarea {
 	/*font-size: 16px;
 	font-family: monospace;
 	color: black;*/
@@ -202,19 +202,31 @@ button:hover {
 	height: 420px;
 }
 
-#code div {
+#rt_wrap {
 	position: relative;
-	/*left: 0;
-	top: 0;*/
-	width: 100%;
+	left: 0;
+	top: 0;
 	min-height: 100%;
+	min-width: 100%;
 }
 
-#code textarea, #code pre {
+#text_wrap {
+	position: absolute;
+	/*left: 0;
+	top: 0;*/
+	min-width: 100%;
+	min-height: 100%;
+	left: 0;
+	top: 0;
+	z-index: -1;
+}
+
+#code_input, #code_display {
 	font-size: 16px;
 	font-family: monospace;
 	/*min-height: 100%;*/
-	width: 100%;
+	min-height: 100%;
+	min-width: 100%;
 	padding: 0;
 	margin: 0;
 	border: 0;
@@ -226,20 +238,34 @@ button:hover {
 	background: none;
 }
 
-#code textarea {
-	color: rgba(0,0,0,.5);
-	position: absolute;
+#code_input {
+	color: #777;
+	/*filter: alpha(opacity=50);
+	opacity: .50;*/
+	/*color: rgba(0,0,0,.5);
+	color: transparent;*/
+	font-weight: lighter;
+	/*position: absolute;
 	left: 0;
 	top: 0;
 	bottom: 0;
-	min-height: 100%;
+	right: 0;*/
 	overflow: hidden;
 	resize: none;
 }
 
-#code pre {
+#code_display {
 	color: black;
 	pointer-events: none;
+}
+
+#code_cur {
+	font-size: 16px;
+	font-family: monospace;
+	border-left: 1px solid #000;
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 
 /* syntax highlighting */
