@@ -74,4 +74,6 @@ button:hover {
 }
 
 #footer {
+	background: #fdfdfd;
+	border-top: 1px solid #ccc;
 }
