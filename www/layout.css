@@ -9,7 +9,6 @@ html {
 
 body {
 	font-family: Arial, Helvetica, sans-serif;
-	color: #444;
 	overflow: hidden;
 	height: 100%;
 }
@@ -30,9 +29,6 @@ body, #header, #content, #footer {
 	top: 0;
 	height: 44px;
 	padding: 2px 16px;
-	
-	background: #eee;
-	border-bottom: 1px solid #888;
 }
 
 #content {
@@ -45,9 +41,6 @@ body, #header, #content, #footer {
 	bottom: 0;
 	height: 44px;
 	padding: 2px 16px;
-	
-	background: #eee;
-	border-top: 1px solid #888;
 }
 
 .column {
@@ -68,15 +61,11 @@ body, #header, #content, #footer {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	border: 1px solid #aaa;
-	background: white;
 }
 
 .panel > h2 {
 	padding: 2px 8px;
 	font-size: 14px;
-	border-bottom: 1px solid #aaa;
-	background: #f4f4f4;
 	cursor: default;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
