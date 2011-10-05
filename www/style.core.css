@@ -1,7 +1,9 @@
 #files {
 	overflow: auto;
 	padding: 8px;
-	height: 300px;
+	position: absolute;
+	top: 21px;
+	bottom: 0;
 }
 
 #files > li {
@@ -69,12 +71,19 @@ button:hover {
 
 #canvas {
 	margin: 12px;
-	height: 200px;
+	position: absolute;
+	top: 21px;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	text-align: center;
 }
 
 #canvas > span {
-	line-height: 200px;
+	display: block;
+	margin: -8px;
+	position: relative;
+	top: 50%;
 }
 
 .panel_content {
