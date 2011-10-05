@@ -8,19 +8,19 @@ body {
 	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc));
 	border-bottom: 1px solid #888;
 	text-shadow: 0 1px #fff;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.14);
-	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.14);
-	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .panel {
 	border: 1px solid #aaa;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 -4px 8px #eee inset;
-	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 -4px 8px #eee inset;
-	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.14), 0 -4px 8px #eee inset;
+	border-radius: 6px 6px 0 0;
+	-moz-border-radius: 6px 6px 0 0;
+	-webkit-border-radius: 6px 6px 0 0;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .panel > h2 {
@@ -152,5 +152,12 @@ button:active {
 */
 
 #footer {
-	
+	background: #fdfdfd;
+	background: -moz-linear-gradient(top, #fdfdfd, #f0f0f0);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#f0f0f0));
+	border-top: 1px solid #ccc;
+	text-shadow: 0 1px #fff;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
