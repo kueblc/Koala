@@ -5,6 +5,7 @@
 		<title>the koala project</title>
 		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 		<link rel="stylesheet" type="text/css" href="style.core.css">
+		<link rel="stylesheet" type="text/css" href="layout.css">
 		<script src="koala.full.js" type="text/javascript"></script>
 		<link id="theme" rel="stylesheet" type="text/css" href="themes/basic.css">
 	</head>
@@ -13,70 +14,82 @@
 			<h1>the koala project</h1>
 		</div>
 		<div id='content'>
-			<div id='content_left'>
-				<div class='panel'>
-					<h2>boxes</h2>
-					<ul id='files'>
-						<li><div></div><input type="text" value="project1.k"></li>
-						<li><div></div><input type="text" value="helloworld.k"></li>
-						<li><div></div><input type="text" value="untitled.k"></li>
-					</ul>
+			<div class='column' style='width:22%'>
+				<div style='height:80%'>
+					<div class='panel'>
+						<h2>boxes</h2>
+						<ul id='files'>
+							<li><div></div><input type="text" value="project1.k"></li>
+							<li><div></div><input type="text" value="helloworld.k"></li>
+							<li><div></div><input type="text" value="untitled.k"></li>
+						</ul>
+					</div>
 				</div>
-				<div class='panel'>
-					<h2>preferences</h2>
-					<div class='panel_content'>
-						theme
-						<select id='theme_sel'>
-							<option value='default'>Default</option>
-							<option value='basic'>Basic</option>
-							<option value='koalabook'>koalabook</option>
-							<option value='koalaplex'>koalaplex</option>
-							<option value='koalabird'>koalabird</option>
-							<option value='koalarch'>koalarch</option>
-						</select>
+				<div style='height:20%'>
+					<div class='panel'>
+						<h2>preferences</h2>
+						<div class='panel_content'>
+							theme
+							<select id='theme_sel'>
+								<option value='default'>Default</option>
+								<option value='basic'>Basic</option>
+								<option value='koalabook'>koalabook</option>
+								<option value='koalaplex'>koalaplex</option>
+								<option value='koalabird'>koalabird</option>
+								<option value='koalarch'>koalarch</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div id='content_center'>
-				<div class='panel'>
-					<h2>script</h2>
-					<div class='menu'>
-						<button>new</button>
-						<button>save</button>
-						<button id='btn_dl'>download</button>&nbsp;
-						<button id='btn_run'>run</button>
-					</div>
-					<div class='panel_content'>
-						<pre id='code' class='input'><br></pre>
-						<p>
-							<button id='btn_text'>Text</button>
-							<button id='btn_html'>HTML</button>
-							<button id='btn_hl'>Refresh</button>
-						</p>
-					</div>
-				</div>
-			</div>
-			<div id='content_right'>
-				<div class='panel'>
-					<h2>workbench</h2>
-					<div id='canvas'><span>design your app's layout here!</span></div>
-				</div>
-				<div class='panel'>
-					<h2>properties</h2>
-					<div class='tab'><button class='current'>name</button><button>placement</button><button>colors</button></div>
-					<div class='panel_content'>
-						<div id='p_name'>
-							<p>title
-								<input name='title' type='text' id='title' class='input'>
-							</p>
-							<p>author
-								<input name='author' type='text' id='author' class='input'>
+			<div class='column' style='width:44%'>
+				<div style='height:100%'>
+					<div class='panel'>
+						<h2>script</h2>
+						<div class='menu'>
+							<button>new</button>
+							<button>save</button>
+							<button id='btn_dl'>download</button>&nbsp;
+							<button id='btn_run'>run</button>
+						</div>
+						<div class='panel_content'>
+							<pre id='code' class='input'><br></pre>
+							<p>
+								<button id='btn_text'>Text</button>
+								<button id='btn_html'>HTML</button>
+								<button id='btn_hl'>Refresh</button>
 							</p>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class='clearfix'></div>
+			<div class='column' style='width:34%'>
+				<div style='height:60%'>
+					<div class='panel'>
+						<h2>workbench</h2>
+						<div id='canvas'><span>design your app's layout here!</span></div>
+					</div>
+				</div>
+				<div style='height:40%'>
+					<div class='panel'>
+						<h2>properties</h2>
+						<div class='tab'><button class='current'>name</button><button>placement</button><button>colors</button></div>
+						<div class='panel_content'>
+							<div id='p_name'>
+								<p>title
+									<input name='title' type='text' id='title' class='input'>
+								</p>
+								<p>author
+									<input name='author' type='text' id='author' class='input'>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id='footer'>
+			<h1>the koala footer</h1>
 		</div>
 	</body>
 </html>

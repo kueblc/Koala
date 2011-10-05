@@ -1,0 +1,87 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #444;
+	overflow: hidden;
+	height: 100%;
+}
+
+body, #header, #content, #footer {
+	position: absolute;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#header, #footer {
+	font-family: "Trebuchet MS";
+}
+
+#header {
+	top: 0;
+	height: 44px;
+	padding: 2px 16px;
+	
+	background: #eee;
+	border-bottom: 1px solid #888;
+}
+
+#content {
+	top: 44px;
+	bottom: 44px;
+	padding: 0 16px 16px 0;
+}
+
+#footer {
+	bottom: 0;
+	height: 44px;
+	padding: 2px 16px;
+	
+	background: #eee;
+	border-top: 1px solid #888;
+}
+
+.column {
+	float: left;
+	height: 100%;
+}
+
+.column > div {
+	padding: 16px 0 0 16px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.panel {
+	overflow: hidden;
+	height: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 1px solid #aaa;
+	background: white;
+}
+
+.panel > h2 {
+	padding: 2px 8px;
+	font-size: 14px;
+	border-bottom: 1px solid #aaa;
+	background: #f4f4f4;
+	cursor: default;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
