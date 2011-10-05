@@ -23,6 +23,7 @@ body, #header, #content, #footer {
 
 #header, #footer {
 	font-family: "Trebuchet MS";
+	z-index: 1;
 }
 
 #header {

@@ -13,7 +13,23 @@ body {
 	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+#content {
+	background: url('bg.png');
+}
+
+#footer {
+	background: #fdfdfd;
+	background: -moz-linear-gradient(top, #fdfdfd, #f0f0f0);
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#f0f0f0));
+	border-top: 1px solid #ccc;
+	text-shadow: 0 1px #fff;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
 .panel {
+	background: #fff;
 	border: 1px solid #aaa;
 	border-radius: 6px 6px 0 0;
 	-moz-border-radius: 6px 6px 0 0;
@@ -151,13 +167,3 @@ button:active {
 }
 */
 
-#footer {
-	background: #fdfdfd;
-	background: -moz-linear-gradient(top, #fdfdfd, #f0f0f0);
-	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#f0f0f0));
-	border-top: 1px solid #ccc;
-	text-shadow: 0 1px #fff;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
