@@ -1,6 +1,11 @@
 * {
 	margin: 0;
 	padding: 0;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
 
 html {
@@ -29,7 +34,6 @@ body, #header, #content, #footer {
 #header {
 	top: 0;
 	height: 44px;
-	padding: 2px 16px;
 }
 
 #content {
@@ -42,6 +46,35 @@ body, #header, #content, #footer {
 	bottom: 0;
 	height: 44px;
 	padding: 2px 16px;
+}
+
+#header > h1 {
+	display: inline-block;
+	padding: 2px 16px;
+	cursor: default;
+}
+
+#header > ul {
+	float: right;
+	border-right: 1px solid #bbb;
+	margin-right: 16px;
+}
+
+#header > ul > li {
+	float: left;
+	list-style: none;
+	font-size: 1.5em;
+	padding: 7px 16px;
+	border-left: 1px solid #bbb;
+	cursor: pointer;
+}
+
+#header > ul > li:hover {
+	background: rgba(0,0,0,.06);
+}
+
+#header > ul > li:active {
+	background: #ccc;
 }
 
 .column {
@@ -69,10 +102,5 @@ body, #header, #content, #footer {
 	padding: 2px 8px;
 	font-size: 14px;
 	cursor: default;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
-	user-select: none;
 }
 
