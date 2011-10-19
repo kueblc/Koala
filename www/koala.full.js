@@ -7,10 +7,10 @@ koala = {
 	version: 0.01,
 	lang: {
 		commands: {
-			say: null,
-			put: null,
-			in: null,
-			dojs: null
+			"say": null,
+			"put": null,
+			"in": null,
+			"dojs": null
 		},
 		rules: {
 			//wsp: /^(\s+)/,
