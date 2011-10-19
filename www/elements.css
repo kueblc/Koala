@@ -91,7 +91,7 @@ button:hover {
 }
 
 .input {
-	padding: 2px;
+	padding: 4px;
 	margin-bottom: 8px;
 	width: 100%;
 	box-sizing: border-box;
@@ -170,6 +170,8 @@ button:hover {
 	position: absolute;
 	top: 0;
 	left: -1px;
+	outline: none;
+	resize: none;
 }
 
 #rta_out {
