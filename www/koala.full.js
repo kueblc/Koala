@@ -14,11 +14,11 @@ koala = {
 		},
 		rules: {
 			//wsp: /^(\s+)/,
-			cmd: null,///^(\b(say|put|in|dojs)\b)/i,
-			num: /^(-?(\d+\.?\d*|\.\d+))/,
+			cmt: /^(\/\/[^\n]*)/,
 			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
 			box: /^(\[[^\]]*\]?)/,
-			cmt: /^(\/\/[^\n]*)/,
+			num: /^(-?(\d+\.?\d*|\.\d+))/,
+			cmd: null,
 			err: /^(\S+)/
 		},
 		parser: null,
@@ -27,7 +27,7 @@ koala = {
 			for( var cmd in koala.lang.commands ){
 				rulesrc.push( cmd );
 			}
-			koala.lang.rules["cmd"] = new RegExp( rulesrc.join('|'), "i" );
+			koala.lang.rules.cmd = new RegExp( "^("+rulesrc.join('|')+")", "i" );
 			rulesrc = ["(\\s+)"];
 			for( var rule in koala.lang.rules ){
 				rulesrc.push( koala.lang.rules[rule].source.substr(1) );
@@ -36,9 +36,10 @@ koala = {
 		},
 		parse: function(){
 			if( !koala.lang.parser ) koala.lang.genparser();
-			var input = koala.editor.innerHTML
+			var input = koala.editor.input.value;
+/*			var input = koala.editor.innerHTML
 				.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
-				.replace( /<.*?>/mg, "" );
+				.replace( /<.*?>/mg, "" );*/
 			var output = "";
 /*			while( input.length > 0 ){
 				var h = true;
@@ -79,8 +80,10 @@ koala = {
 					}
 				}
 			}
-			koala.editor.innerHTML = output
-				.replace( /\n/mg, "<br>" );
+		//	koala.editor.innerHTML = output
+		//		.replace( /\n/mg, "<br>" );
+			koala.editor.output.innerHTML = output
+				.replace( /\n/mg, "<br>" )+"<br>";
 		}
 	}
 };
@@ -109,7 +112,7 @@ function assoc(t){
 		}
 	}
 };
-
+/*
 function hl(){
 	var rulesrc = [];
 	for( var rule in koala.lang.rules ){
@@ -131,7 +134,7 @@ function hl(){
 	}
 	koala.editor.innerHTML = output
 		.replace( /\n/mg, "<br>" );
-}
+}*/
 
 function speedtest_qp(){
 	var rulesrc = [];
@@ -222,10 +225,16 @@ function speedtest_tp(){
 window.onload = function(){
 	// TODO
 	// testing...
-	koala.editor = $("code");
+	//koala.editor = $("code");
+	koala.editor = {
+		input: $("rta_in"),
+		output: $("rta_out")
+	};
+	koala.editor.input.onkeyup = function(){ koala.lang.parse(); };
+	koala.editor.input.spellcheck = false;
 	// trigger designmode
 	//koala.editor.designMode = 'on';
-	koala.editor.contentEditable = true;
+	//koala.editor.contentEditable = true;
 	
 	koala.theme = $("theme");
 	koala.theme.selector = $("theme_sel");
@@ -238,12 +247,12 @@ window.onload = function(){
 	$("btn_text").onclick = function(){
 		alert(koala.editor.textContent || koala.editor.innerText); };
 	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
-	$("btn_hl").onclick = function(){hl();};
+	//$("btn_hl").onclick = function(){hl();};
 	$("btn_run").onclick = function(){
 		// for testing...
 		//hl();
 		koala.lang.parse();
-		var lex = koala.editor.getElementsByTagName("span");
+		var lex = koala.editor.output.getElementsByTagName("span");
 		for( var i = 0; i < lex.length; i++ ){
 			if( lex[i].innerHTML === "say" ){
 				i++;
@@ -256,10 +265,10 @@ window.onload = function(){
 			}
 		}
 	};
-	koala.editor.onkeydown = function(e){
+/*	koala.editor.onkeydown = function(e){
 		e = e || window.event;
 		var k = e.keyCode || e.which;
-		if( k === 13 ){
+		if( k === 13 ){*/
 			//window.document.execCommand("bold",false,null);
 			//window.document.execCommand("inserthtml",false,"&nbsp;");
 			//var n = window.getSelection().focusNode;
@@ -288,14 +297,14 @@ window.onload = function(){
 			//window.getSelection().extend($("cur"),0);
 			//window.getSelection().collapseToEnd();
 			//koala.editor.focus();
-		}
-		if( k === 9 ){ /* tab */
+/*		}
+		if( k === 9 ){ // tab
 			try {
 				document.execCommand("inserthtml",false,"\t");
 				return false;
 			} catch(e){}
 		}
-	};
+	};*/
 	/*koala.editor.onkeyup = function(e){
 		e = e || window.event;
 		var k = e.keyCode || e.which;*/
@@ -341,7 +350,7 @@ window.onload = function(){
 			hl();
 		}
 	};*/
-	koala.editor.focus();
+	//koala.editor.focus();
 	//window.document.execCommand("inserthtml",false,"<span></span>");
 	//window.document.execCommand("bold",false,null);
 	$("btn_dl").onclick = function(){

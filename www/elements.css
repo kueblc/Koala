@@ -96,7 +96,7 @@ button:hover {
 	width: 100%;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	-webkit-box-sizing:border-box;
+	-webkit-box-sizing: border-box;
 	outline: none;
 }
 /*
@@ -135,18 +135,45 @@ button:hover {
 	left: 8px;
 }
 */
-#title {
+
+#richtextarea {
+	overflow: auto;
+	height: 420px;
 }
 
-#author {
+#rta_wrap {
+	width: 100%;
+	min-height: 100%;
+	position: relative;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 }
 
-#code {
+#rta_in, #rta_out {
 	font-size: 16px;
 	font-family: monospace;
 	color: black;
-	overflow: auto;
-	height: 420px;
+	min-width: 100%;
+	min-height: 100%;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	white-space: pre-wrap;
+}
+
+#rta_in {
+	opacity: 0.2;
+	filter: alpha(opacity = 20);
+	overflow: visible;
+	background: 0;
+	position: absolute;
+	top: 0;
+	left: -1px;
+}
+
+#rta_out {
+	padding-bottom: 16px;
 }
 
 /* syntax highlighting */
