@@ -36,54 +36,24 @@ koala = {
 		},
 		parse: function(){
 			if( !koala.lang.parser ) koala.lang.genparser();
-			var input = koala.editor.input.value;
-/*			var input = koala.editor.innerHTML
-				.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
-				.replace( /<.*?>/mg, "" );*/
-			var output = "";
-/*			while( input.length > 0 ){
-				var h = true;
-				// clear whitespace
-				var ws = input.match( /^(\s*)/ );
-				//var ws = /^(\s)/.exec( input );
-				if( ws ){//&& ws[0] ){
-					input = input.substr(ws[0].length);
-					output += ws[0];
-				}
-				// tokenize
-				for( var rule in koala.lang.rules ){
-					var match = input.match( koala.lang.rules[rule] );
-					//var match = koala.lang.rules[rule].exec( input );
-					if( match ){//&& match[0] ){
-						input = input.substr(match[0].length);
-						output += "<span class='"+rule+"'>"+match[0]+"</span>";
-						h = false;
-						break;
+			var input = koala.editor.input.value,
+				output = "";
+			if( input ){
+				var m = input.match(koala.lang.parser);
+				for( var i = 0; i < m.length; i++ ){
+					if( /^(\s+)/.test( m[i] ) ){
+						output += m[i];
+						continue;
 					}
-				}
-				// determine when to stop
-				if( h ){
-					output += input;
-					break;
-				}
-			}*/
-			var m = input.match(koala.lang.parser);
-			for( var i = 0; i < m.length; i++ ){
-				if( /^(\s+)/.test( m[i] ) ){
-					output += m[i];
-					continue;
-				}
-				for( var rule in koala.lang.rules ){
-					if( koala.lang.rules[rule].test( m[i] ) ){
-						output += "<span class='"+rule+"'>"+m[i]+"</span>";
-						break;
+					for( var rule in koala.lang.rules ){
+						if( koala.lang.rules[rule].test( m[i] ) ){
+							output += "<span class='"+rule+"'>"+m[i]+"</span>";
+							break;
+						}
 					}
 				}
 			}
-		//	koala.editor.innerHTML = output
-		//		.replace( /\n/mg, "<br>" );
 			koala.editor.output.innerHTML = output + '\n\n';
-		//		.replace( /\n/mg, "<br>" )+"<br>";
 		}
 	}
 };
