@@ -82,8 +82,8 @@ koala = {
 			}
 		//	koala.editor.innerHTML = output
 		//		.replace( /\n/mg, "<br>" );
-			koala.editor.output.innerHTML = output
-				.replace( /\n/mg, "<br>" )+"<br>";
+			koala.editor.output.innerHTML = output + '\n\n';
+		//		.replace( /\n/mg, "<br>" )+"<br>";
 		}
 	}
 };
