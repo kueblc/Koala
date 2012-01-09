@@ -4,7 +4,7 @@
 function $(e){ return document.getElementById(e); };
 
 koala = {
-	version: 0.01,
+	version: 0.02,
 	lang: {
 		commands: {
 			"say": null,
@@ -65,43 +65,16 @@ function assoc(t){
 		}
 	}
 };
-/*
-function hl(){
-	var rulesrc = [];
-	for( var rule in koala.lang.rules ){
-		rulesrc.push( koala.lang.rules[rule].source.substr(1) );
-	}
-	var re = new RegExp( rulesrc.join('|'), "gi" );
-	var input = koala.editor.innerHTML
-		.replace( /(<br>|<div>|<\/div><div>|<\/P>)/mg, "\n" )
-		.replace( /<.*?>/mg, "" );
-	var output = "";
-	var m = input.match(re);
-	for( var i = 0; i < m.length; i++ ){
-		for( var rule in koala.lang.rules ){
-			if( koala.lang.rules[rule].test( m[i] ) ){
-				output += "<span class='"+rule+"'>"+m[i]+"</span>";
-				break;
-			}
-		}
-	}
-	koala.editor.innerHTML = output
-		.replace( /\n/mg, "<br>" );
-}*/
 
 window.onload = function(){
 	// TODO
 	// testing...
-	//koala.editor = $("code");
 	koala.editor = {
 		input: $("rta_in"),
 		output: $("rta_out")
 	};
 	koala.editor.input.onkeyup = function(){ koala.lang.parse(); };
 	koala.editor.input.spellcheck = false;
-	// trigger designmode
-	//koala.editor.designMode = 'on';
-	//koala.editor.contentEditable = true;
 	
 	koala.theme = $("theme");
 	koala.theme.selector = $("theme_sel");
@@ -114,10 +87,8 @@ window.onload = function(){
 	$("btn_text").onclick = function(){
 		alert(koala.editor.textContent || koala.editor.innerText); };
 	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
-	//$("btn_hl").onclick = function(){hl();};
 	$("btn_run").onclick = function(){
 		// for testing...
-		//hl();
 		koala.lang.parse();
 		var lex = koala.editor.output.getElementsByTagName("span");
 		for( var i = 0; i < lex.length; i++ ){
@@ -132,23 +103,10 @@ window.onload = function(){
 			}
 		}
 	};
-	koala.editor.onkeydown = function(e){
-		e = e || window.event;
-		var k = e.keyCode || e.which;
-		if( k === 9 ){ /* tab */
-			try {
-				document.execCommand("inserthtml",false,"\t");
-				return false;
-			} catch(e){}
-		}
-	};
-	koala.editor.focus();
-	//window.document.execCommand("inserthtml",false,"<span></span>");
-	//window.document.execCommand("bold",false,null);
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ koala.lang.parse(); };//hl(); };
+	$("btn_hl").onclick = function(){ koala.lang.parse(); };
 };
 
 window.onerror = function( msg, url, line ){
