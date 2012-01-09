@@ -53,12 +53,7 @@ koala = {
 					}
 				}
 			}
-			if( koala.editor.output.outerHTML ){
-				// IE fix
-				koala.editor.output.outerHTML = '<pre>' + output + '\n\n</pre>';
-			} else {
-				koala.editor.output.innerHTML = output + '\n\n';
-			}
+			koala.editor.output.innerHTML = '<pre>' + output + '\n\n</pre>';
 		}
 	}
 };

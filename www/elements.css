@@ -150,11 +150,11 @@ button:hover {
 	-webkit-box-sizing: border-box;
 }
 
-#rta_in, #rta_out {
+#rta_in, #rta_out > pre {
 	font-size: 16px;
 	font-family: monospace;
 	color: black;
-	min-width: 100%;
+	width: 100%;
 	min-height: 100%;
 	border: 0;
 	padding: 0;
@@ -175,6 +175,8 @@ button:hover {
 }
 
 #rta_out {
+	width: 100%;
+	min-height: 100%;
 }
 
 /* syntax highlighting */
