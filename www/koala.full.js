@@ -53,7 +53,12 @@ koala = {
 					}
 				}
 			}
-			koala.editor.output.innerHTML = output + '\n\n';
+			if( koala.editor.output.outerHTML ){
+				// IE fix
+				koala.editor.output.outerHTML = '<pre>' + output + '\n\n</pre>';
+			} else {
+				koala.editor.output.innerHTML = output + '\n\n';
+			}
 		}
 	}
 };
@@ -73,7 +78,19 @@ window.onload = function(){
 		input: $("rta_in"),
 		output: $("rta_out")
 	};
-	koala.editor.input.onkeyup = function(){ koala.lang.parse(); };
+	if( koala.editor.input.addEventListener ){
+		// detect changes to the textarea
+		koala.editor.input.addEventListener("input",koala.lang.parse,false);
+	} else {
+		// IE fix
+		koala.editor.input.attachEvent("onpropertychange",
+			function(e){
+				if( e.propertyName.toLowerCase() === "value" ){
+					koala.lang.parse();
+				}
+			}
+		);
+	}
 	koala.editor.input.spellcheck = false;
 	
 	koala.theme = $("theme");
