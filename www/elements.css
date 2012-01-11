@@ -150,6 +150,7 @@ button:hover {
 	-webkit-box-sizing: border-box;
 	display: inline-block;
 	padding-right: 1em;
+	-moz-padding-start: 1px;
 }
 
 #rta_in, #rta_out > pre {
@@ -170,7 +171,7 @@ button:hover {
 	background: 0;
 	position: absolute;
 	top: 0;
-	left: -1px;
+	left: 0;
 	outline: none;
 	resize: none;
 }
