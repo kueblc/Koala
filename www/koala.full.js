@@ -37,8 +37,10 @@ koala = {
 		parse: function(){
 			if( !koala.lang.parser ) koala.lang.genparser();
 			var input = koala.editor.input.value,
-				output = "";
+				output = '';
 			if( input ){
+				// if first character is a newline, the <pre> will omit it, so add an extra
+				if( input.charAt(0) === '\n' || input.charAt(0) === '\r' ) output = '\n';
 				var m = input.match(koala.lang.parser);
 				for( var i = 0; i < m.length; i++ ){
 					if( /^(\s+)/.test( m[i] ) ){
