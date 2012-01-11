@@ -142,41 +142,37 @@ button:hover {
 }
 
 #rta_wrap {
-	width: 100%;
+	min-width: 100%;
 	min-height: 100%;
 	position: relative;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	display: inline-block;
+	padding-right: 1em;
 }
 
 #rta_in, #rta_out > pre {
 	font-size: 16px;
 	font-family: monospace;
 	color: black;
-	width: 100%;
+	min-width: 100%;
 	min-height: 100%;
 	border: 0;
 	padding: 0;
 	margin: 0;
-	white-space: pre-wrap;
 }
 
 #rta_in {
 	opacity: 0.2;
 	filter: alpha(opacity = 20);
-	overflow: visible;
+	overflow: auto;
 	background: 0;
 	position: absolute;
 	top: 0;
 	left: -1px;
 	outline: none;
 	resize: none;
-}
-
-#rta_out {
-	width: 100%;
-	min-height: 100%;
 }
 
 /* syntax highlighting */
