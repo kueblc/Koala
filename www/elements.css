@@ -149,7 +149,6 @@ button:hover {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	display: inline-block;
-	padding-right: 1em;
 	-moz-padding-start: 1px;
 }
 
@@ -157,16 +156,20 @@ button:hover {
 	font-size: 16px;
 	font-family: monospace;
 	color: black;
-	min-width: 100%;
-	min-height: 100%;
 	border: 0;
 	padding: 0;
 	margin: 0;
 }
 
+#rta_out > pre {
+	padding-right: 1em;
+}
+
 #rta_in {
 	opacity: 0.2;
 	filter: alpha(opacity = 20);
+	min-width: 100%;
+	min-height: 100%;
 	overflow: auto;
 	background: 0;
 	position: absolute;
