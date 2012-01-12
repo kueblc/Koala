@@ -55,7 +55,7 @@ koala = {
 					}
 				}
 			}
-			koala.editor.output.innerHTML = '<pre>' + output + '\n\n</pre>';
+			koala.editor.output.innerHTML = '<pre>' + output + '\n</pre>';
 		}
 	}
 };

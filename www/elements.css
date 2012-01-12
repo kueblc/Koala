@@ -136,12 +136,12 @@ button:hover {
 }
 */
 
-#richtextarea {
+.richtextarea {
 	overflow: auto;
-	height: 420px;
+	height: 340px;
 }
 
-#rta_wrap {
+.richtextarea > div {
 	min-width: 100%;
 	min-height: 100%;
 	position: relative;
@@ -161,10 +161,6 @@ button:hover {
 	margin: 0;
 }
 
-#rta_out > pre {
-	padding-right: 1em;
-}
-
 #rta_in {
 	opacity: 0.2;
 	filter: alpha(opacity = 20);
@@ -177,6 +173,10 @@ button:hover {
 	left: 0;
 	outline: none;
 	resize: none;
+}
+
+#rta_out > pre {
+	padding-right: 1em;
 }
 
 /* syntax highlighting */
