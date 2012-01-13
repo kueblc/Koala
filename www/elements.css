@@ -136,6 +136,7 @@ button:hover {
 }
 */
 
+/* richtextarea */
 .richtextarea {
 	overflow: auto;
 	height: 340px;
@@ -152,7 +153,7 @@ button:hover {
 	-moz-padding-start: 1px;
 }
 
-#rta_in, #rta_out > pre {
+.richtextarea textarea, .richtextarea pre {
 	font-size: 16px;
 	font-family: monospace;
 	color: black;
@@ -161,7 +162,7 @@ button:hover {
 	margin: 0;
 }
 
-#rta_in {
+.richtextarea textarea {
 	opacity: 0.2;
 	filter: alpha(opacity = 20);
 	min-width: 100%;
@@ -175,7 +176,7 @@ button:hover {
 	resize: none;
 }
 
-#rta_out > pre {
+.richtextarea pre {
 	padding-right: 2em;
 }
 
