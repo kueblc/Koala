@@ -54,8 +54,10 @@ koala = {
 						}
 					}
 				}
+				koala.editor.output.innerHTML = '<pre>' + output + '\n</pre>';
+			} else {
+				koala.editor.output.innerHTML = '<br>';
 			}
-			koala.editor.output.innerHTML = '<pre>' + output + '\n</pre>';
 		}
 	}
 };
