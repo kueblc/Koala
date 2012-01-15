@@ -156,28 +156,31 @@ button:hover {
 .richtextarea textarea, .richtextarea pre {
 	font-size: 16px;
 	font-family: monospace;
-	color: black;
 	border: 0;
 	padding: 0;
 	margin: 0;
 }
 
 .richtextarea textarea {
-	opacity: 0.2;
-	filter: alpha(opacity = 20);
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #fff;
+	color: rgba(0,0,0,.5);
 	min-width: 100%;
 	min-height: 100%;
 	overflow: auto;
 	background: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
 	outline: none;
 	resize: none;
 }
 
 .richtextarea pre {
+	position: relative;
+	z-index: 1;
+	pointer-events: none;
 	padding-right: 2em;
+	color: black;
 }
 
 /* syntax highlighting */
