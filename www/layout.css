@@ -59,12 +59,18 @@ body, #header, #content, #footer {
 
 #header > ul {
 	float: right;
+	height: 100%;
 	border-right: 1px solid #bbb;
 	margin-right: 16px;
 }
 
 #header > ul > li {
 	float: left;
+	position: relative;
+	height: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 	list-style: none;
 	font-size: 1.5em;
 	padding: 7px 16px;
@@ -78,6 +84,29 @@ body, #header, #content, #footer {
 
 #header > ul > li:active {
 	background: #ccc;
+}
+
+#header > ul > li > div {
+	position: absolute;
+	display: none;
+	top: 100%;
+	right: -1px;
+	width: 250px;
+	padding: 12px;
+	cursor: auto;
+	background: #eee;
+	border: 1px solid #888;
+	border-radius: 0 0 6px 6px;
+	-moz-border-radius: 0 0 6px 6px;
+	-webkit-border-radius: 0 0 6px 6px;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	clip: rect(0px 999px 999px -99px);
+}
+
+#header > ul > li:hover > div {
+	display: block;
 }
 
 .column {
