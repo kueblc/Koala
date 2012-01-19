@@ -38,23 +38,39 @@ koala = {
 			if( !koala.lang.parser ) koala.lang.genparser();
 			var input = koala.editor.input.value,
 				output = '';
-			var playpen = koala.editor.output.children[0].children;
-			if( input ){
+			//var playpen = koala.editor.output.children[0].children;
+			var parent = koala.editor.input.parentNode;
+			if( input && input !== "" ){
 				// if first character is a newline, the <pre> will omit it, so add an extra
-				if( input.charAt(0) === '\n' || input.charAt(0) === '\r' ) output = '\n';
+				//if( input.charAt(0) === '\n' || input.charAt(0) === '\r' ) output = '\n';
 				var m = input.match(koala.lang.parser);
-				for( var i = 0; i < m.length; i++ ){
-					var rule;
-					if( playpen[i] && playpen[i].textContent === m[i] ){
-						rule = playpen[i].className;
-					} else {
-						rule = assoc(m[i]);
-					}
-					output += "<span class='"+rule+"'>"+m[i]+"</span>";
+				var n = parent.childNodes;
+				//var n = parent.getElementsByTagName("span");
+				var i, j;
+				// find the starting point of differences
+				for( i = 0; i < m.length && i < n.length-1; i++ )
+					if( m[i] !== n[i].textContent ) break;
+				// if the length of the display is longer than the parse, delete excess display
+				while( m.length < n.length-1 ) parent.removeChild(n[i]);
+				// find the ending point of differences
+				for( j = i + m.length - n.length+1; j < m.length; j++ ){
+					if( m[j] === n[i].textContent ) break;
+					parent.removeChild(n[i]);
 				}
-				koala.editor.output.innerHTML = '<pre>' + output + '\n</pre>';
+				// add in modified spans
+				console.log( (j-i) + " modified spans.");
+				for( var insertionPt = n[i]; i < j; i++ ){
+					span = document.createElement("span");
+					span.className = assoc(m[i]);
+					span.textContent = span.innerText = m[i];
+					parent.insertBefore( span, insertionPt );
+				}
 			} else {
-				koala.editor.output.innerHTML = '<br>';
+				//koala.editor.output.innerHTML = '<br>';
+				var spans = koala.editor.input.parentNode.getElementsByTagName("span");
+				for( var i = 0; i < spans.length; i++ ){
+					koala.editor.input.parentNode.removeChild(spans[i]);
+				}
 			}
 		}
 	}
@@ -72,8 +88,8 @@ window.onload = function(){
 	// TODO
 	// testing...
 	koala.editor = {
-		input: $("rta_in"),
-		output: $("rta_out")
+		input: $("rta_in")//,
+		//output: $("rta_out")
 	};
 	if( koala.editor.input.addEventListener ){
 		// detect changes to the textarea
