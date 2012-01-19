@@ -13,7 +13,7 @@ koala = {
 			"dojs": null
 		},
 		rules: {
-			//wsp: /^(\s+)/,
+			wsp: /^(\s+)/,
 			cmt: /^(--[^\n]*)/,
 			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
 			box: /^(\[[^\]]*\]?)/,
@@ -28,7 +28,7 @@ koala = {
 				rulesrc.push( cmd );
 			}
 			koala.lang.rules.cmd = new RegExp( "^("+rulesrc.join('|')+")", "i" );
-			rulesrc = ["(\\s+)"];
+			rulesrc = [];
 			for( var rule in koala.lang.rules ){
 				rulesrc.push( koala.lang.rules[rule].source.substr(1) );
 			}
@@ -38,21 +38,19 @@ koala = {
 			if( !koala.lang.parser ) koala.lang.genparser();
 			var input = koala.editor.input.value,
 				output = '';
+			var playpen = koala.editor.output.children[0].children;
 			if( input ){
 				// if first character is a newline, the <pre> will omit it, so add an extra
 				if( input.charAt(0) === '\n' || input.charAt(0) === '\r' ) output = '\n';
 				var m = input.match(koala.lang.parser);
 				for( var i = 0; i < m.length; i++ ){
-					if( /^(\s+)/.test( m[i] ) ){
-						output += m[i];
-						continue;
+					var rule;
+					if( playpen[i] && playpen[i].textContent === m[i] ){
+						rule = playpen[i].className;
+					} else {
+						rule = assoc(m[i]);
 					}
-					for( var rule in koala.lang.rules ){
-						if( koala.lang.rules[rule].test( m[i] ) ){
-							output += "<span class='"+rule+"'>"+m[i]+"</span>";
-							break;
-						}
-					}
+					output += "<span class='"+rule+"'>"+m[i]+"</span>";
 				}
 				koala.editor.output.innerHTML = '<pre>' + output + '\n</pre>';
 			} else {
