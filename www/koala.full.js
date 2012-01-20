@@ -47,17 +47,28 @@ koala = {
 				var m = input.match(koala.lang.parser);
 				var n = parent.childNodes;
 				//var n = parent.getElementsByTagName("span");
-				var i, j, mp, dp;
+				var i, j, mp, np;
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
 					if( m[i] !== n[i].textContent ) break;
+				// if the length of the display is longer than the parse, delete excess display
+				while( m.length < n.length-1 ){
+					console.log("Removing span");
+					parent.removeChild(n[i]);
+				}
 				// find the last difference
-				for( mp = m.length-1, np = n.length-2; i < mp && i < np; mp--, np-- )
+				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
 					if( m[mp] !== n[np].textContent ) break;
-				// remove dirty spans
+				/*// remove dirty spans
 				for( j = np - i + 1; j > 0; j-- ){
 					console.log("Removing span");
 					parent.removeChild(n[i]);
+				}*/
+				// update modified spans
+				for( ; i < np+1; i++ ){
+					console.log("Changing span");
+					n[i].className = assoc(m[i]);
+					n[i].textContent = n[i].innerText = m[i];
 				}
 				// if the length of the display is longer than the parse, delete excess display
 				/*while( m.length < n.length-1 ) parent.removeChild(n[i]);
