@@ -46,10 +46,16 @@ koala = {
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
 					if( m[i] !== n[i].textContent ) break;
-				// if the length of the display is longer than the parse, delete excess display
+				// if the display is longer than the parse, delete spans
 				while( m.length < n.length-1 ){
 					console.log("Removing span");
 					parent.removeChild(n[i]);
+				}
+				// if the display is shorter than the parse, add spans
+				while( m.length > n.length-1 ){
+					console.log("Adding span");
+					span = document.createElement("span");
+					parent.insertBefore( span, n[i] );
 				}
 				// find the last difference
 				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
@@ -62,13 +68,13 @@ koala = {
 				}
 				// add in modified spans
 				//console.log( (j-i) + " modified spans.");
-				for( var insertionPt = n[i]; i <= mp; i++ ){
+				/*for( var insertionPt = n[i]; i <= mp; i++ ){
 					console.log("Adding span");
 					span = document.createElement("span");
 					span.className = assoc(m[i]);
 					span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
-				}
+				}*/
 			} else {
 				// clear the display
 				while( n.length > 1 ) parent.removeChild(n[0]);
