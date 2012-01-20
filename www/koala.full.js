@@ -37,16 +37,11 @@ koala = {
 		parse: function(){
 			console.log("Running koala.lang.parse");
 			if( !koala.lang.parser ) koala.lang.genparser();
-			var input = koala.editor.input.value,
-				output = '';
-			//var playpen = koala.editor.output.children[0].children;
+			var input = koala.editor.input.value;
 			var parent = koala.editor.input.parentNode;
-			if( input && input !== "" ){
-				// if first character is a newline, the <pre> will omit it, so add an extra
-				//if( input.charAt(0) === '\n' || input.charAt(0) === '\r' ) output = '\n';
+			var n = parent.childNodes;
+			if( input ){
 				var m = input.match(koala.lang.parser);
-				var n = parent.childNodes;
-				//var n = parent.getElementsByTagName("span");
 				var i, j, mp, np;
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
@@ -59,24 +54,12 @@ koala = {
 				// find the last difference
 				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
 					if( m[mp] !== n[np].textContent ) break;
-				/*// remove dirty spans
-				for( j = np - i + 1; j > 0; j-- ){
-					console.log("Removing span");
-					parent.removeChild(n[i]);
-				}*/
 				// update modified spans
-				for( ; i < np+1; i++ ){
+				for( ; i <= np; i++ ){
 					console.log("Changing span");
 					n[i].className = assoc(m[i]);
 					n[i].textContent = n[i].innerText = m[i];
 				}
-				// if the length of the display is longer than the parse, delete excess display
-				/*while( m.length < n.length-1 ) parent.removeChild(n[i]);
-				// find the ending point of differences
-				for( j = i + m.length - n.length+1; j < m.length; j++ ){
-					if( m[j] === n[i].textContent ) break;
-					parent.removeChild(n[i]);
-				}*/
 				// add in modified spans
 				//console.log( (j-i) + " modified spans.");
 				for( var insertionPt = n[i]; i <= mp; i++ ){
@@ -87,11 +70,8 @@ koala = {
 					parent.insertBefore( span, insertionPt );
 				}
 			} else {
-				//koala.editor.output.innerHTML = '<br>';
-				var spans = koala.editor.input.parentNode.getElementsByTagName("span");
-				for( var i = 0; i < spans.length; i++ ){
-					koala.editor.input.parentNode.removeChild(spans[i]);
-				}
+				// clear the display
+				while( n.length > 1 ) parent.removeChild(n[0]);
 			}
 		}
 	}
