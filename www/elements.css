@@ -140,17 +140,8 @@ button:hover {
 .richtextarea {
 	overflow: auto;
 	height: 340px;
-}
-
-.richtextarea > div {
-	min-width: 100%;
-	min-height: 100%;
 	position: relative;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	display: inline-block;
-	-moz-padding-start: 1px;
+	-moz-padding-start: 5px;
 }
 
 .richtextarea textarea, .richtextarea span {
@@ -175,10 +166,10 @@ button:hover {
 	left: 0;
 	outline: none;
 	resize: none;
-}
-
-.richtextarea pre {
-	padding-right: 2em;
+	padding: 4px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 }
 
 /* syntax highlighting */
