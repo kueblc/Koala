@@ -144,17 +144,16 @@ button:hover {
 	-moz-padding-start: 5px;
 }
 
-.richtextarea textarea, .richtextarea span {
-	font-size: 16px;
-	font-family: monospace;
-	color: black;
-	border: 0;
-	padding: 0;
-	margin: 0;
-	white-space: pre;
+.richtextarea, .richtextarea textarea {
+	font-size: 16px !important;
+	font-family: monospace !important;
+	color: black !important;
 }
 
 .richtextarea textarea {
+	border: 0;
+	padding: 0;
+	margin: 0;
 	opacity: 0.2;
 	filter: alpha(opacity = 20);
 	min-width: 100%;

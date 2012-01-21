@@ -14,7 +14,7 @@ koala = {
 		},
 		rules: {
 			wsp: /^(\s+)/,
-			cmt: /^(--[^\n]*)/,
+			cmt: /^(--[^\r\n]*)/,
 			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
 			box: /^(\[[^\]]*\]?)/,
 			num: /^(-?(\d+\.?\d*|\.\d+))/,
@@ -73,6 +73,8 @@ koala = {
 			} else {
 				// clear the display
 				while( n.length > 1 ) parent.removeChild(n[0]);
+				// reset textarea rows/cols
+				koala.editor.input.cols = koala.editor.input.rows = 1;
 			}
 		}
 	}
@@ -89,9 +91,12 @@ function assoc(t){
 function resizeTextarea(input){
 	// determine the best size for the textarea
 	var lines = input.split('\n');
-	koala.editor.input.cols = 2 +
-		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
-	koala.editor.input.rows = 2 + lines.length;
+	var maxlen = 0;
+	for( var i = 0; i < lines.length; i++ )
+		maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
+	koala.editor.input.cols = maxlen + 1;
+//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
+	koala.editor.input.rows = lines.length;
 }
 
 window.onload = function(){
