@@ -62,6 +62,28 @@ koala = {
 	}
 };
 
+stringify = function( obj ){
+	var t = typeof( obj );
+	// literals
+	if( t !== "object" || obj === null ){
+		// quote strings
+		if( t === "string" ) obj = '"'+obj.replace(/"/g,'\\"')+'"';
+		return String(obj);
+	// arrays
+	} else if( obj && obj.constructor === Array ){
+		var elem = [];
+		for( var n in obj )
+			elem.push(stringify(obj[n]));
+		return "["+elem+"]";
+	// objects
+	} else {
+		var elem = [];
+		for( var n in obj )
+			elem.push(stringify(n)+':'+stringify(obj[n]));
+		return "{"+elem+"}";
+	}
+};
+
 function assoc(t){
 	for( var rule in koala.lang.rules ){
 		if( koala.lang.rules[rule].test( t ) ){
