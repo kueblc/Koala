@@ -179,6 +179,38 @@ span.box { color: red; }
 span.cmt { color: gray; }
 span.err { border-bottom: 1px dotted red; }
 
+/* show tabs */
+span.arr {
+	position: relative;
+}
+
+/* draws a line */
+span.arr:before {
+	content: '';
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	left: 2px;
+	right: 6px;
+	margin-top: 8px;
+	height: 2px;
+	background: silver;
+}
+
+/* draws a small triangle */
+span.arr:after {
+	content: '';
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	top: 4px;
+	right: 2px;
+	border: 5px dotted transparent;
+	border-left: 5px solid silver;
+	border-right: 0;
+}
+
 /*
 button {
 	border: 1px solid #aaa;
