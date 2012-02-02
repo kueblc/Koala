@@ -4,6 +4,7 @@ body {
 
 #header {
 	background: #eee;
+	background: 0 0px repeat-x url('gr.png');
 	background: -moz-linear-gradient(top, #eee, #ccc);
 	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc));
 	border-bottom: 1px solid #888;
@@ -13,12 +14,17 @@ body {
 	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+#header > ul > li:hover {
+	background: 0 -43px repeat-x url('gr.png');
+}
+
 #content {
 	background: url('bg.png');
 }
 
 #footer {
 	background: #fdfdfd;
+	background: 0 -132px repeat-x url('gr.png');
 	background: -moz-linear-gradient(top, #fdfdfd, #f0f0f0);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#f0f0f0));
 	border-top: 1px solid #ccc;
@@ -43,6 +49,7 @@ body {
 	text-shadow: 0 1px #fff;
 	border-bottom: 1px solid #aaa;
 	background: #f4f4f4;
+	background: 0 -86px repeat-x url('gr.png');
 	background: -moz-linear-gradient(top, #fafafa, #ddd);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#ddd));
 	border-radius: 6px 6px 0 0;
@@ -51,6 +58,7 @@ body {
 }
 
 .menu, .tab {
+	background: 0 -106px repeat-x url('gr.png');
 	background: -moz-linear-gradient(top, #fefefe, #f8f8f8);
 	background: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#f8f8f8));
 	border-bottom: 1px solid #ccc;
