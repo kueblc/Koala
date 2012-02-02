@@ -13,8 +13,9 @@ koala = {
 			"dojs": null
 		},
 		rules: {
-			//wsp: /^(\s+)/,
-			cmt: /^(--[^\n]*)/,
+			wsp: /^([^\S\t]+)/,
+			arr: /^(\t)/,
+			cmt: /^(--[^\r\n]*)/,
 			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
 			box: /^(\[[^\]]*\]?)/,
 			num: /^(-?(\d+\.?\d*|\.\d+))/,
@@ -28,35 +29,53 @@ koala = {
 				rulesrc.push( cmd );
 			}
 			koala.lang.rules.cmd = new RegExp( "^("+rulesrc.join('|')+")", "i" );
-			rulesrc = ["(\\s+)"];
+			rulesrc = [];
 			for( var rule in koala.lang.rules ){
 				rulesrc.push( koala.lang.rules[rule].source.substr(1) );
 			}
 			koala.lang.parser = new RegExp( rulesrc.join('|'), "gi" );
 		},
 		parse: function(){
+			//console.log("Running koala.lang.parse");
 			if( !koala.lang.parser ) koala.lang.genparser();
-			var input = koala.editor.input.value,
-				output = '';
+			var input = koala.editor.input.value;
+			var parent = koala.editor.input.parentNode;
+			var n = parent.childNodes;
 			if( input ){
-				// if first character is a newline, the <pre> will omit it, so add an extra
-				if( input.charAt(0) === '\n' || input.charAt(0) === '\r' ) output = '\n';
 				var m = input.match(koala.lang.parser);
-				for( var i = 0; i < m.length; i++ ){
-					if( /^(\s+)/.test( m[i] ) ){
-						output += m[i];
-						continue;
-					}
-					for( var rule in koala.lang.rules ){
-						if( koala.lang.rules[rule].test( m[i] ) ){
-							output += "<span class='"+rule+"'>"+m[i]+"</span>";
-							break;
-						}
-					}
+				var i, j, mp, np;
+				// find the first difference
+				for( i = 0; i < m.length && i < n.length-1; i++ )
+					if( m[i] !== n[i].textContent ) break;
+				// if the length of the display is longer than the parse, delete excess display
+				while( m.length < n.length-1 ){
+					//console.log("Removing span");
+					parent.removeChild(n[i]);
 				}
-				koala.editor.output.innerHTML = '<pre>' + output + '\n</pre>';
+				// find the last difference
+				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
+					if( m[mp] !== n[np].textContent ) break;
+				// update modified spans
+				for( ; i <= np; i++ ){
+					//console.log("Changing span");
+					n[i].className = assoc(m[i]);
+					n[i].textContent = n[i].innerText = m[i];
+				}
+				// add in modified spans
+				//console.log( (j-i) + " modified spans.");
+				for( var insertionPt = n[i]; i <= mp; i++ ){
+					//console.log("Adding span");
+					span = document.createElement("span");
+					span.className = assoc(m[i]);
+					span.textContent = span.innerText = m[i];
+					parent.insertBefore( span, insertionPt );
+				}
+				resizeTextarea(input);
 			} else {
-				koala.editor.output.innerHTML = '<br>';
+				// clear the display
+				while( n.length > 1 ) parent.removeChild(n[0]);
+				// reset textarea rows/cols
+				koala.editor.input.cols = koala.editor.input.rows = 1;
 			}
 		}
 	}
@@ -92,12 +111,23 @@ function assoc(t){
 	}
 };
 
+function resizeTextarea(input){
+	// determine the best size for the textarea
+	var lines = input.split('\n');
+	var maxlen = 0;
+	for( var i = 0; i < lines.length; i++ )
+		maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
+	koala.editor.input.cols = maxlen + 1;
+//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
+	koala.editor.input.rows = lines.length;
+}
+
 window.onload = function(){
 	// TODO
 	// testing...
 	koala.editor = {
-		input: $("rta_in"),
-		output: $("rta_out")
+		input: $("rta_in")//,
+		//output: $("rta_out")
 	};
 	if( koala.editor.input.addEventListener ){
 		// detect changes to the textarea
