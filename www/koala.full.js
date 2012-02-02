@@ -92,6 +92,34 @@ function assoc(t){
 	}
 };
 
+// calls func on elem right click
+function addContext( elem, func ){
+	if (document.addEventListener) {
+		elem.addEventListener('contextmenu', function(e) {
+			func(e);
+			e.preventDefault();
+		}, false);
+	} else {
+		elem.attachEvent('oncontextmenu', function() {
+			func(window.event);
+			window.event.returnValue = false;
+		});
+	}
+}
+
+// draws a context menu
+function drawContext(e){
+	var menu = document.createElement("ul");
+	menu.className = 'contextmenu';
+	menu.onclick = function(){ document.body.removeChild(menu); };
+	menu.innerHTML = '<li>Cu<u>t</u></li><li><u>C</u>opy</li><li><u>P</u>aste</li><li><u>A</u>bout</li>';
+	menu.style.left = ( e.pageX || e.clientX + document.body.scrollLeft
+			+ document.documentElement.scrollLeft )+'px';
+	menu.style.top = ( e.pageY || e.clientY + document.body.scrollTop
+			+ document.documentElement.scrollTop )+'px';
+	document.body.appendChild(menu);
+};
+
 window.onload = function(){
 	// TODO
 	// testing...
@@ -145,6 +173,8 @@ window.onload = function(){
 		throw new Error("NotImplemented");
 	};
 	$("btn_hl").onclick = function(){ koala.lang.parse(); };
+	// context menu test
+	addContext( $("files"), drawContext );
 };
 
 window.onerror = function( msg, url, line ){
