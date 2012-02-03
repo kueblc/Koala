@@ -4,7 +4,7 @@
 function $(e){ return document.getElementById(e); };
 
 koala = {
-	version: 0.02,
+	version: 0.03,
 	lang: {
 		commands: {
 			"say": null,
@@ -35,48 +35,64 @@ koala = {
 			}
 			koala.lang.parser = new RegExp( rulesrc.join('|'), "gi" );
 		},
-		parse: function(){
-			//console.log("Running koala.lang.parse");
+		tokenize: function(input){
 			if( !koala.lang.parser ) koala.lang.genparser();
+			return input.match(koala.lang.parser);
+		},
+		assoc: function(token){
+			for( var rule in koala.lang.rules ){
+				if( koala.lang.rules[rule].test(token) ){
+					return rule;
+				}
+			}
+		}
+	},
+	editor: {
+		highlight: function(){
 			var input = koala.editor.input.value;
 			var parent = koala.editor.input.parentNode;
 			var n = parent.childNodes;
 			if( input ){
-				var m = input.match(koala.lang.parser);
+				var m = koala.lang.tokenize(input);
 				var i, j, mp, np;
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
 					if( m[i] !== n[i].textContent ) break;
 				// if the length of the display is longer than the parse, delete excess display
-				while( m.length < n.length-1 ){
-					//console.log("Removing span");
+				while( m.length < n.length-1 )
 					parent.removeChild(n[i]);
-				}
 				// find the last difference
 				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
 					if( m[mp] !== n[np].textContent ) break;
 				// update modified spans
 				for( ; i <= np; i++ ){
-					//console.log("Changing span");
-					n[i].className = assoc(m[i]);
+					n[i].className = koala.lang.assoc(m[i]);
 					n[i].textContent = n[i].innerText = m[i];
 				}
 				// add in modified spans
-				//console.log( (j-i) + " modified spans.");
 				for( var insertionPt = n[i]; i <= mp; i++ ){
-					//console.log("Adding span");
 					span = document.createElement("span");
-					span.className = assoc(m[i]);
+					span.className = koala.lang.assoc(m[i]);
 					span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
 				}
-				resizeTextarea(input);
+				koala.editor.resize();
 			} else {
 				// clear the display
 				while( n.length > 1 ) parent.removeChild(n[0]);
 				// reset textarea rows/cols
 				koala.editor.input.cols = koala.editor.input.rows = 1;
 			}
+		},
+		resize: function(){
+			// determine the best size for the textarea
+			var lines = koala.editor.input.value.split('\n');
+			var maxlen = 0;
+			for( var i = 0; i < lines.length; i++ )
+				maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
+			koala.editor.input.cols = maxlen + 1;
+		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
+			koala.editor.input.rows = lines.length;
 		}
 	}
 };
@@ -103,41 +119,19 @@ stringify = function( obj ){
 	}
 };
 
-function assoc(t){
-	for( var rule in koala.lang.rules ){
-		if( koala.lang.rules[rule].test( t ) ){
-			return rule;
-		}
-	}
-};
-
-function resizeTextarea(input){
-	// determine the best size for the textarea
-	var lines = input.split('\n');
-	var maxlen = 0;
-	for( var i = 0; i < lines.length; i++ )
-		maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
-	koala.editor.input.cols = maxlen + 1;
-//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
-	koala.editor.input.rows = lines.length;
-}
-
 window.onload = function(){
 	// TODO
 	// testing...
-	koala.editor = {
-		input: $("rta_in")//,
-		//output: $("rta_out")
-	};
+	koala.editor.input = $("rta_in");
 	if( koala.editor.input.addEventListener ){
 		// detect changes to the textarea
-		koala.editor.input.addEventListener("input",koala.lang.parse,false);
+		koala.editor.input.addEventListener("input",koala.editor.highlight,false);
 	} else {
 		// IE fix
 		koala.editor.input.attachEvent("onpropertychange",
 			function(e){
 				if( e.propertyName.toLowerCase() === "value" ){
-					koala.lang.parse();
+					koala.editor.highlight();
 				}
 			}
 		);
@@ -152,32 +146,54 @@ window.onload = function(){
 	}
 	// TODO
 	// temporary function testing only, not real button actions
-	$("btn_text").onclick = function(){
-		alert(koala.editor.textContent || koala.editor.innerText); };
-	$("btn_html").onclick = function(){ alert(koala.editor.innerHTML); };
 	$("btn_run").onclick = function(){
 		// for testing...
-		koala.lang.parse();
-		var lex = koala.editor.output.getElementsByTagName("span");
-		for( var i = 0; i < lex.length; i++ ){
-			if( lex[i].innerHTML === "say" ){
-				i++;
-				var str = lex[i].textContent || lex[i].innerText;
-				alert( str.slice(1,-1) );
-			}else if( lex[i].innerHTML === "dojs" ){
-				i++;
-				var str = lex[i].textContent || lex[i].innerText;
-				eval( str.slice(1,-1) );
+		var lex = koala.editor.input.parentNode.getElementsByTagName("span");
+		var i = 0;
+		while( i < lex.length ){
+			try {
+				switch(lex[i++].textContent){
+					case "say":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( lex[i].className === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( lex[i].className !== "str" )
+							throw new Error("KSyntaxError.say");
+						eval( "alert("+lex[i++].textContent+")" );
+						break;
+					case "dojs":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( lex[i].className === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( lex[i].className !== "str" )
+							throw new Error("KSyntaxError.dojs");
+						eval( "eval("+lex[i++].textContent+")" );
+						break;
+					default:
+						if( lex[i-1].className !== "wsp" )
+							throw new Error("KSyntaxError");
+				}
+			} catch(e) {
+				console && console.log && console.log(e);
 			}
 		}
 	};
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ koala.lang.parse(); };
+	$("btn_hl").onclick = function(){ koala.editor.highlight(); };
 };
 
 window.onerror = function( msg, url, line ){
+	function toHex(s){
+		var output = "";
+		var b16 = "0123456789ABCDEF";
+		for( var i = 0; i < s.length; i++ ){
+			var c = s.charCodeAt(i);
+			output += b16.charAt(c>>4) + b16.charAt(c&15) + " ";
+		}
+		return output;
+	}
 	document.body.style.background="blue";
 	var error = url.substring(url.lastIndexOf('/')+1)+":"+line+": "+msg+"\n"+navigator.userAgent;
 	document.body.innerHTML=
@@ -185,14 +201,4 @@ window.onerror = function( msg, url, line ){
 	document.body.onkeyup = function(){ location.reload(); };
 	return true;
 };
-
-function toHex(s){
-	var output = "";
-	var b16 = "0123456789ABCDEF";
-	for( var i = 0; i < s.length; i++ ){
-		var c = s.charCodeAt(i);
-		output += b16.charAt(c>>4) + b16.charAt(c&15) + " ";
-	}
-	return output;
-}
 
