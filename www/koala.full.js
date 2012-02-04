@@ -1,7 +1,7 @@
 // koala.full.js
 // the koala project
 
-function $(e){ return document.getElementById(e); };
+var $ = function(e){ return document.getElementById(e); },
 
 koala = {
 	version: 0.03,
