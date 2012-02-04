@@ -13,28 +13,14 @@ How do I try it out?
 yet. If you'd like to try a live demo without much hassle, visit
 [ http://kueblc.myrpi.org/koala ].
 
-Who makes koala?
-  Currently, koala is being developed solely by Colin Kuebler of the Rensselaer
-Center for Open Source Software (RCOS). If you'd like to help me out, send me
-an email at kueblc[at]rpi[dot]edu and I'll be happy to coordinate some code.
-Koala is released under GPLv3 so rest assured koala will always be open source.
-
 Where am I?
   Take a look at the map below!
 
  Koala/
  ├── README - *You are here!
  ├── LICENSE - Koala's license, GPLv3
+ ├── PHILOSOPHY - A bit about project standards
+ ├── TODO - Things that still need work!
  ├── .gitignore - Used by git, koala's subversioning software
- ├── presentations/ - Presentations I've given about koala
- │   ├── rcos-intro.odp - Koala's debut at RCOS
- │   └── rcos-intro.pdf - Same as the above, in PDF
  └── www/ - Main source code directory, contains everything needed to run koala
-     ├── index.html - Contains the structural information
-     ├── style.css - The main stylesheet, defines the look and feel
-     ├── favicon.ico - Icon displayed in the address bar representing koala
-     ├── .htaccess - Apache control file, disables directory listing
-     └── backend/ - Files used by the server running koala
-         └── dl.php - Generates a download prompt
-
 

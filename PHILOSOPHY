@@ -1,0 +1,25 @@
+
+[ work in progress ]
+
+This:
+if( test ){
+	dostuff( arg1, arg2 );
+}
+
+Not this:
+if (test)
+{
+  dostuff(arg1 ,arg2)}
+
+This:
+/* returns integer half of x */
+half = function( x ){
+	return x >> 1;
+};
+
+Not this:
+function half (x)
+{
+     //return x >> 1
+	  return x >> 1}
+
