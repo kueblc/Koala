@@ -1,5 +1,0 @@
-<span class='large'>Feedback</span>
-<%= form_for([@project, @project.Comments.new]) do |f| %>
-	<%= f.text_area :content, :id => 'box', :class => 'widest', :rows => '20', :style => 'height:150px' %>
-	<%= f.submit :value => 'Submit' %>
-<% end %>
