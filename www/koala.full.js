@@ -8,6 +8,7 @@ koala = {
 	lang: {
 		commands: {
 			"say": null,
+			"ask": null,
 			"put": null,
 			"in": null,
 			"dojs": null
@@ -160,6 +161,14 @@ window.onload = function(){
 						if( lex[i].className !== "str" )
 							throw new Error("KSyntaxError.say");
 						eval( "alert("+lex[i++].textContent+")" );
+						break;
+					case "ask":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( lex[i].className === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( lex[i].className !== "str" )
+							throw new Error("KSyntaxError.ask");
+						eval( "rv=prompt("+lex[i++].textContent+")" );
 						break;
 					case "dojs":
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
