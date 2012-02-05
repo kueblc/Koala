@@ -72,6 +72,35 @@ var notfoundHandler = function( request, response ){
 	response.end(body);
 };
 
+var postQuery = function( msg ){
+	var response = { 'status': 'Not implemented' };
+	return response;
+};
+
+var postHandler = function( request, response ){
+	var msg = '';
+	request.on( 'data', function(d){ msg += d; } );
+	request.on( 'end',
+		function(){
+			VERBOSE && console.log('Received query: '+msg);
+			var status = 404;
+			var body = '{"status":"Bad Query"}';
+			try {
+				var obj = JSON.parse(msg.toString());
+				var res = postQuery(obj);
+				status = 200;
+				body = JSON.stringify(res);
+			} catch (e) {
+				console.log(e);
+			}
+			response.writeHead( status, {
+				'Content-Type': 'text/json',
+				'Content-Length': body.length
+				});
+			response.end(body);
+		} );
+};
+
 var server = require('http').createServer(
 	function( request, response ){
 		console.log('Handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
@@ -81,6 +110,9 @@ var server = require('http').createServer(
 				handler =
 					fileHandlers[request.url.substring(1) || 'index.html'] ||
 					notfoundHandler;
+				break;
+			case 'POST':
+				handler = postHandler;
 				break;
 			default:
 				handler = notfoundHandler;
