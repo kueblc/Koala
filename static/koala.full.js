@@ -48,10 +48,12 @@ koala = {
 			}
 		}
 	},
-	editor: {
-		highlight: function(){
-			var input = koala.editor.input.value;
-			var parent = koala.editor.input.parentNode;
+	editor: function(textarea){
+		var editor = this;
+		editor.textarea = textarea;
+		editor.highlight = function(){
+			var input = editor.textarea.value;
+			var parent = editor.textarea.parentNode;
 			var n = parent.childNodes;
 			if( input ){
 				var m = koala.lang.tokenize(input);
@@ -77,24 +79,39 @@ koala = {
 					span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
 				}
-				koala.editor.resize();
+				editor.resize();
 			} else {
 				// clear the display
 				while( n.length > 1 ) parent.removeChild(n[0]);
 				// reset textarea rows/cols
-				koala.editor.input.cols = koala.editor.input.rows = 1;
+				editor.textarea.cols = editor.textarea.rows = 1;
 			}
-		},
-		resize: function(){
+		};
+		editor.resize = function(){
 			// determine the best size for the textarea
-			var lines = koala.editor.input.value.split('\n');
+			var lines = editor.textarea.value.split('\n');
 			var maxlen = 0;
 			for( var i = 0; i < lines.length; i++ )
 				maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
-			koala.editor.input.cols = maxlen + 1;
+			editor.textarea.cols = maxlen + 1;
 		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
-			koala.editor.input.rows = lines.length;
+			editor.textarea.rows = lines.length;
+		};
+		if( textarea.addEventListener ){
+			// detect changes to the textarea
+			textarea.addEventListener("input",editor.highlight,false);
+		} else {
+			// IE fix
+			textarea.attachEvent("onpropertychange",
+				function(e){
+					if( e.propertyName.toLowerCase() === "value" ){
+						editor.highlight();
+					}
+				}
+			);
 		}
+		// turns off spellchecking in firefox
+		editor.textarea.spellcheck = false;
 	}
 };
 
@@ -123,21 +140,7 @@ stringify = function( obj ){
 window.onload = function(){
 	// TODO
 	// testing...
-	koala.editor.input = $("rta_in");
-	if( koala.editor.input.addEventListener ){
-		// detect changes to the textarea
-		koala.editor.input.addEventListener("input",koala.editor.highlight,false);
-	} else {
-		// IE fix
-		koala.editor.input.attachEvent("onpropertychange",
-			function(e){
-				if( e.propertyName.toLowerCase() === "value" ){
-					koala.editor.highlight();
-				}
-			}
-		);
-	}
-	koala.editor.input.spellcheck = false;
+	var editor = new koala.editor( $("rta_in") );
 	
 	koala.theme = $("theme");
 	koala.theme.selector = $("theme_sel");
@@ -149,7 +152,7 @@ window.onload = function(){
 	// temporary function testing only, not real button actions
 	$("btn_run").onclick = function(){
 		// for testing...
-		var lex = koala.editor.input.parentNode.getElementsByTagName("span");
+		var lex = editor.textarea.parentNode.getElementsByTagName("span");
 		var i = 0;
 		while( i < lex.length ){
 			try {
@@ -190,7 +193,7 @@ window.onload = function(){
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ koala.editor.highlight(); };
+	$("btn_hl").onclick = function(){ editor.highlight(); };
 };
 
 window.onerror = function( msg, url, line ){
