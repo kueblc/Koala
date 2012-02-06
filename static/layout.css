@@ -79,7 +79,7 @@ h1, h2 {
 }
 
 #header > ul > li:hover {
-	background: #bbb;
+	background: #ddd;
 }
 
 #header > ul > li:active {
