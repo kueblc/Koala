@@ -38,26 +38,41 @@ var types = {
 var fs = require('fs');
 
 var serveFile = function(filename){
-	var body;
 	var extension = filename.substring(filename.lastIndexOf('.')+1);
 	var type = types[extension] || 'application/octet-stream';
-	fs.readFile( FILE_PATH + filename,
-		function( error, data ){
-			if( error ){
-				console.log('Error: could not load '+filename);
-				VERBOSE && console.log(error);
+	var file = null;
+	var getFile = function(callback){
+		if(file){
+			callback();
+		} else {
+			fs.readFile( FILE_PATH + filename,
+				function( error, data ){
+					if( error ){
+						console.log('Error: could not load '+filename);
+						VERBOSE && console.log(error);
+					} else {
+						file = data;
+						VERBOSE && console.log('Loaded '+filename);
+					}
+					callback();
+				}
+			);
+		}
+	};
+	fileHandlers[filename] = function( request, response ){
+		getFile( function(){
+			if(file){
+				VERBOSE && console.log('Serving '+filename);
+				response.writeHead( 200, {
+					'Content-Type': type,
+					'Content-Length': file.length
+					}
+				);
+				response.end(file);
 			} else {
-				body = data;
-				VERBOSE && console.log('Loaded '+filename);
+				notfoundHandler(request,response);
 			}
 		} );
-	fileHandlers[filename] = function( request, response ){
-		VERBOSE && console.log('Serving '+filename);
-		response.writeHead( 200, {
-			'Content-Type': type,
-			'Content-Length': body.length
-			});
-		response.end(body);
 	};
 };
 
