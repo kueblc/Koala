@@ -21,6 +21,8 @@ var FILES = [
 	'themes/koalarch.css',
 	'themes/silver.css' ];
 
+var FILE_PATH = 'static/';
+
 /***************************/
 
 var fileHandlers = {};
@@ -39,7 +41,7 @@ var serveFile = function(filename){
 	var body;
 	var extension = filename.substring(filename.lastIndexOf('.')+1);
 	var type = types[extension] || 'application/octet-stream';
-	fs.readFile( filename,
+	fs.readFile( FILE_PATH + filename,
 		function( error, data ){
 			if( error ){
 				console.log('Error: could not load '+filename);
