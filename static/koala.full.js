@@ -48,7 +48,7 @@ koala = {
 			}
 		}
 	},
-	editor: function(textarea){
+	editor: function( textarea, tokenizer, colorer ){
 		var editor = this;
 		editor.textarea = textarea;
 		editor.highlight = function(){
@@ -56,7 +56,7 @@ koala = {
 			var parent = editor.textarea.parentNode;
 			var n = parent.childNodes;
 			if( input ){
-				var m = koala.lang.tokenize(input);
+				var m = tokenizer(input);
 				var i, j, mp, np;
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
@@ -69,13 +69,13 @@ koala = {
 					if( m[mp] !== n[np].textContent ) break;
 				// update modified spans
 				for( ; i <= np; i++ ){
-					n[i].className = koala.lang.assoc(m[i]);
+					n[i].className = colorer(m[i]);
 					n[i].textContent = n[i].innerText = m[i];
 				}
 				// add in modified spans
 				for( var insertionPt = n[i]; i <= mp; i++ ){
 					span = document.createElement("span");
-					span.className = koala.lang.assoc(m[i]);
+					span.className = colorer(m[i]);
 					span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
 				}
@@ -137,10 +137,11 @@ stringify = function( obj ){
 	}
 };
 
+var editor;
 window.onload = function(){
 	// TODO
 	// testing...
-	var editor = new koala.editor( $("rta_in") );
+	editor = new koala.editor( $("rta_in"), koala.lang.tokenize, koala.lang.assoc );
 	
 	koala.theme = $("theme");
 	koala.theme.selector = $("theme_sel");
