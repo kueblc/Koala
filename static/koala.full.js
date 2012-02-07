@@ -110,15 +110,30 @@ koala = {
 				s++;
 				textarea.setSelectionRange(s, s)
 			}
+			editor.highlight();
 		};
 		/* capture tab keypresses */
 		// TODO: test cross-browser-ness
-		textarea.onkeypress = function(e){
+		var fireOnKeyPress = true;
+		textarea.onkeydown = function(e){
+			var e = e || window.event;
 			var key = e.keyCode || e.charCode || e.which;
 			if( key === 9 && !(e.shiftKey || e.ctrlKey || e.altKey) ){
 				editor.insertTab();
+				fireOnKeyPress = false;
 				e.preventDefault && e.preventDefault();
-				editor.highlight();
+				return false;
+			}
+			return true;
+		};
+		/* block tab index */
+		textarea.onkeypress = function(e){
+			var e = e || window.event;
+			var key = e.keyCode || e.charCode || e.which;
+			if( key === 9 && !(e.shiftKey || e.ctrlKey || e.altKey) ){
+				fireOnKeyPress && editor.insertTab();
+				fireOnKeyPress = true;
+				e.preventDefault && e.preventDefault();
 				return false;
 			}
 			return true;
