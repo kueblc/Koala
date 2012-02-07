@@ -97,6 +97,32 @@ koala = {
 		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
 			editor.textarea.rows = lines.length;
 		};
+		/* insert tab at current cursor position */
+		// TODO: test cross-browser-ness
+		editor.insertTab = function(){
+			if( textarea.createTextRange ){
+				document.selection.createRange().text = "\t"
+			} else {
+				var s = textarea.selectionStart;
+				var c = textarea.selectionEnd;
+				var v = textarea.value;
+				textarea.value = v.substring(0, s) + "\t" + v.substring(c);
+				s++;
+				textarea.setSelectionRange(s, s)
+			}
+		};
+		/* capture tab keypresses */
+		// TODO: test cross-browser-ness
+		textarea.onkeypress = function(e){
+			var key = e.keyCode || e.charCode || e.which;
+			if( key === 9 && !(e.shiftKey || e.ctrlKey || e.altKey) ){
+				editor.insertTab();
+				e.preventDefault && e.preventDefault();
+				editor.highlight();
+				return false;
+			}
+			return true;
+		};
 		if( textarea.addEventListener ){
 			// detect changes to the textarea
 			textarea.addEventListener("input",editor.highlight,false);
