@@ -52,8 +52,8 @@ koala = {
 		var editor = this;
 		editor.textarea = textarea;
 		editor.highlight = function(){
-			var input = editor.textarea.value;
-			var parent = editor.textarea.parentNode;
+			var input = textarea.value;
+			var parent = textarea.parentNode;
 			var n = parent.childNodes;
 			if( input ){
 				var m = tokenizer(input);
@@ -84,18 +84,18 @@ koala = {
 				// clear the display
 				while( n.length > 1 ) parent.removeChild(n[0]);
 				// reset textarea rows/cols
-				editor.textarea.cols = editor.textarea.rows = 1;
+				textarea.cols = textarea.rows = 1;
 			}
 		};
 		editor.resize = function(){
 			// determine the best size for the textarea
-			var lines = editor.textarea.value.split('\n');
+			var lines = textarea.value.split('\n');
 			var maxlen = 0;
 			for( var i = 0; i < lines.length; i++ )
 				maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
-			editor.textarea.cols = maxlen + 1;
+			textarea.cols = maxlen + 1;
 		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
-			editor.textarea.rows = lines.length;
+			textarea.rows = lines.length;
 		};
 		/* insert tab at current cursor position */
 		// TODO: test cross-browser-ness
@@ -152,7 +152,7 @@ koala = {
 			);
 		}
 		// turns off spellchecking in firefox
-		editor.textarea.spellcheck = false;
+		textarea.spellcheck = false;
 	}
 };
 
