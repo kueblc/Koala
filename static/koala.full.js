@@ -21,7 +21,7 @@ koala = {
 			box: /^(\[[^\]]*\]?)/,
 			num: /^(-?(\d+\.?\d*|\.\d+))/,
 			cmd: null,
-			err: /^(\S+)/
+			err: /^([^\s-"'\[\d]|-(?!-))+/
 		},
 		parser: null,
 		genparser: function(){
