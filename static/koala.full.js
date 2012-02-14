@@ -97,61 +97,121 @@ koala = {
 		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
 			textarea.rows = lines.length;
 		};
-		/* insert tab at current cursor position */
 		// TODO: test cross-browser-ness
-		editor.insertTab = function(){
+		editor.insertAtCursor = function(x){
 			if( textarea.createTextRange ){
-				document.selection.createRange().text = "\t"
+				document.selection.createRange().text = x;
 			} else {
-				var s = textarea.selectionStart;
-				var c = textarea.selectionEnd;
-				var v = textarea.value;
-				textarea.value = v.substring(0, s) + "\t" + v.substring(c);
-				s++;
-				textarea.setSelectionRange(s, s)
+				var s = textarea.selectionStart,
+					e = textarea.selectionEnd,
+					v = textarea.value;
+				textarea.value = v.substring(0, s) + x + v.substring(e);
+				s += x.length;
+				textarea.setSelectionRange(s, s);
 			}
-			editor.highlight();
 		};
-		/* capture tab keypresses */
-		// TODO: test cross-browser-ness
+		var keyBindings = {
+			"Tab": function(){
+					editor.insertAtCursor("\t");
+					editor.highlight();
+					return true;
+				},
+			"Ctrl-S": function(){
+					alert("Saved "+prompt("Filename:"));
+					return true;
+				}
+		};
+		editor.bindings = keyBindings;
+		// named keys
+		var keyMap = {
+			8: "Backspace",
+			9: "Tab",
+			13: "Enter",
+			16: "Shift",
+			17: "Ctrl",
+			18: "Alt",
+			19: "Pause",
+			20: "CapsLk",
+			27: "Esc",
+			33: "PgUp",
+			34: "PgDn",
+			35: "End",
+			36: "Home",
+			37: "Left",
+			38: "Up",
+			39: "Right",
+			40: "Down",
+			45: "Insert",
+			46: "Delete",
+			112: "F1",
+			113: "F2",
+			114: "F3",
+			115: "F4",
+			116: "F5",
+			117: "F6",
+			118: "F7",
+			119: "F8",
+			120: "F9",
+			121: "F10",
+			122: "F11",
+			123: "F12",
+			145: "ScrLk" };
+		var keyEventNormalizer = function(e){
+			// get the event object and start constructing a query
+			var e = e || window.event;
+			var query = "";
+			// add in prefixes for each key modifier
+			e.shiftKey && (query += "Shift-");
+			e.ctrlKey && (query += "Ctrl-");
+			e.altKey && (query += "Alt-");
+			e.metaKey && (query += "Meta-");
+			// determine the key code
+			var key = e.which || e.keyCode || e.charCode;
+			// if we have a name for it, use it
+			if( keyMap[key] )
+				query += keyMap[key];
+			// otherwise turn it into a string
+			else
+				query += String.fromCharCode(key).toUpperCase();
+			/* DEBUG */
+			//console.log("keyEvent: "+query);
+			// try to run the keybinding, cancel the event if it returns true
+			if( keyBindings[query] && keyBindings[query]() ){
+				e.preventDefault && e.preventDefault();
+				e.stopPropagation && e.stopPropagation();
+				return false;
+			}
+			return true;
+		};
+		// capture onkeydown and onkeypress events to capture repeating key events
+		// maintain a boolean so we only fire once per character
 		var fireOnKeyPress = true;
 		textarea.onkeydown = function(e){
-			var e = e || window.event;
-			var key = e.keyCode || e.charCode || e.which;
-			if( key === 9 && !(e.shiftKey || e.ctrlKey || e.altKey) ){
-				editor.insertTab();
-				fireOnKeyPress = false;
-				e.preventDefault && e.preventDefault();
-				return false;
-			}
-			return true;
+			fireOnKeyPress = false;
+			return keyEventNormalizer(e);
 		};
-		/* block tab index */
 		textarea.onkeypress = function(e){
-			var e = e || window.event;
-			var key = e.keyCode || e.charCode || e.which;
-			if( key === 9 && !(e.shiftKey || e.ctrlKey || e.altKey) ){
-				fireOnKeyPress && editor.insertTab();
-				fireOnKeyPress = true;
-				e.preventDefault && e.preventDefault();
-				return false;
-			}
+			if( fireOnKeyPress )
+				return keyEventNormalizer(e);
+			fireOnKeyPress = true;
 			return true;
 		};
+		// detect all changes to the textarea,
+		// including keyboard input, cut/copy/paste, drag & drop, etc
 		if( textarea.addEventListener ){
-			// detect changes to the textarea
-			textarea.addEventListener("input",editor.highlight,false);
+			// standards browsers: oninput event
+			textarea.addEventListener( "input", editor.highlight, false );
 		} else {
-			// IE fix
-			textarea.attachEvent("onpropertychange",
+			// MSIE: detect changes to the 'value' property
+			textarea.attachEvent( "onpropertychange",
 				function(e){
-					if( e.propertyName.toLowerCase() === "value" ){
+					if( e.propertyName.toLowerCase() === 'value' ){
 						editor.highlight();
 					}
 				}
 			);
 		}
-		// turns off spellchecking in firefox
+		// turns off built-in spellchecking in firefox
 		textarea.spellcheck = false;
 	}
 };
