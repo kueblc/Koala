@@ -158,7 +158,7 @@ button:hover {
 	filter: alpha(opacity = 20);
 	min-width: 100%;
 	min-height: 100%;
-	overflow: auto;
+	overflow: hidden;
 	background: 0;
 	position: absolute;
 	top: 0;

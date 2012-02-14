@@ -87,12 +87,21 @@ koala = {
 				textarea.cols = textarea.rows = 1;
 			}
 		};
+		var lineLength = function(line){
+			var tabLength = 0;
+			line.replace( /\t/g,
+				function( str, offset ){
+					tabLength += 8 - (tabLength + offset) % 8;
+					return str;
+				} );
+			return line.length + tabLength;
+		};
 		editor.resize = function(){
 			// determine the best size for the textarea
 			var lines = textarea.value.split('\n');
 			var maxlen = 0;
 			for( var i = 0; i < lines.length; i++ )
-				maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
+				maxlen = (lines[i].length > maxlen) ? lineLength(lines[i]) : maxlen;
 			textarea.cols = maxlen + 1;
 		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
 			textarea.rows = lines.length;
@@ -213,6 +222,8 @@ koala = {
 		}
 		// turns off built-in spellchecking in firefox
 		textarea.spellcheck = false;
+		// turns off word wrap
+		textarea.wrap = "off";
 	}
 };
 
