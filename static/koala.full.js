@@ -48,13 +48,15 @@ koala = {
 			}
 		}
 	},
-	editor: {
-		highlight: function(){
-			var input = koala.editor.input.value;
-			var parent = koala.editor.input.parentNode;
+	editor: function( textarea, tokenizer, colorer ){
+		var editor = this;
+		editor.textarea = textarea;
+		editor.highlight = function(){
+			var input = textarea.value;
+			var parent = textarea.parentNode;
 			var n = parent.childNodes;
 			if( input ){
-				var m = koala.lang.tokenize(input);
+				var m = tokenizer(input);
 				var i, j, mp, np;
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
@@ -67,34 +69,161 @@ koala = {
 					if( m[mp] !== n[np].textContent ) break;
 				// update modified spans
 				for( ; i <= np; i++ ){
-					n[i].className = koala.lang.assoc(m[i]);
+					n[i].className = colorer(m[i]);
 					n[i].textContent = n[i].innerText = m[i];
 				}
 				// add in modified spans
 				for( var insertionPt = n[i]; i <= mp; i++ ){
 					span = document.createElement("span");
-					span.className = koala.lang.assoc(m[i]);
+					span.className = colorer(m[i]);
 					span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
 				}
-				koala.editor.resize();
+				editor.resize();
 			} else {
 				// clear the display
 				while( n.length > 1 ) parent.removeChild(n[0]);
 				// reset textarea rows/cols
-				koala.editor.input.cols = koala.editor.input.rows = 1;
+				textarea.cols = textarea.rows = 1;
 			}
-		},
-		resize: function(){
+		};
+		var lineLength = function(line){
+			var tabLength = 0;
+			line.replace( /\t/g,
+				function( str, offset ){
+					tabLength += 8 - (tabLength + offset) % 8;
+					return str;
+				} );
+			return line.length + tabLength;
+		};
+		editor.resize = function(){
 			// determine the best size for the textarea
-			var lines = koala.editor.input.value.split('\n');
+			var lines = textarea.value.split('\n');
 			var maxlen = 0;
 			for( var i = 0; i < lines.length; i++ )
-				maxlen = (lines[i].length > maxlen) ? lines[i].length : maxlen;
-			koala.editor.input.cols = maxlen + 1;
+				maxlen = (lines[i].length > maxlen) ? lineLength(lines[i]) : maxlen;
+			textarea.cols = maxlen + 1;
 		//		lines.reduce(function(a,b){return a.length > b.length ? a : b;}).length;
-			koala.editor.input.rows = lines.length;
+			textarea.rows = lines.length;
+		};
+		// TODO: test cross-browser-ness
+		editor.insertAtCursor = textarea.createTextRange ?
+			function(x){
+				document.selection.createRange().text = x;
+			} :
+			function(x){
+				var s = textarea.selectionStart,
+					e = textarea.selectionEnd,
+					v = textarea.value;
+				textarea.value = v.substring(0, s) + x + v.substring(e);
+				s += x.length;
+				textarea.setSelectionRange(s, s);
+			};
+		var keyBindings = {
+			"Tab": function(){
+					editor.insertAtCursor("\t");
+					editor.highlight();
+					return true;
+				},
+			"Ctrl-S": function(){
+					alert("Saved "+prompt("Filename:"));
+					return true;
+				}
+		};
+		editor.bindings = keyBindings;
+		// named keys
+		var keyMap = {
+			8: "Backspace",
+			9: "Tab",
+			13: "Enter",
+			16: "Shift",
+			17: "Ctrl",
+			18: "Alt",
+			19: "Pause",
+			20: "CapsLk",
+			27: "Esc",
+			33: "PgUp",
+			34: "PgDn",
+			35: "End",
+			36: "Home",
+			37: "Left",
+			38: "Up",
+			39: "Right",
+			40: "Down",
+			45: "Insert",
+			46: "Delete",
+			112: "F1",
+			113: "F2",
+			114: "F3",
+			115: "F4",
+			116: "F5",
+			117: "F6",
+			118: "F7",
+			119: "F8",
+			120: "F9",
+			121: "F10",
+			122: "F11",
+			123: "F12",
+			145: "ScrLk" };
+		var keyEventNormalizer = function(e){
+			// get the event object and start constructing a query
+			var e = e || window.event;
+			var query = "";
+			// add in prefixes for each key modifier
+			e.shiftKey && (query += "Shift-");
+			e.ctrlKey && (query += "Ctrl-");
+			e.altKey && (query += "Alt-");
+			e.metaKey && (query += "Meta-");
+			// determine the key code
+			var key = e.which || e.keyCode || e.charCode;
+			// if we have a name for it, use it
+			if( keyMap[key] )
+				query += keyMap[key];
+			// otherwise turn it into a string
+			else
+				query += String.fromCharCode(key).toUpperCase();
+			/* DEBUG */
+			//console.log("keyEvent: "+query);
+			// try to run the keybinding, cancel the event if it returns true
+			if( keyBindings[query] && keyBindings[query]() ){
+				e.preventDefault && e.preventDefault();
+				e.stopPropagation && e.stopPropagation();
+				return false;
+			}
+			return true;
+		};
+		// capture onkeydown and onkeypress events to capture repeating key events
+		// maintain a boolean so we only fire once per character
+		var fireOnKeyPress = true;
+		textarea.onkeydown = function(e){
+			fireOnKeyPress = false;
+			return keyEventNormalizer(e);
+		};
+		textarea.onkeypress = function(e){
+			if( fireOnKeyPress )
+				return keyEventNormalizer(e);
+			fireOnKeyPress = true;
+			return true;
+		};
+		// detect all changes to the textarea,
+		// including keyboard input, cut/copy/paste, drag & drop, etc
+		if( textarea.addEventListener ){
+			// standards browsers: oninput event
+			textarea.addEventListener( "input", editor.highlight, false );
+		} else {
+			// MSIE: detect changes to the 'value' property
+			textarea.attachEvent( "onpropertychange",
+				function(e){
+					if( e.propertyName.toLowerCase() === 'value' ){
+						editor.highlight();
+					}
+				}
+			);
 		}
+		// turns off built-in spellchecking in firefox
+		textarea.spellcheck = false;
+		// turns off word wrap
+		textarea.wrap = "off";
 	}
 };
 
@@ -120,24 +249,11 @@ stringify = function( obj ){
 	}
 };
 
+var editor;
 window.onload = function(){
 	// TODO
 	// testing...
-	koala.editor.input = $("rta_in");
-	if( koala.editor.input.addEventListener ){
-		// detect changes to the textarea
-		koala.editor.input.addEventListener("input",koala.editor.highlight,false);
-	} else {
-		// IE fix
-		koala.editor.input.attachEvent("onpropertychange",
-			function(e){
-				if( e.propertyName.toLowerCase() === "value" ){
-					koala.editor.highlight();
-				}
-			}
-		);
-	}
-	koala.editor.input.spellcheck = false;
+	editor = new koala.editor( $("rta_in"), koala.lang.tokenize, koala.lang.assoc );
 	
 	koala.theme = $("theme");
 	koala.theme.selector = $("theme_sel");
@@ -149,7 +265,7 @@ window.onload = function(){
 	// temporary function testing only, not real button actions
 	$("btn_run").onclick = function(){
 		// for testing...
-		var lex = koala.editor.input.parentNode.getElementsByTagName("span");
+		var lex = editor.textarea.parentNode.getElementsByTagName("span");
 		var i = 0;
 		while( i < lex.length ){
 			try {
@@ -190,7 +306,7 @@ window.onload = function(){
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ koala.editor.highlight(); };
+	$("btn_hl").onclick = function(){ editor.highlight(); };
 };
 
 window.onerror = function( msg, url, line ){
