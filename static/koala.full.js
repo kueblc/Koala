@@ -98,18 +98,18 @@ koala = {
 			textarea.rows = lines.length;
 		};
 		// TODO: test cross-browser-ness
-		editor.insertAtCursor = function(x){
-			if( textarea.createTextRange ){
+		editor.insertAtCursor = textarea.createTextRange ?
+			function(x){
 				document.selection.createRange().text = x;
-			} else {
+			} :
+			function(x){
 				var s = textarea.selectionStart,
 					e = textarea.selectionEnd,
 					v = textarea.value;
 				textarea.value = v.substring(0, s) + x + v.substring(e);
 				s += x.length;
 				textarea.setSelectionRange(s, s);
-			}
-		};
+			};
 		var keyBindings = {
 			"Tab": function(){
 					editor.insertAtCursor("\t");
