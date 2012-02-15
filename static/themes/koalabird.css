@@ -71,7 +71,7 @@ button:hover {
 	border: 1px dashed #aaa;
 }
 
-#canvas > span {
+#canvas.shadow:before {
 	color: #bbb;
 	font-size: 12px;
 }
