@@ -127,6 +127,26 @@ h1, h2 {
 .panel > h2 {
 	padding: 2px 8px;
 	font-size: 14px;
+	height: 16px;
 	cursor: default;
+}
+
+.panel > .scroll {
+	position: absolute;
+	top: 21px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 8px;
+	overflow: auto;
+}
+
+.panel > .stretch {
+	position: absolute;
+	top: 21px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 12px;
 }
 
