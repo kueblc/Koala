@@ -70,13 +70,15 @@ koala = {
 				// update modified spans
 				for( ; i <= np; i++ ){
 					n[i].className = colorer(m[i]);
-					n[i].textContent = n[i].innerText = m[i];
+					n[i].replaceChild( document.createTextNode(m[i]), n[i].firstChild );
+					//n[i].textContent = n[i].innerText = m[i];
 				}
 				// add in modified spans
 				for( var insertionPt = n[i]; i <= mp; i++ ){
 					span = document.createElement("span");
+					span.appendChild( document.createTextNode(m[i]) );
 					span.className = colorer(m[i]);
-					span.textContent = span.innerText = m[i];
+					//span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
 				}
 				editor.resize();
