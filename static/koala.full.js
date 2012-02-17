@@ -51,9 +51,13 @@ koala = {
 	editor: function( textarea, tokenizer, colorer ){
 		var editor = this;
 		editor.textarea = textarea;
-		//var parent = textarea.parentNode;
+		// construct editor DOM
+		var parent = textarea.parentNode;
 		var output = document.createElement("pre");
-		textarea.parentNode.insertBefore( output, textarea );
+		var label = document.createElement("label");
+		parent.replaceChild( label, textarea );
+		label.appendChild( textarea );
+		parent.insertBefore( output, label );
 		var n = output.childNodes;
 		editor.highlight = function(){
 			var input = textarea.value;
