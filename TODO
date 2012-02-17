@@ -6,23 +6,38 @@ Things to do... oh so many
 
 Brainstorm zone *you have been warned*
 
-"in" as a keyword, gets return value from command
-console, "say" and "ask" "?", otherwise use alert() etc
-library stored on personal computer, localStorage?
-sync'd with server for sharing
-should be essentially be able to save the koala site and still use it
-units as part of number objects
-ex.
-	3 inches ->
-		{ value: 3, type: 'number', unit: 'inches' }
-way to convert between units
-need to know 2 things about units:
-	measurement: distance, time, temperature, etc
-	ratio relative to a fixed unit: ie, mm=.001, cm=.01, m=1
-	
-units = {
-	distance: {
-		mm: .001,
-		cm: .01,
-		m: 1, ....
+Philosophies:
+	Server independence: should essentially be able to save the koala site and still use it
+
+Language:
+	Keywords:
+		"in" - gets return value of last command
+		"of" - dereference operator
+		"?" - evaluates to boolean
+	Debug mode: "say", "ask" map to console,
+		otherwise uses alert(), prompt()
+	Units as part of number literals
+		ex. 3 inches -> { value: 3, type: 'number', unit: 'inches' }
+		can do conversions between units with:
+			measurement: distance, time, temperature, etc
+			ratio relative to a fixed unit: ie, mm=.001, cm=.01, m=1
+		ex. units = {
+				distance: {
+					mm: .001,
+					cm: .01,
+					m: 1, ....
+
+File browser:
+	Need icons (PD, GPLv3...)
+		Default icons
+		Custom (uploaded) icons
+	Drag and drop support
+		Drag files in to upload
+		Drag files out to download
+	Multiple views:
+		List, icon
+		Changeable by CSS class?
+	Backup to localStorage
+		Save to server when available
+		Maintain whether it has been uploaded or not
 
