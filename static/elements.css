@@ -141,7 +141,6 @@ button:hover {
 	overflow: auto;
 	height: 340px;
 	position: relative;
-	-moz-padding-start: 5px;
 }
 
 .richtextarea pre, .richtextarea textarea {
@@ -152,6 +151,7 @@ button:hover {
 
 .richtextarea pre {
 	display: inline;
+	-moz-padding-start: 1px;
 	padding-right: 2em;
 }
 
