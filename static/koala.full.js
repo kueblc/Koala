@@ -60,7 +60,7 @@ koala = {
 				var i, j, mp, np;
 				// find the first difference
 				for( i = 0; i < m.length && i < n.length-1; i++ )
-					if( m[i] !== n[i].textContent ) break;
+					if( m[i] !== n[i].token ) break;
 				// if the length of the display is longer than the parse, delete excess display
 				while( m.length < n.length-1 )
 					parent.removeChild(n[i]);
@@ -78,6 +78,7 @@ koala = {
 					span = document.createElement("span");
 					span.appendChild( document.createTextNode(m[i]) );
 					span.className = colorer(m[i]);
+					span.token = m[i];
 					//span.textContent = span.innerText = m[i];
 					parent.insertBefore( span, insertionPt );
 				}
