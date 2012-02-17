@@ -46,6 +46,51 @@ koala = {
 					return rule;
 				}
 			}
+		},
+		interpret: function(script){
+			// testing interpreter, not final
+			// tokenize and classify the tokens
+			var lex = koala.lang.tokenize(script);
+			var types = [];
+			for( var i = 0; i < lex.length; i++ )
+				types.push( koala.lang.assoc(lex[i]) );
+			// interpret each token
+			var i = 0;
+			while( i < lex.length ){
+				try {
+					switch(lex[i++]){
+						case "say":
+							if(!lex[i]) throw new Error("KSyntaxError.eof");
+							if( types[i] === "wsp" ) i++;
+							if(!lex[i]) throw new Error("KSyntaxError.eof");
+							if( types[i] !== "str" )
+								throw new Error("KSyntaxError.say");
+							eval( "alert("+lex[i++]+")" );
+							break;
+						case "ask":
+							if(!lex[i]) throw new Error("KSyntaxError.eof");
+							if( types[i] === "wsp" ) i++;
+							if(!lex[i]) throw new Error("KSyntaxError.eof");
+							if( types[i] !== "str" )
+								throw new Error("KSyntaxError.ask");
+							eval( "rv=prompt("+lex[i++]+")" );
+							break;
+						case "dojs":
+							if(!lex[i]) throw new Error("KSyntaxError.eof");
+							if( types[i] === "wsp" ) i++;
+							if(!lex[i]) throw new Error("KSyntaxError.eof");
+							if( types[i] !== "str" )
+								throw new Error("KSyntaxError.dojs");
+							eval( "eval("+lex[i++]+")" );
+							break;
+						default:
+							if( types[i-1] !== "wsp" )
+								throw new Error("KSyntaxError");
+					}
+				} catch(e) {
+					console && console.log && console.log(e);
+				}
+			}
 		}
 	},
 	editor: function( textarea, tokenizer, colorer ){
@@ -264,44 +309,7 @@ window.onload = function(){
 	// TODO
 	// temporary function testing only, not real button actions
 	$("btn_run").onclick = function(){
-		// for testing...
-		var lex = editor.textarea.parentNode.getElementsByTagName("span");
-		var i = 0;
-		while( i < lex.length ){
-			try {
-				switch(lex[i++].textContent){
-					case "say":
-						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( lex[i].className === "wsp" ) i++;
-						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( lex[i].className !== "str" )
-							throw new Error("KSyntaxError.say");
-						eval( "alert("+lex[i++].textContent+")" );
-						break;
-					case "ask":
-						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( lex[i].className === "wsp" ) i++;
-						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( lex[i].className !== "str" )
-							throw new Error("KSyntaxError.ask");
-						eval( "rv=prompt("+lex[i++].textContent+")" );
-						break;
-					case "dojs":
-						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( lex[i].className === "wsp" ) i++;
-						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( lex[i].className !== "str" )
-							throw new Error("KSyntaxError.dojs");
-						eval( "eval("+lex[i++].textContent+")" );
-						break;
-					default:
-						if( lex[i-1].className !== "wsp" )
-							throw new Error("KSyntaxError");
-				}
-			} catch(e) {
-				console && console.log && console.log(e);
-			}
-		}
+		koala.lang.interpret( editor.textarea.value );
 	};
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
