@@ -54,6 +54,8 @@ koala = {
 		// construct editor DOM
 		var parent = textarea.parentNode;
 		var output = document.createElement("pre");
+		// extra br tag acts as trailing insertionPt
+		output.appendChild( document.createElement("br") );
 		var label = document.createElement("label");
 		parent.replaceChild( label, textarea );
 		label.appendChild( textarea );
@@ -65,13 +67,13 @@ koala = {
 				var m = tokenizer(input);
 				var i, j, mp, np;
 				// find the first difference
-				for( i = 0; i < m.length && i < n.length; i++ )
+				for( i = 0; i < m.length && i < n.length-1; i++ )
 					if( m[i] !== n[i].textContent ) break;
 				// if the length of the display is longer than the parse, delete excess display
-				while( m.length < n.length )
+				while( m.length < n.length-1 )
 					output.removeChild(n[i]);
 				// find the last difference
-				for( mp = m.length-1, np = n.length-1; i < np; mp--, np-- )
+				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
 					if( m[mp] !== n[np].textContent ) break;
 				// update modified spans
 				for( ; i <= np; i++ ){
@@ -88,7 +90,7 @@ koala = {
 				editor.resize();
 			} else {
 				// clear the display
-				while( n.length > 0 ) output.removeChild(n[0]);
+				while( n.length > 1 ) output.removeChild(n[0]);
 				// reset textarea rows/cols
 				textarea.cols = textarea.rows = 1;
 			}
