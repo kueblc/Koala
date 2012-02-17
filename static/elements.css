@@ -150,13 +150,18 @@ button:hover {
 	color: black !important;
 }
 
+.richtextarea pre {
+	display: inline;
+	padding-right: 2em;
+}
+
 .richtextarea label {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	display: inline-block;
+	display: inline;
 	padding: 4px;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
