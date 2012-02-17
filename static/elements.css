@@ -146,13 +146,13 @@ button:hover {
 .richtextarea pre, .richtextarea textarea {
 	font-size: 16px !important;
 	font-family: monospace !important;
-	color: black !important;
 }
 
 .richtextarea pre {
 	display: inline;
 	-moz-padding-start: 1px;
 	padding-right: 2em;
+	color: black;
 }
 
 .richtextarea label {
@@ -179,8 +179,10 @@ button:hover {
 	min-width: 100%;
 	min-height: 100%;
 	overflow: hidden;
-	opacity: 0.2;
+	/*opacity: 0.2;*/
 	filter: alpha(opacity = 20);
+	color: transparent !important;
+	color: rgba(0,0,0,.2) !important;
 }
 
 /* syntax highlighting */
