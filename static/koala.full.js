@@ -52,14 +52,19 @@ koala = {
 		var editor = this;
 		editor.textarea = textarea;
 		// construct editor DOM
-		var parent = textarea.parentNode;
+		var parent = document.createElement("div");
 		var output = document.createElement("pre");
+		parent.appendChild(output);
 		// extra br tag acts as trailing insertionPt
 		output.appendChild( document.createElement("br") );
 		var label = document.createElement("label");
-		parent.replaceChild( label, textarea );
-		label.appendChild( textarea );
-		parent.insertBefore( output, label );
+		parent.appendChild(label);
+		// replace the textarea with RTA DOM and reattach on label
+		textarea.parentNode.replaceChild( parent, textarea );
+		label.appendChild(textarea);
+		// transfer the CSS styles to our editor
+		parent.className = textarea.className;
+		textarea.className = '';
 		var n = output.childNodes;
 		editor.highlight = function(){
 			var input = textarea.value;
