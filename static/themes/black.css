@@ -55,7 +55,7 @@ button:hover {
 	border: 1px dashed #aaa;
 }
 
-#canvas > span {
+#canvas.shadow:before {
 	color: #fff;
 	background: #000;
 	font-size: 12px;

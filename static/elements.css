@@ -76,14 +76,16 @@ button:hover {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	text-align: center;
 }
 
-#canvas > span {
+#canvas.shadow:before {
+	content: "design your app's layout here!";
 	display: block;
-	margin: -8px;
-	position: relative;
+	margin: -8px 0;
+	position: absolute;
 	top: 50%;
+	width: 100%;
+	text-align: center;
 }
 
 .panel_content {
