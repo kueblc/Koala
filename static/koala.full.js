@@ -96,10 +96,23 @@ koala = {
 	editor: function( textarea, tokenizer, colorer ){
 		var editor = this;
 		editor.textarea = textarea;
+		// construct editor DOM
+		var parent = document.createElement("div");
+		var output = document.createElement("pre");
+		parent.appendChild(output);
+		// extra br tag acts as trailing insertionPt
+		output.appendChild( document.createElement("br") );
+		var label = document.createElement("label");
+		parent.appendChild(label);
+		// replace the textarea with RTA DOM and reattach on label
+		textarea.parentNode.replaceChild( parent, textarea );
+		label.appendChild(textarea);
+		// transfer the CSS styles to our editor
+		parent.className = textarea.className;
+		textarea.className = '';
+		var n = output.childNodes;
 		editor.highlight = function(){
 			var input = textarea.value;
-			var parent = textarea.parentNode;
-			var n = parent.childNodes;
 			if( input ){
 				var m = tokenizer(input);
 				var i, j, mp, np;
@@ -108,7 +121,7 @@ koala = {
 					if( m[i] !== n[i].textContent ) break;
 				// if the length of the display is longer than the parse, delete excess display
 				while( m.length < n.length-1 )
-					parent.removeChild(n[i]);
+					output.removeChild(n[i]);
 				// find the last difference
 				for( mp = m.length-1, np = n.length-2; i < np; mp--, np-- )
 					if( m[mp] !== n[np].textContent ) break;
@@ -122,12 +135,12 @@ koala = {
 					span = document.createElement("span");
 					span.className = colorer(m[i]);
 					span.textContent = span.innerText = m[i];
-					parent.insertBefore( span, insertionPt );
+					output.insertBefore( span, insertionPt );
 				}
 				editor.resize();
 			} else {
 				// clear the display
-				while( n.length > 1 ) parent.removeChild(n[0]);
+				while( n.length > 1 ) output.removeChild(n[0]);
 				// reset textarea rows/cols
 				textarea.cols = textarea.rows = 1;
 			}
