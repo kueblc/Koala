@@ -59,18 +59,13 @@ var serveFile = function(filename){
 			);
 		}
 	};
-	fileHandlers[filename] = function( request, response ){
+	fileHandlers[filename] = function( request, respond ){
 		getFile( function(){
 			if(file){
 				VERBOSE && console.log('Serving '+filename);
-				response.writeHead( 200, {
-					'Content-Type': type,
-					'Content-Length': file.length
-					}
-				);
-				response.end(file);
+				respond( 200, type, file );
 			} else {
-				notfoundHandler(request,response);
+				notfoundHandler(request,respond);
 			}
 		} );
 	};
@@ -79,14 +74,10 @@ var serveFile = function(filename){
 for( var i = 0; i < FILES.length; ++i )
 	serveFile(FILES[i]);
 
-var notfoundHandler = function( request, response ){
+var notfoundHandler = function( request, respond ){
 	VERBOSE && console.log('Error: 404 Not Found');
 	var body = '<h1>404 NOT FOUND</h1>';
-	response.writeHead( 404, {
-		'Content-Type': 'text/html',
-		'Content-Length': body.length
-		});
-	response.end(body);
+	respond( 404, 'text/html', body );
 };
 
 var postQuery = function( msg ){
@@ -94,7 +85,7 @@ var postQuery = function( msg ){
 	return response;
 };
 
-var postHandler = function( request, response ){
+var postHandler = function( request, respond ){
 	var msg = '';
 	request.on( 'data', function(d){ msg += d; } );
 	request.on( 'end',
@@ -103,18 +94,14 @@ var postHandler = function( request, response ){
 			var status = 404;
 			var body = '{"status":"Bad Query"}';
 			try {
-				var obj = JSON.parse(msg.toString());
+				var obj = JSON.parse(msg);
 				var res = postQuery(obj);
 				status = 200;
 				body = JSON.stringify(res);
 			} catch (e) {
 				console.log(e);
 			}
-			response.writeHead( status, {
-				'Content-Type': 'text/json',
-				'Content-Length': body.length
-				});
-			response.end(body);
+			respond( status, 'text/json', body );
 		} );
 };
 
@@ -134,7 +121,16 @@ var server = require('http').createServer(
 			default:
 				handler = notfoundHandler;
 		}
-		handler( request, response );
+		handler(
+			request,
+			function( status, type, data ){
+				response.writeHead( status,
+					{	'Content-Type': type,
+						'Content-Length': data.length	}
+				);
+				response.end(data);
+			}
+		);
 	});
 
 server.listen( PORT, HOST );
