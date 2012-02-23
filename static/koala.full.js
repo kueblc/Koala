@@ -1,6 +1,15 @@
 // koala.full.js
 // the koala project
 
+var MOD_DIR = '../modules/';
+
+var require = function( module ){
+	var s = document.createElement('script');
+	s.type = 'text/javascript';
+	s.src = MOD_DIR + module;
+	document.body.appendChild(s);
+};
+
 var $ = function(e){ return document.getElementById(e); },
 
 koala = {
