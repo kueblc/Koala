@@ -1,4 +1,4 @@
-// koala.full.js
+// Koala.js
 // the koala project
 
 var MOD_DIR = '../modules/';
