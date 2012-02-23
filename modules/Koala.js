@@ -1,18 +1,10 @@
-// Koala.js
-// the koala project
+/* Koala.js
+ * written by Colin Kuebler 2011-2012
+ * Part of The Koala Project, licensed under GPLv3
+ * The main entry point for in browser koala web application
+ */
 
-var MOD_DIR = '../modules/';
-
-var require = function( module ){
-	var s = document.createElement('script');
-	s.type = 'text/javascript';
-	s.src = MOD_DIR + module;
-	document.body.appendChild(s);
-};
-
-var $ = function(e){ return document.getElementById(e); },
-
-koala = {
+var koala = {
 	version: 0.03,
 	lang: {
 		commands: {
@@ -55,99 +47,31 @@ koala = {
 					return rule;
 				}
 			}
-		},
-		interpret: function(script){
-			// testing interpreter, not final
-			// tokenize and classify the tokens
-			var lex = koala.lang.tokenize(script);
-			var types = [];
-			for( var i = 0; i < lex.length; i++ )
-				types.push( koala.lang.assoc(lex[i]) );
-			// interpret each token
-			var i = 0;
-			while( i < lex.length ){
-				try {
-					switch(lex[i++]){
-						case "say":
-							if(!lex[i]) throw new Error("KSyntaxError.eof");
-							if( types[i] === "wsp" ) i++;
-							if(!lex[i]) throw new Error("KSyntaxError.eof");
-							if( types[i] !== "str" )
-								throw new Error("KSyntaxError.say");
-							eval( "alert("+lex[i++]+")" );
-							break;
-						case "ask":
-							if(!lex[i]) throw new Error("KSyntaxError.eof");
-							if( types[i] === "wsp" ) i++;
-							if(!lex[i]) throw new Error("KSyntaxError.eof");
-							if( types[i] !== "str" )
-								throw new Error("KSyntaxError.ask");
-							eval( "rv=prompt("+lex[i++]+")" );
-							break;
-						case "dojs":
-							if(!lex[i]) throw new Error("KSyntaxError.eof");
-							if( types[i] === "wsp" ) i++;
-							if(!lex[i]) throw new Error("KSyntaxError.eof");
-							if( types[i] !== "str" )
-								throw new Error("KSyntaxError.dojs");
-							eval( "eval("+lex[i++]+")" );
-							break;
-						default:
-							if( types[i-1] !== "wsp" )
-								throw new Error("KSyntaxError");
-					}
-				} catch(e) {
-					console && console.log && console.log(e);
-				}
-			}
 		}
 	}
 };
 
-stringify = function( obj ){
-	var t = typeof( obj );
-	// literals
-	if( t !== "object" || obj === null ){
-		// quote strings
-		if( t === "string" ) obj = '"'+obj.replace(/"/g,'\\"')+'"';
-		return String(obj);
-	// arrays
-	} else if( obj && obj.constructor === Array ){
-		var elem = [];
-		for( var n in obj )
-			elem.push(stringify(obj[n]));
-		return "["+elem+"]";
-	// objects
-	} else {
-		var elem = [];
-		for( var n in obj )
-			elem.push(stringify(n)+':'+stringify(obj[n]));
-		return "{"+elem+"}";
-	}
-};
-
-var editor;
+var parser, editor, compiler;
 window.onload = function(){
 	// TODO
 	// testing...
-	editor = new TextareaDecorator( $("rta_in"),
-		{ tokenize: koala.lang.tokenize, identify: koala.lang.assoc } );
+	parser = { tokenize: koala.lang.tokenize, identify: koala.lang.assoc };
 	
-	koala.theme = $("theme");
-	koala.theme.selector = $("theme_sel");
+	editor = new TextareaDecorator( $("rta_in"), parser );
 	
-	koala.theme.selector.onchange = function(){
-		koala.theme.href = "themes/" + this.value + ".css";
-	}
+	compiler = new Compiler( parser );
+	
+	user = new User();
+	
 	// TODO
 	// temporary function testing only, not real button actions
 	$("btn_run").onclick = function(){
-		koala.lang.interpret( editor.textarea.value );
+		compiler.interpret( editor.input.value );
 	};
 	$("btn_dl").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ editor.highlight(); };
+	$("btn_hl").onclick = function(){ editor.update(); };
 };
 
 window.onerror = function( msg, url, line ){

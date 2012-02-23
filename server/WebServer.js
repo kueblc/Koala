@@ -1,5 +1,8 @@
-// server.js
-// the koala project
+/* WebServer.js
+ * written by Colin Kuebler 2012
+ * Part of The Koala Project, licensed under GPLv3
+ * Creates an HTTP server hosting the koala project
+ */
 
 var HOST = '127.0.0.1',
 	PORT = 8124,
