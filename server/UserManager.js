@@ -4,13 +4,15 @@
  * Manages user accounts
  */
 
-var api = exports;
+var USER_DB = exports._db = require('./Dirty.js')('users.json');
 
-var USER_DB = api._db = require('./Dirty.js')( 'users.json' );
+USER_DB.on( 'load', function(){
+	console.log("User database loaded");
+} );
 
-USER_DB.on( 'load', function(){ console.log("User database loaded"); } );
-USER_DB.on( 'drain', function(){ console.log("User database saved"); } );
-
+USER_DB.on( 'drain', function(){
+	console.log("User database saved");
+} );
 
 function User( username ){
 	var identify = function( user ){
@@ -22,7 +24,7 @@ function User( username ){
 	return api;
 };
 
-api.add = function( user ){
+exports.add = function( user ){
 	console.log("UserManager.add");
 	var id = user.id;
 	if( USER_DB.get(id) ){
@@ -33,7 +35,7 @@ api.add = function( user ){
 	}
 };
 
-api.remove = function( user ){
+exports.remove = function( user ){
 	console.log("UserManager.remove");
 	var id = user.id;
 	if( USER_DB.get(id) ){
@@ -44,13 +46,12 @@ api.remove = function( user ){
 	}
 };
 
-api.update = function( id, key, value ){
+exports.update = function( id, key, value ){
 };
 
-api.login = function( id, auth ){
-	
+exports.login = function( id, auth ){
 };
 
-api.logout = function( id ){
+exports.logout = function( id ){
 };
 
