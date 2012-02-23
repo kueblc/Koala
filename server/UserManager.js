@@ -6,7 +6,7 @@
 
 var api = exports;
 
-var USER_DB = api._db = require('./Dirty.js')( __dirname + '/db/users.json' );
+var USER_DB = api._db = require('./Dirty.js')( 'users.json' );
 
 USER_DB.on( 'load', function(){ console.log("User database loaded"); } );
 USER_DB.on( 'drain', function(){ console.log("User database saved"); } );

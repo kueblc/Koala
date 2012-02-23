@@ -38,7 +38,7 @@ var Dirty = exports.Dirty = function(path) {
 
 	EventEmitter.call(this);
 
-	this.path = path;
+	this.path = __dirname + '/db/' + path;
 	this.writeBundle = 1000;
 
 	this._docs = {};
@@ -129,7 +129,7 @@ Dirty.prototype._load = function() {
 			arr.forEach(function(rowStr) {
 				if (!rowStr) {
 					self.emit('error', new Error('Empty lines never appear in a healthy database'));
-					return
+					return;
 				}
 				try {
 					var row = JSON.parse(rowStr);
