@@ -1,7 +1,7 @@
 /* WebServer.js
  * written by Colin Kuebler 2012
  * Part of The Koala Project, licensed under GPLv3
- * Creates an HTTP server hosting the koala project
+ * Creates and manages an HTTP server
  */
 
 var WebServer = module.exports,
@@ -9,57 +9,11 @@ var WebServer = module.exports,
 	fs = require('fs'),
 	http = require('http');
 
-/***************************/
-
-var HOST = '127.0.0.1',
-	PORT = 8124;
-
-var FILES = [
-	'index.html',
-	'favicon.ico',
-	'layout.css',
-	'elements.css',
-	'koala.full.js',
-	'themes/basic.css',
-	'themes/bg.png',
-	'themes/black.css',
-	'themes/gr.png',
-	'themes/koalabird.css',
-	'themes/koalabook.css',
-	'themes/koalaplex.css',
-	'themes/koalarch.css',
-	'themes/silver.css' ];
-
-var FILE_PATH = 'static/';
-
-/***************************/
-
-for( var i = 0; i < FILES.length; ++i )
-	WebServer.serve(FILES[i]);
-
 var notfoundHandler = function( request, respond ){
 	log.notify('serving 404');
 	var body = '<h1>404 NOT FOUND</h1>';
 	respond( 404, 'text/html', body );
 };
-
-var postQuery = function( msg ){
-		var status = 404;
-		var body = '{"status":"Bad Query"}';
-		try {
-			var obj = JSON.parse(msg);
-			var res = postQuery(obj);
-			status = 200;
-			body = JSON.stringify(res);
-		} catch (e) {
-			log.error(e);
-		}
-		respond( status, 'text/json', body );
-	var response = { 'status': 'Not implemented' };
-	return response;
-};
-
-/***************************/
 
 var getMap = {};
 WebServer.get = function( url, handler ){
@@ -88,7 +42,7 @@ var types = {
 	'png' : 'image/png'
 };
 
-WebServer.serve = function(filename){
+WebServer.serve = function( path, filename ){
 	var extension = filename.substring(filename.lastIndexOf('.')+1);
 	var type = types[extension] || 'application/octet-stream';
 	var file = null;
@@ -96,7 +50,7 @@ WebServer.serve = function(filename){
 		if(file){
 			callback();
 		} else {
-			fs.readFile( FILE_PATH + filename,
+			fs.readFile( path + filename,
 				function( error, data ){
 					if( error ){
 						log.error('could not load '+filename);
@@ -122,7 +76,9 @@ WebServer.serve = function(filename){
 	};
 };
 
-WebServer.init = function(){
+WebServer.init = function( HOST, PORT ){
+	var HOST = HOST || '127.0.0.1',
+		PORT = PORT || 8124;
 	var server = http.createServer(
 		function( request, response ){
 			log.notify('handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
