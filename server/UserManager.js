@@ -4,16 +4,19 @@
  * Manages user accounts
  */
 
-var USER_DB = exports._db = require('./Dirty.js')('users.json');
+var UserManager = module.exports,
+	log = require('./Logger.js').log('UserManager'),
+	USER_DB = require('./Dirty.js')('users.json');
 
 USER_DB.on( 'load', function(){
-	console.log("User database loaded");
+	log.notify("database loaded");
 } );
 
 USER_DB.on( 'drain', function(){
-	console.log("User database saved");
+	log.notify("database saved");
 } );
 
+/*
 function User( username ){
 	var identify = function( user ){
 		return 5;
@@ -23,35 +26,38 @@ function User( username ){
 	api.id = identify( username );
 	return api;
 };
+*/
 
-exports.add = function( user ){
-	console.log("UserManager.add");
+UserManager._db = USER_DB;
+
+UserManager.add = function( user ){
+	log.debug("running add");
 	var id = user.id;
 	if( USER_DB.get(id) ){
-		console.log("UserManager Error: user already exists");
+		log.error("user already exists");
 	} else {
 		USER_DB.set( id, user );
-		console.log("UserManager: user added");
+		log.notify("user added");
 	}
 };
 
-exports.remove = function( user ){
-	console.log("UserManager.remove");
+UserManager.remove = function( user ){
+	log.debug("running remove");
 	var id = user.id;
 	if( USER_DB.get(id) ){
 		USER_DB.rm( id );
-		console.log("UserManager: user removed");
+		log.notify("user removed");
 	} else {
-		console.log("UserManager Error: user does not exist");
+		log.error("user does not exist");
 	}
 };
 
-exports.update = function( id, key, value ){
+UserManager.update = function( id, key, value ){
 };
 
-exports.login = function( id, auth ){
+UserManager.login = function( id, auth ){
 };
 
-exports.logout = function( id ){
+UserManager.logout = function( id ){
 };
 
