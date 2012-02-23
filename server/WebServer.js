@@ -4,6 +4,11 @@
  * Creates an HTTP server hosting the koala project
  */
 
+var WebServer = module.exports,
+	log = require('./Logger.js').log('WebServer'),
+	fs = require('fs'),
+	http = require('http');
+
 var HOST = '127.0.0.1',
 	PORT = 8124,
 	VERBOSE = true;
@@ -38,8 +43,6 @@ var types = {
 	'png' : 'image/png'
 };
 
-var fs = require('fs');
-
 var serveFile = function(filename){
 	var extension = filename.substring(filename.lastIndexOf('.')+1);
 	var type = types[extension] || 'application/octet-stream';
@@ -51,11 +54,11 @@ var serveFile = function(filename){
 			fs.readFile( FILE_PATH + filename,
 				function( error, data ){
 					if( error ){
-						console.log('Error: could not load '+filename);
-						VERBOSE && console.log(error);
+						log.error('could not load '+filename);
+						log.debug(error);
 					} else {
 						file = data;
-						VERBOSE && console.log('Loaded '+filename);
+						log.notify('loaded '+filename);
 					}
 					callback();
 				}
@@ -65,7 +68,7 @@ var serveFile = function(filename){
 	fileHandlers[filename] = function( request, respond ){
 		getFile( function(){
 			if(file){
-				VERBOSE && console.log('Serving '+filename);
+				log.notify('serving '+filename);
 				respond( 200, type, file );
 			} else {
 				notfoundHandler(request,respond);
@@ -78,7 +81,7 @@ for( var i = 0; i < FILES.length; ++i )
 	serveFile(FILES[i]);
 
 var notfoundHandler = function( request, respond ){
-	VERBOSE && console.log('Error: 404 Not Found');
+	log.notify('serving 404');
 	var body = '<h1>404 NOT FOUND</h1>';
 	respond( 404, 'text/html', body );
 };
@@ -93,7 +96,7 @@ var postHandler = function( request, respond ){
 	request.on( 'data', function(d){ msg += d; } );
 	request.on( 'end',
 		function(){
-			VERBOSE && console.log('Received query: '+msg);
+			log.debug('received query: '+msg);
 			var status = 404;
 			var body = '{"status":"Bad Query"}';
 			try {
@@ -102,41 +105,43 @@ var postHandler = function( request, respond ){
 				status = 200;
 				body = JSON.stringify(res);
 			} catch (e) {
-				console.log(e);
+				log.error(e);
 			}
 			respond( status, 'text/json', body );
 		} );
 };
 
-var server = require('http').createServer(
-	function( request, response ){
-		console.log('Handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
-		var handler;
-		switch( request.method ){
-			case 'GET':
-				handler =
-					fileHandlers[request.url.substring(1) || 'index.html'] ||
-					notfoundHandler;
-				break;
-			case 'POST':
-				handler = postHandler;
-				break;
-			default:
-				handler = notfoundHandler;
-		}
-		handler(
-			request,
-			function( status, type, data ){
-				response.writeHead( status,
-					{	'Content-Type': type,
-						'Content-Length': data.length	}
-				);
-				response.end(data);
+WebServer.init = function(){
+	var server = http.createServer(
+		function( request, response ){
+			log.notify('handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
+			var handler;
+			switch( request.method ){
+				case 'GET':
+					handler =
+						fileHandlers[request.url.substring(1) || 'index.html'] ||
+						notfoundHandler;
+					break;
+				case 'POST':
+					handler = postHandler;
+					break;
+				default:
+					handler = notfoundHandler;
 			}
-		);
-	});
+			handler(
+				request,
+				function( status, type, data ){
+					response.writeHead( status,
+						{	'Content-Type': type,
+							'Content-Length': data.length	}
+					);
+					response.end(data);
+				}
+			);
+		});
 
-server.listen( PORT, HOST );
+	server.listen( PORT, HOST );
 
-console.log('Listening on http://'+HOST+':'+PORT+'/...');
+	log.notify('listening on http://'+HOST+':'+PORT+'/');
+};
 
