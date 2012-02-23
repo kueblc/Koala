@@ -10,7 +10,7 @@ var WebServer = module.exports,
 	http = require('http');
 
 var notfoundHandler = function( request, respond ){
-	log.notify('serving 404');
+	log.warn('serving 404');
 	var body = '<h1>404 NOT FOUND</h1>';
 	respond( 404, 'text/html', body );
 };
@@ -57,7 +57,7 @@ WebServer.serve = function( path, filename ){
 						log.debug(error);
 					} else {
 						file = data;
-						log.notify('loaded '+filename);
+						log.debug('loaded '+filename);
 					}
 					callback();
 				}
@@ -67,7 +67,7 @@ WebServer.serve = function( path, filename ){
 	getMap[filename] = function( request, respond ){
 		getFile( function(){
 			if(file){
-				log.notify('serving '+filename);
+				log.debug('serving '+filename);
 				respond( 200, type, file );
 			} else {
 				notfoundHandler(request,respond);
@@ -81,7 +81,7 @@ WebServer.init = function( HOST, PORT ){
 		PORT = PORT || 8124;
 	var server = http.createServer(
 		function( request, response ){
-			log.notify('handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
+			log.debug('handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
 			var handler;
 			var url = request.url.substring(1) || 'index.html';
 			var responder = function( status, type, data ){
