@@ -13,12 +13,11 @@ var KoalaServer = module.exports,
 var HOST = '127.0.0.1',
 	PORT = 8124;
 
-var FILES = [
-	'index.html',
-	'favicon.ico',
-	'layout.css',
+var STATIC_FILES = [
 	'elements.css',
-	'koala.full.js',
+	'favicon.ico',
+	'index.html',
+	'layout.css',
 	'themes/basic.css',
 	'themes/bg.png',
 	'themes/black.css',
@@ -29,12 +28,29 @@ var FILES = [
 	'themes/koalarch.css',
 	'themes/silver.css' ];
 
-var FILE_PATH = 'static/';
+var STATIC_PATH = 'static/';
+
+var JS_FILES = [
+	'modules/Compiler.js',
+	'modules/Koala.js',
+	'modules/Parser.js',
+	'modules/TextareaDecorator.js',
+	'modules/User.js',
+	'modules/Utils.js' ];
+
+var CSS_FILES = [
+	'modules/styles/TextareaDecorator.css' ];
 
 /***************************/
 
-for( var i = 0; i < FILES.length; ++i )
-	server.serve( FILE_PATH, FILES[i] );
+for( var i = 0; i < STATIC_FILES.length; ++i )
+	server.serve( STATIC_PATH, STATIC_FILES[i] );
+
+for( var i = 0; i < JS_FILES.length; ++i )
+	server.serve( '', JS_FILES[i] );
+
+for( var i = 0; i < CSS_FILES.length; ++i )
+	server.serve( '', CSS_FILES[i] );
 
 server.post( '', function( request, respond ){
 	var status, body;
