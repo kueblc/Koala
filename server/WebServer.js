@@ -9,9 +9,10 @@ var WebServer = module.exports,
 	fs = require('fs'),
 	http = require('http');
 
+/***************************/
+
 var HOST = '127.0.0.1',
-	PORT = 8124,
-	VERBOSE = true;
+	PORT = 8124;
 
 var FILES = [
 	'index.html',
@@ -33,7 +34,51 @@ var FILE_PATH = 'static/';
 
 /***************************/
 
-var fileHandlers = {};
+for( var i = 0; i < FILES.length; ++i )
+	WebServer.serve(FILES[i]);
+
+var notfoundHandler = function( request, respond ){
+	log.notify('serving 404');
+	var body = '<h1>404 NOT FOUND</h1>';
+	respond( 404, 'text/html', body );
+};
+
+var postQuery = function( msg ){
+		var status = 404;
+		var body = '{"status":"Bad Query"}';
+		try {
+			var obj = JSON.parse(msg);
+			var res = postQuery(obj);
+			status = 200;
+			body = JSON.stringify(res);
+		} catch (e) {
+			log.error(e);
+		}
+		respond( status, 'text/json', body );
+	var response = { 'status': 'Not implemented' };
+	return response;
+};
+
+/***************************/
+
+var getMap = {};
+WebServer.get = function( url, handler ){
+	getMap[url] = handler;
+};
+
+var postMap = {};
+WebServer.post = function( url, handler ){
+	postMap[url] = handler;
+};
+
+var getPostData = function( request, respond, handler ){
+	var data = '';
+	request.on( 'data', function(d){ data += d; } );
+	request.on( 'end', function(){
+		request.data = data;
+		handler( request, respond );
+	} );
+};
 
 var types = {
 	'html': 'text/html',
@@ -43,7 +88,7 @@ var types = {
 	'png' : 'image/png'
 };
 
-var serveFile = function(filename){
+WebServer.serve = function(filename){
 	var extension = filename.substring(filename.lastIndexOf('.')+1);
 	var type = types[extension] || 'application/octet-stream';
 	var file = null;
@@ -65,7 +110,7 @@ var serveFile = function(filename){
 			);
 		}
 	};
-	fileHandlers[filename] = function( request, respond ){
+	getMap[filename] = function( request, respond ){
 		getFile( function(){
 			if(file){
 				log.notify('serving '+filename);
@@ -77,67 +122,35 @@ var serveFile = function(filename){
 	};
 };
 
-for( var i = 0; i < FILES.length; ++i )
-	serveFile(FILES[i]);
-
-var notfoundHandler = function( request, respond ){
-	log.notify('serving 404');
-	var body = '<h1>404 NOT FOUND</h1>';
-	respond( 404, 'text/html', body );
-};
-
-var postQuery = function( msg ){
-	var response = { 'status': 'Not implemented' };
-	return response;
-};
-
-var postHandler = function( request, respond ){
-	var msg = '';
-	request.on( 'data', function(d){ msg += d; } );
-	request.on( 'end',
-		function(){
-			log.debug('received query: '+msg);
-			var status = 404;
-			var body = '{"status":"Bad Query"}';
-			try {
-				var obj = JSON.parse(msg);
-				var res = postQuery(obj);
-				status = 200;
-				body = JSON.stringify(res);
-			} catch (e) {
-				log.error(e);
-			}
-			respond( status, 'text/json', body );
-		} );
-};
-
 WebServer.init = function(){
 	var server = http.createServer(
 		function( request, response ){
 			log.notify('handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
 			var handler;
+			var url = request.url.substring(1) || 'index.html';
+			var responder = function( status, type, data ){
+				response.writeHead( status,
+					{	'Content-Type': type,
+						'Content-Length': data.length	}
+				);
+				response.end(data);
+			};
 			switch( request.method ){
 				case 'GET':
-					handler =
-						fileHandlers[request.url.substring(1) || 'index.html'] ||
-						notfoundHandler;
+					if( getMap[url] )
+						getMap[url]( request, responder );
+					else
+						notfoundHandler( request, responder );
 					break;
 				case 'POST':
-					handler = postHandler;
+					if( postMap[url] )
+						getPostData( request, responder, postMap[url] );
+					else
+						notfoundHandler( request, responder );
 					break;
 				default:
-					handler = notfoundHandler;
+					notfoundHandler( request, responder );
 			}
-			handler(
-				request,
-				function( status, type, data ){
-					response.writeHead( status,
-						{	'Content-Type': type,
-							'Content-Length': data.length	}
-					);
-					response.end(data);
-				}
-			);
 		});
 
 	server.listen( PORT, HOST );
