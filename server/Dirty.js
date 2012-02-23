@@ -33,7 +33,7 @@ var fs = require('fs'),
 	util = require('util'),
 	EventEmitter = require('events').EventEmitter;
 
-var Dirty = exports.Dirty = function(path) {
+var Dirty = module.exports = function(path) {
 	if (!(this instanceof Dirty)) return new Dirty(path);
 
 	EventEmitter.call(this);
@@ -51,8 +51,8 @@ var Dirty = exports.Dirty = function(path) {
 };
 
 util.inherits(Dirty, EventEmitter);
-Dirty.Dirty = Dirty;
-module.exports = Dirty;
+//Dirty.Dirty = Dirty;
+//module.exports = Dirty;
 
 Dirty.prototype.set = function(key, val, cb) {
 	if (val === undefined) {
