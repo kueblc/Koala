@@ -81,7 +81,8 @@ WebServer.init = function( HOST, PORT ){
 		PORT = PORT || 8124;
 	var server = http.createServer(
 		function( request, response ){
-			log.notify('handling '+request.method+' request http://'+HOST+':'+PORT+request.url);
+			log.notify( request.method + ' request for ' +
+				request.url + ' from ' + request.connection.remoteAddress );
 			var handler;
 			var url = request.url.substring(1) || 'index.html';
 			var responder = function( status, type, data ){
