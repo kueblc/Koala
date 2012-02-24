@@ -41,3 +41,87 @@ File browser:
 		Save to server when available
 		Maintain whether it has been uploaded or not
 
+Resources:
+	Using pure CSS to apply alternating styles
+		http://www.w3.org/Style/Examples/007/evenodd.en.html
+	CSS system colors and appearance for better OS integration
+		http://www.iangraham.org/books/xhtml1/appd/update-23feb2000.html
+		www.w3schools.com/cssref/css3_pr_appearance.asp
+	Node.js module that creates a common namespace between server and clients
+		http://nowjs.com/
+	DOM manipulation with fragments could give significant performance improvements
+		http://ejohn.org/blog/dom-documentfragments/
+	Directory walk in node.js
+		http://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search
+	Drag & Drop, Reading local files from JavaScript
+		http://www.html5rocks.com/en/tutorials/dnd/basics/
+		http://www.html5rocks.com/en/tutorials/file/dndfiles/
+		http://www.html5rocks.com/en/tutorials/casestudies/box_dnd_download.html
+		https://developer.mozilla.org/En/DragDrop/Drag_and_Drop
+		https://developer.mozilla.org/En/DragDrop/DataTransfer
+		https://developer.mozilla.org/En/DragDrop/Recommended_Drag_Types
+		http://www.thecssninja.com/javascript/gmail-dragout
+		http://help.dottoro.com/ljmpcqdb.php
+	Node.js based minification
+		https://github.com/GoalSmashers/clean-css
+		https://github.com/mishoo/UglifyJS
+		https://github.com/Qard/crsh
+	In browser interpretters
+		http://ioctl.org/logic/prolog1
+	Node.js example server
+		https://github.com/ry/node_chat
+	AJAX
+		http://www.w3schools.com/ajax/ajax_xmlhttprequest_onreadystatechange.asp
+		http://microajax.googlecode.com/svn/trunk/microajax.js
+	Semi-fluid CSS layout
+		http://www.alistapart.com/articles/holygrail
+
+~ scraps ~
+== Dealing with Buffers & Strings, Base64 & binary
+> console.log(new Buffer("Hello World").toString('base64'));
+SGVsbG8gV29ybGQ=
+> console.log(new Buffer("SGVsbG8gV29ybGQ=", 'base64').toString('ascii'))
+Hello World
+--
+var base64Data = req.rawBody.replace(/^data:image\/png;base64,/,""),
+var dataBuffer = new Buffer(base64Data, 'base64');
+require("fs").writeFile("out.png", dataBuffer, function(err) {
+  console.log(err);
+});
+--
+fs.readFile(image_origial, function(err, original_data){
+	fs.writeFile('image_orig.jpg', original_data, function(err) {});
+	var base64Image = original_data.toString('base64');
+	var decodedImage = new Buffer(base64Image, 'base64');
+	fs.writeFile('image_decoded.jpg', decodedImage, function(err) {});
+});
+== Walking a directory
+function walk(root, fileCb, doneCb) {
+	fs.readdir(root, function(err, files) {
+		if (err) {
+			//fileCb(err);
+		} else {
+			for( var i = 0; i < files.length; i++ ){
+				var file = root + '/' + files.shift();
+				fs.stat(file, function(err, stat) {
+					if (err) {
+						//doneCb(err);
+					} else {
+						if (stat.isFile()) {
+							fileCb(file);
+						} else {
+							walk(file, fileCb);
+						}
+					}
+				});
+			}
+			//doneCb && doneCb(false);
+		}
+	});
+}
+== MD5
+md5 = function (str) {
+	var md5 = require('crypto').createHash('md5');
+	md5.update(str)
+	return md5.digest('hex')
+};
