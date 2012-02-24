@@ -66,8 +66,10 @@ Resources:
 		https://github.com/GoalSmashers/clean-css
 		https://github.com/mishoo/UglifyJS
 		https://github.com/Qard/crsh
-	In browser interpretters
+	In browser interpretters/compilers; prolog, lisp
 		http://ioctl.org/logic/prolog1
+		http://lambda-the-ultimate.org/node/892
+		http://joeganley.com/code/jslisp.html
 	Node.js example server
 		https://github.com/ry/node_chat
 	AJAX
@@ -75,6 +77,19 @@ Resources:
 		http://microajax.googlecode.com/svn/trunk/microajax.js
 	Semi-fluid CSS layout
 		http://www.alistapart.com/articles/holygrail
+	Some thoughts on coding standards
+		http://adamspiers.org/computing/Linus-Kernel-CodingStyle
+	Icons?
+		http://bogo-d.deviantart.com/art/Project-Icons-v-2-1-8-155863784
+	Server Sent Events
+		http://www.w3.org/TR/eventsource/
+		http://html5doctor.com/server-sent-events/
+		https://github.com/Yaffle/EventSource
+		https://github.com/remy/eventsource-h5d
+	Cursor position in IE
+		http://www.webdeveloper.com/forum/showthread.php?t=74982
+	Multi-User Edit
+		https://github.com/Pita/etherpad-lite
 
 ~ scraps ~
 == Dealing with Buffers & Strings, Base64 & binary
