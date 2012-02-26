@@ -54,13 +54,12 @@ function Compiler( parser ){
 				console && console.log && console.log(e);
 			}
 		}
+		output.push( 'return rv;' );
 		return output.join(' ');
 	};
 
 	api.interpret = function(script){
-		// testing interpreter, not final
-		eval( api.compile( script ) );
-		return rv;
+		return Function( api.compile( script ) )();
 	};
 
 	return api;
