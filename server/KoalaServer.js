@@ -31,15 +31,15 @@ var STATIC_FILES = [
 var STATIC_PATH = 'static/';
 
 var JS_FILES = [
-	'modules/Compiler.js',
-	'modules/Koala.js',
-	'modules/Parser.js',
-	'modules/TextareaDecorator.js',
-	'modules/User.js',
-	'modules/Utils.js' ];
+	'app/Compiler.js',
+	'app/Koala.js',
+	'app/Parser.js',
+	'app/TextareaDecorator.js',
+	'app/User.js',
+	'app/Utils.js' ];
 
 var CSS_FILES = [
-	'modules/styles/TextareaDecorator.css' ];
+	'app/styles/TextareaDecorator.css' ];
 
 /***************************/
 
