@@ -34,6 +34,7 @@ var JS_FILES = [
 	'app/Compiler.js',
 	'app/Koala.js',
 	'app/Parser.js',
+	'app/Server.js',
 	'app/TextareaDecorator.js',
 	'app/User.js',
 	'app/Utils.js' ];

@@ -51,7 +51,7 @@ var koala = {
 	}
 };
 
-var parser, editor, compiler;
+var parser, editor, compiler, server, user;
 window.onload = function(){
 	// TODO
 	// testing...
@@ -61,7 +61,9 @@ window.onload = function(){
 	
 	compiler = new Compiler( parser );
 	
-	user = new User();
+	server = new Server();
+	
+	user = new User( server );
 	
 	// TODO
 	// temporary function testing only, not real button actions
