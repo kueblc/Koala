@@ -5,12 +5,16 @@
  */
 
 function Compiler( parser ){
+	/* INIT */
+	var api = this;
+
 	var parser = parser;
-	this.interpret = function(script){
-		// testing interpreter, not final
+
+	api.compile = function(script){
 		// tokenize and classify the tokens
 		var lex = parser.tokenize(script);
 		var types = [];
+		var output = ['var rv;'];
 		for( var i = 0; i < lex.length; i++ )
 			types.push( parser.identify(lex[i]) );
 		// interpret each token
@@ -24,7 +28,7 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] !== "str" )
 							throw new Error("KSyntaxError.say");
-						eval( "alert("+lex[i++]+")" );
+						output.push( "alert("+lex[i++]+");" );
 						break;
 					case "ask":
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
@@ -32,7 +36,7 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] !== "str" )
 							throw new Error("KSyntaxError.ask");
-						eval( "rv=prompt("+lex[i++]+")" );
+						output.push( "rv=prompt("+lex[i++]+");" );
 						break;
 					case "dojs":
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
@@ -40,7 +44,7 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] !== "str" )
 							throw new Error("KSyntaxError.dojs");
-						eval( "eval("+lex[i++]+")" );
+						output.push( "rv=eval("+lex[i++]+");" );
 						break;
 					default:
 						if( types[i-1] !== "wsp" )
@@ -50,6 +54,15 @@ function Compiler( parser ){
 				console && console.log && console.log(e);
 			}
 		}
+		return output.join(' ');
 	};
+
+	api.interpret = function(script){
+		// testing interpreter, not final
+		eval( api.compile( script ) );
+		return rv;
+	};
+
+	return api;
 };
 
