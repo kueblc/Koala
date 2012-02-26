@@ -4,7 +4,7 @@
  * Creates and manages an HTTP server
  */
 
-var WebServer = module.exports,
+var WebServer = exports,
 	log = require('./Logger.js').log('WebServer'),
 	fs = require('fs'),
 	http = require('http');

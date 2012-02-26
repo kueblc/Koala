@@ -4,7 +4,7 @@
  * Manages user accounts
  */
 
-var UserManager = module.exports,
+var UserManager = exports,
 	log = require('./Logger.js').log('UserManager'),
 	USER_DB = require('./Dirty.js')('users.json');
 

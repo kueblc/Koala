@@ -4,7 +4,7 @@
  * Manages server logging capabilities
  */
 
-var Logger = module.exports;
+var Logger = exports;
 
 var levels = [ "DEBUG", "INFO", "WARNING", "ERROR" ];
 

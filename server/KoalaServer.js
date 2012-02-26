@@ -4,7 +4,7 @@
  * Main entry point for the koala project server
  */
 
-var KoalaServer = module.exports,
+var KoalaServer = exports,
 	log = require('./Logger.js').log('KoalaServer'),
 	server = require('./WebServer.js');
 
