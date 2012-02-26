@@ -26,9 +26,13 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] === "wsp" ) i++;
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( types[i] !== "str" )
+						if( types[i] === "str" ){
+							output.push( "alert("+lex[i++]+");" );
+						} else if( types[i] === "box" ){
+							output.push( "alert("+lex[i++].replace(/\[|\]/g,'')+");" );
+						} else {
 							throw new Error("KSyntaxError.say");
-						output.push( "alert("+lex[i++]+");" );
+						}
 						break;
 					case "ask":
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
@@ -46,6 +50,22 @@ function Compiler( parser ){
 							throw new Error("KSyntaxError.dojs");
 						output.push( "rv=eval("+lex[i++]+");" );
 						break;
+					case "put":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] !== "str" )
+							throw new Error("KSyntaxError.put");
+						output.push( "rv=("+lex[i++]+");" );
+						break;
+					case "in":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] !== "box" )
+							throw new Error("KSyntaxError.in");
+						output.push( lex[i++].replace(/\[|\]/g,'')+"=rv;" );
+						break;
 					default:
 						if( types[i-1] !== "wsp" )
 							throw new Error("KSyntaxError");
@@ -59,7 +79,11 @@ function Compiler( parser ){
 	};
 
 	api.interpret = function(script){
-		return Function( api.compile( script ) )();
+		try {
+			return Function( api.compile( script ) )();
+		} catch(e) {
+			throw new Error("KRuntimeError: "+e);
+		}
 	};
 
 	return api;
