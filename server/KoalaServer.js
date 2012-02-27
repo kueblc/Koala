@@ -6,7 +6,8 @@
 
 var KoalaServer = exports,
 	log = require('./Logger.js').log('KoalaServer'),
-	server = require('./WebServer.js');
+	server = require('./WebServer.js'),
+	users = require('./UserManager.js');
 
 /***************************/
 
@@ -64,6 +65,48 @@ server.post( '', function( request, respond ){
 		log.error(e);
 		status = 404;
 		body = '{"status":"Bad Query"}';
+	}
+	respond( status, 'text/json', body );
+} );
+
+server.post( 'login', function( request, respond ){
+	var status, body;
+	try {
+		var obj = JSON.parse( request.data );
+		if( obj.user && obj.key ){
+			var res = users.login( obj.user, obj.key );
+			status = res ? 200 : 201;
+			body = JSON.stringify( res );
+			log.debug( 'login ' + (res ? 'successful' : 'denied') );
+		} else {
+			log.debug('request missing user/key');
+			status = 201;
+			body = '';
+		}
+	} catch (e) {
+		log.error(e);
+		status = 404;
+		body = '';
+	}
+	respond( status, 'text/json', body );
+} );
+
+server.post( 'logout', function( request, respond ){
+	var status, body;
+	try {
+		var obj = JSON.parse( request.data );
+		if( obj.user && obj.key ){
+			var res = users.logout( obj.user, obj.key );
+			status = res ? 200 : 201;
+			body = JSON.stringify( res );
+		} else {
+			status = 201;
+			body = '';
+		}
+	} catch (e) {
+		log.error(e);
+		status = 404;
+		body = '';
 	}
 	respond( status, 'text/json', body );
 } );
