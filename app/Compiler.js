@@ -54,8 +54,6 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] === "wsp" ) i++;
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( types[i] !== "str" )
-							throw new Error("KSyntaxError.put");
 						output.push( "rv=("+lex[i++]+");" );
 						break;
 					case "in":
