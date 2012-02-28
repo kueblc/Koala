@@ -56,17 +56,17 @@ button:hover {
 	padding-bottom: 0;
 }
 
-.tab > button {
+.tab > label {
 	font-size: 14px;
 	padding: 2px 4px;
 	margin-bottom: -1px;
 	margin-left: -2px;
 }
 
-.tab > button.current {
+.tab > label.current {
 }
 
-.tab > button:hover {
+.tab > label:hover {
 }
 
 #canvas {
