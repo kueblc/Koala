@@ -56,14 +56,23 @@ button:hover {
 	padding-bottom: 0;
 }
 
-.tab > label {
+.tab li {
+	display: block;
+	float: left;
+}
+
+.tab input {
+	display: none;
+}
+
+.tab label {
 	font-size: 14px;
 	padding: 2px 4px;
 	margin-bottom: -1px;
 	margin-left: -2px;
 }
 
-.tab > label.current {
+.tab :checked ~ label {
 }
 
 .tab > label:hover {
