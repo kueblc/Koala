@@ -37,7 +37,7 @@
 
 button {
 	font-size: 14px;
-	padding: 2px 4px;
+	padding: 2px 8px;
 	margin-right: 1px;
 	outline: none;
 }
@@ -50,8 +50,6 @@ button:hover {
 }
 
 .tab > button {
-	font-size: 14px;
-	padding: 2px 4px;
 	margin-top: 3px;
 	margin-left: -2px;
 }
