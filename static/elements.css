@@ -35,10 +35,6 @@
 	outline: none;
 }
 
-.menu, .tab {
-	padding: 2px 8px;
-}
-
 button {
 	font-size: 14px;
 	padding: 2px 4px;
@@ -69,6 +65,7 @@ button:hover {
 #canvas {
 	height: 100%;
 	width: 100%;
+	position: relative;
 }
 
 #canvas.shadow:before {

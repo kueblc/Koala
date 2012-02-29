@@ -143,11 +143,14 @@ h1, h2 {
 .panel > .header {
 	height: 30px;
 	top: 21px;
+	padding: 2px 8px;
 }
 
 .panel > .footer {
 	height: 30px;
 	bottom: 0;
+	padding: 2px 8px;
+	border-top: 1px solid #ccc;
 }
 
 .panel > .content {
