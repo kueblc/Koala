@@ -70,10 +70,9 @@ window.onload = function(){
 	$("btn_run").onclick = function(){
 		compiler.interpret( editor.input.value );
 	};
-	$("btn_dl").onclick = function(){
+	$("btn_test").onclick = function(){
 		throw new Error("NotImplemented");
 	};
-	$("btn_hl").onclick = function(){ editor.update(); };
 };
 
 window.onerror = function( msg, url, line ){

@@ -1,3 +1,4 @@
+/*
 #files {
 	overflow: auto;
 	padding: 8px;
@@ -5,6 +6,7 @@
 	top: 21px;
 	bottom: 0;
 }
+*/
 
 #files > li {
 	float: left;
@@ -33,18 +35,9 @@
 	outline: none;
 }
 
-.panel > h2 {
-	padding: 2px 8px;
-	font-size: 14px;
-}
-
-.menu, .tab {
-	padding: 2px 8px;
-}
-
 button {
 	font-size: 14px;
-	padding: 2px 4px;
+	padding: 2px 8px;
 	margin-right: 1px;
 	outline: none;
 }
@@ -57,9 +50,7 @@ button:hover {
 }
 
 .tab > button {
-	font-size: 14px;
-	padding: 2px 4px;
-	margin-bottom: -1px;
+	margin-top: 3px;
 	margin-left: -2px;
 }
 
@@ -70,12 +61,7 @@ button:hover {
 }
 
 #canvas {
-	margin: 12px;
-	position: absolute;
-	top: 21px;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	position: relative;
 }
 
 #canvas.shadow:before {
@@ -86,10 +72,6 @@ button:hover {
 	top: 50%;
 	width: 100%;
 	text-align: center;
-}
-
-.panel_content {
-	margin: 12px;
 }
 
 .input {
@@ -140,7 +122,6 @@ button:hover {
 
 /* syntax highlighting */
 .ldt {
-	height: 340px;
 }
 
 .ldt .cmd { color: green; }
