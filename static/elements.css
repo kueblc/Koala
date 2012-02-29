@@ -31,13 +31,13 @@
 	white-space: pre;
 	text-overflow: ellipsis;
 	background: #fff;
-	border: 1px solid #CCCCCC;
+	border: 1px solid #ccc;
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 0 4px #FFFFFF inset, 0 -16px 40px rgba(0, 0, 0, 0.05) inset;
-	-moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 0 4px #FFFFFF inset, 0 -16px 40px rgba(0, 0, 0, 0.05) inset;
-	-webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 0 0 4px #FFFFFF inset, 0 -16px 40px rgba(0, 0, 0, 0.05) inset;
+	box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.1) inset;
+	-moz-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.1) inset;
+	-webkit-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.1) inset;
 }
 
 #files input[type=text] {
