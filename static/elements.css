@@ -14,6 +14,10 @@
 	margin: 8px;
 	width: 128px;
 	height: 128px;
+	border-radius: 16px;
+	-moz-border-radius: 16px;
+	-webkit-border-radius: 16px;
+	cursor: pointer;
 }
 
 #files > li:hover {
@@ -21,10 +25,26 @@
 }
 
 #files div {
+	overflow: hidden;
 	margin: 4px 16px;
-	width: 96px;
-	height: 96px;
-	background: #ccc;
+	padding: 8px;
+	width: 78px;
+	height: 78px;
+	white-space: pre;
+	text-overflow: ellipsis;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.1) inset;
+	-moz-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.1) inset;
+	-webkit-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.1) inset;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
 }
 
 #files input[type=text] {
