@@ -56,7 +56,7 @@ button:hover {
 .tab > button {
 	font-size: 14px;
 	padding: 2px 4px;
-	margin-bottom: -1px;
+	margin-top: 3px;
 	margin-left: -2px;
 }
 
