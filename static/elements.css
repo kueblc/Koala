@@ -63,11 +63,6 @@ button:hover {
 }
 
 #canvas {
-	height: 100%;
-	width: 100%;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
 	position: relative;
 }
 
@@ -129,8 +124,6 @@ button:hover {
 
 /* syntax highlighting */
 .ldt {
-	height: 100%;
-	width: 100%;
 }
 
 .ldt .cmd { color: green; }
