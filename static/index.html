@@ -47,32 +47,37 @@
 			<div class='column' style='width:22%'>
 				<div style='height:100%'>
 					<div class='panel'>
-						<h2>boxes</h2>
-						<ul id='files'>
+						<h2>file browser</h2>
+						<div class='header menu'>
+							<button>+</button>
+							<button>home</button>
+						</div>
+						<ul id='files' class='content head scroll foot'>
 							<li><div></div><input type="text" value="project1.k"></li>
 							<li><div></div><input type="text" value="helloworld.k"></li>
 							<li><div></div><input type="text" value="untitled.k"></li>
 						</ul>
+						<div class='footer menu'>
+							<button>new</button>
+							<button>delete</button>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class='column' style='width:44%'>
 				<div style='height:100%'>
 					<div class='panel'>
-						<h2>script</h2>
-						<div class='menu'>
+						<h2>editor</h2>
+						<div class='header tab'>
+							<button class='current'>*unsaved script</button>
 							<button>new</button>
-							<button>save</button>
-							<button id='btn_dl'>download</button>&nbsp;
-							<button id='btn_run'>run</button>
 						</div>
-						<div class='panel_content'>
+						<div class='content head stretch foot'>
 							<textarea id='rta_in' class='input'></textarea>
-							<p>
-								<button id='btn_text'>Text</button>
-								<button id='btn_html'>HTML</button>
-								<button id='btn_hl'>Refresh</button>
-							</p>
+						</div>
+						<div class='footer menu'>
+							<button id='btn_test'>test</button>
+							<button id='btn_run'>run</button>
 						</div>
 					</div>
 				</div>
@@ -81,14 +86,16 @@
 				<div style='height:60%'>
 					<div class='panel'>
 						<h2>workbench</h2>
-						<div id='canvas' class='shadow'></div>
+						<div class='content stretch'>
+							<div id='canvas' class='shadow'></div>
+						</div>
 					</div>
 				</div>
 				<div style='height:40%'>
 					<div class='panel'>
 						<h2>properties</h2>
-						<div class='tab'><button class='current'>name</button><button>placement</button><button>colors</button></div>
-						<div class='panel_content'>
+						<div class='header tab'><button class='current'>name</button><button>placement</button><button>colors</button></div>
+						<div class='content head stretch'>
 							<div id='p_name'>
 								<p>title
 									<input name='title' type='text' id='title' class='input'>

@@ -115,38 +115,60 @@ h1, h2 {
 	box-sizing: border-box;
 }
 
-.panel {
-	overflow: hidden;
-	height: 100%;
+.panel, .panel > h2, .panel > .header, .panel > .footer {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+.panel > .header, .panel > .content, .panel > .footer {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+.panel {
+	overflow: hidden;
+	height: 100%;
 	position: relative;
 }
 
 .panel > h2 {
 	padding: 2px 8px;
 	font-size: 14px;
-	height: 16px;
+	height: 21px;
 	cursor: default;
 }
 
-.panel > .scroll {
-	position: absolute;
+.panel > .header {
+	height: 30px;
+	top: 21px;
+}
+
+.panel > .footer {
+	height: 30px;
+	bottom: 0;
+}
+
+.panel > .content {
 	top: 21px;
 	bottom: 0;
-	left: 0;
-	right: 0;
+}
+
+.panel > .head {
+	top: 51px;
+}
+
+.panel > .foot {
+	bottom: 30px;
+}
+
+.panel > .scroll {
 	padding: 8px;
 	overflow: auto;
 }
 
 .panel > .stretch {
-	position: absolute;
-	top: 21px;
-	bottom: 0;
-	left: 0;
-	right: 0;
 	padding: 12px;
 }
 
