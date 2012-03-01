@@ -2,7 +2,7 @@ body {
 	color: #333;
 }
 
-#header {
+header {
 	background: #3b5998;
 	color: #fff;
 }
@@ -85,5 +85,5 @@ button:hover {
 #code {
 }
 
-#footer {
+footer {
 }

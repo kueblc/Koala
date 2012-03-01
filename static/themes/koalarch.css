@@ -3,7 +3,7 @@ body {
 	background: #f6f9fc;
 }
 
-#header {
+header {
 	background: #333;
 	border-bottom: 5px solid #08c;
 	color: #fff;
@@ -76,5 +76,5 @@ button:hover {
 #code {
 }
 
-#footer {
+footer {
 }

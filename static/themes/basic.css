@@ -2,7 +2,7 @@ body {
 	color: #444;
 }
 
-#header {
+header {
 	background: #eee;
 	border-bottom: 1px solid #888;
 }
@@ -73,7 +73,7 @@ button:hover {
 #code {
 }
 
-#footer {
+footer {
 	background: #fdfdfd;
 	border-top: 1px solid #ccc;
 }

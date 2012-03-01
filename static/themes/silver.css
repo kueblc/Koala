@@ -2,7 +2,7 @@ body {
 	color: #444;
 }
 
-#header {
+header {
 	background: #eee;
 	background: 0 0px repeat-x url('gr.png');
 	background: -moz-linear-gradient(top, #eee, #ccc);
@@ -14,11 +14,11 @@ body {
 	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-#header > ul > li:hover {
+header > ul > li:hover {
 	background: 0 -43px repeat-x url('gr.png');
 }
 
-#header > ul > li > div {
+header > ul > li > div {
 	border-radius: 0 0 6px 6px;
 	-moz-border-radius: 0 0 6px 6px;
 	-webkit-border-radius: 0 0 6px 6px;
@@ -31,7 +31,7 @@ body {
 	background: url('bg.png');
 }
 
-#footer {
+footer {
 	background: #fdfdfd;
 	background: 0 -132px repeat-x url('gr.png');
 	background: -moz-linear-gradient(top, #fdfdfd, #f0f0f0);
