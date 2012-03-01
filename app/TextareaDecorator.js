@@ -12,11 +12,9 @@ function TextareaDecorator( textarea, parser ){
 	var parent = document.createElement("div");
 	var output = document.createElement("pre");
 	parent.appendChild(output);
-	var label = document.createElement("label");
-	parent.appendChild(label);
 	// replace the textarea with RTA DOM and reattach on label
 	textarea.parentNode.replaceChild( parent, textarea );
-	label.appendChild(textarea);
+	parent.appendChild(textarea);
 	// transfer the CSS styles to our editor
 	parent.className = 'ldt ' + textarea.className;
 	textarea.className = '';
