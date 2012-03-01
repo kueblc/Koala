@@ -77,8 +77,6 @@ WebServer.serve = function( path, filename ){
 };
 
 WebServer.init = function( HOST, PORT ){
-	var HOST = HOST || '127.0.0.1',
-		PORT = PORT || 8124;
 	var server = http.createServer(
 		function( request, response ){
 			log.notify( request.method + ' request for ' +
