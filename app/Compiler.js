@@ -5,12 +5,16 @@
  */
 
 function Compiler( parser ){
+	/* INIT */
+	var api = this;
+
 	var parser = parser;
-	this.interpret = function(script){
-		// testing interpreter, not final
+
+	api.compile = function(script){
 		// tokenize and classify the tokens
 		var lex = parser.tokenize(script);
 		var types = [];
+		var output = ['var rv;'];
 		for( var i = 0; i < lex.length; i++ )
 			types.push( parser.identify(lex[i]) );
 		// interpret each token
@@ -22,9 +26,13 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] === "wsp" ) i++;
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
-						if( types[i] !== "str" )
+						if( types[i] === "str" ){
+							output.push( "alert("+lex[i++]+");" );
+						} else if( types[i] === "box" ){
+							output.push( "alert("+lex[i++].replace(/\[|\]/g,'')+");" );
+						} else {
 							throw new Error("KSyntaxError.say");
-						eval( "alert("+lex[i++]+")" );
+						}
 						break;
 					case "ask":
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
@@ -32,7 +40,7 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] !== "str" )
 							throw new Error("KSyntaxError.ask");
-						eval( "rv=prompt("+lex[i++]+")" );
+						output.push( "rv=prompt("+lex[i++]+");" );
 						break;
 					case "dojs":
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
@@ -40,7 +48,21 @@ function Compiler( parser ){
 						if(!lex[i]) throw new Error("KSyntaxError.eof");
 						if( types[i] !== "str" )
 							throw new Error("KSyntaxError.dojs");
-						eval( "eval("+lex[i++]+")" );
+						output.push( "rv=eval("+lex[i++]+");" );
+						break;
+					case "put":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						output.push( "rv=("+lex[i++]+");" );
+						break;
+					case "in":
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] === "wsp" ) i++;
+						if(!lex[i]) throw new Error("KSyntaxError.eof");
+						if( types[i] !== "box" )
+							throw new Error("KSyntaxError.in");
+						output.push( lex[i++].replace(/\[|\]/g,'')+"=rv;" );
 						break;
 					default:
 						if( types[i-1] !== "wsp" )
@@ -50,6 +72,18 @@ function Compiler( parser ){
 				console && console.log && console.log(e);
 			}
 		}
+		output.push( 'return rv;' );
+		return output.join(' ');
 	};
+
+	api.interpret = function(script){
+		try {
+			return Function( api.compile( script ) )();
+		} catch(e) {
+			throw new Error("KRuntimeError: "+e);
+		}
+	};
+
+	return api;
 };
 
