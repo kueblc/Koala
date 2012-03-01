@@ -6,8 +6,13 @@
 
 /* settings you can play with */
 
-.ldt, .ldt textarea {
+.ldt textarea, .ldt pre {
 	padding: 4px;
+}
+
+.ldt pre {
+	/* moz misalignment fix, should be padding + 1 */
+	-moz-padding-start: 5px;
 }
 
 .ldt, .ldt pre, .ldt textarea {
@@ -29,17 +34,17 @@
 .ldt {
 	overflow: auto;
 	position: relative;
+	padding: 0;
 }
 
 .ldt pre {
-	-moz-padding-start: 1px;
-}
-
-.ldt textarea {
 	position: absolute;
 	top: 0;
 	left: 0;
-	display: inline;
+	z-index: -1;
+}
+
+.ldt textarea {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
