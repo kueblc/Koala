@@ -41,6 +41,10 @@ File browser:
 		Save to server when available
 		Maintain whether it has been uploaded or not
 
+Image editor:
+	Using HTML5 canvas
+		get data using canvas.toDataURL([mime="image/png"]);
+
 Resources:
 	Using pure CSS to apply alternating styles
 		http://www.w3.org/Style/Examples/007/evenodd.en.html
