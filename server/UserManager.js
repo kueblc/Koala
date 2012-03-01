@@ -10,6 +10,11 @@ var UserManager = exports,
 
 USER_DB.on( 'load', function(){
 	log.notify("database loaded");
+	//UserManager.add( 'fred', hash(hash('fred')+hash('password')) );
+} );
+
+USER_DB.on( 'error', function(){
+	log.error("database load failed!");
 } );
 
 USER_DB.on( 'drain', function(){
@@ -30,20 +35,39 @@ function User( username ){
 
 UserManager._db = USER_DB;
 
-UserManager.add = function( user ){
+var hash = function(str){
+	var key = 0;
+	for( var i = 0; i < str.length; i++ ){
+		var v = str.charCodeAt(i);
+		key = ( ( key << 5 ) - key ) + v;
+		key = key & key;
+	}
+	return ''+key;
+};
+
+var makekey = function( str ){
+	return hash(''+str+new Date());
+};
+
+UserManager.add = function( user, key ){
 	log.debug("running add");
-	var id = user.id;
+	var id = hash(user);
 	if( USER_DB.get(id) ){
 		log.error("user already exists");
+		return null;
 	} else {
-		USER_DB.set( id, user );
+		USER_DB.set( id,
+			{ user: user,
+			pass: key,
+			key: makekey(id+key) }
+		);
 		log.notify("user added");
 	}
 };
 
-UserManager.remove = function( user ){
+UserManager.remove = function( user, key ){
 	log.debug("running remove");
-	var id = user.id;
+	var id = hash(user);
 	if( USER_DB.get(id) ){
 		USER_DB.rm( id );
 		log.notify("user removed");
@@ -52,12 +76,27 @@ UserManager.remove = function( user ){
 	}
 };
 
-UserManager.update = function( id, key, value ){
+UserManager.login = function( user, pass ){
+	log.debug("running login");
+	var id = hash(user);
+	var u = USER_DB.get(id);
+	if( u && u.pass === pass ){
+		u.key = makekey(id+pass);
+		USER_DB.set( id, u );
+		return u.key;
+	}
+	return null;
 };
 
-UserManager.login = function( id, auth ){
-};
-
-UserManager.logout = function( id ){
+UserManager.logout = function( user, key ){
+	log.debug("running logout");
+	var id = hash(user);
+	var u = USER_DB.get(id);
+	if( u && hash(u.key) === key ){
+		u.key = null;
+		USER_DB.set( id, u );
+		return id;
+	}
+	return null;
 };
 
