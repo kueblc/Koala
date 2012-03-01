@@ -13,6 +13,10 @@ USER_DB.on( 'load', function(){
 	//UserManager.add( 'fred', hash(hash('fred')+hash('password')) );
 } );
 
+USER_DB.on( 'error', function(){
+	log.error("database load failed!");
+} );
+
 USER_DB.on( 'drain', function(){
 	log.notify("database saved");
 } );
