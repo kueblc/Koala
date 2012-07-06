@@ -99,9 +99,9 @@ h1, h2 {
 	clip: rect(0px 999px 999px -99px);
 }
 
-#header > ul > li:hover > div {
+/*#header > ul > li:hover > div {
 	display: block;
-}
+}*/
 
 .column {
 	float: left;
