@@ -94,6 +94,12 @@ Resources:
 		http://www.webdeveloper.com/forum/showthread.php?t=74982
 	Multi-User Edit
 		https://github.com/Pita/etherpad-lite
+	JS Security
+		http://pajhome.org.uk/crypt/md5/
+		http://www.ietf.org/rfc/rfc2104.txt
+	Node.js Reference
+		http://nodejs.org/docs/v0.4.9/api/crypto.html
+		http://nodejs.org/docs/v0.4.9/api/globals.html
 
 ~ scraps ~
 == Dealing with Buffers & Strings, Base64 & binary
