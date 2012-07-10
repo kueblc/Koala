@@ -14,6 +14,7 @@
 		<script src="../app/TextareaDecorator.js" type="text/javascript"></script>
 		<script src="../app/User.js" type="text/javascript"></script>
 		<script src="../app/Server.js" type="text/javascript"></script>
+		<script src="../app/Animator.js" type="text/javascript"></script>
 		<script src="../app/Koala.js" type="text/javascript"></script>
 		<link id="theme" rel="stylesheet" type="text/css" href="themes/basic.css">
 	</head>
@@ -21,7 +22,7 @@
 		<div id='header'>
 			<h1>the koala project</h1>
 			<ul>
-				<li>settings<div>
+				<li id='toolbar_settings'>settings<div>
 					theme
 					<select id='theme_sel' autocomplete='off'>
 						<option value='basic' selected>Basic</option>
@@ -33,7 +34,7 @@
 						<option value='black'>Black</option>
 					</select>
 				</div></li>
-				<li>login<div>
+				<li id='toolbar_login'>login<div>
 					<p>username
 						<input name='user' type='text' id='login_username' class='input'>
 					</p>

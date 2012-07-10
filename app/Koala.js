@@ -65,6 +65,26 @@ window.onload = function(){
 	
 	user = new User( server );
 	
+	anim = new Animator();
+	
+	function ToggleMenu( elem ){
+		var lock = true;
+		elem.onmousedown = function(){ lock = false; };
+		elem.onmouseup = function(){ lock = true; };
+		elem.onmouseover = function(){
+			elem.children[0].style.display = 'block';
+		};
+		elem.onmouseout = function(){
+			lock && (elem.children[0].style.display = 'none');
+		};
+	};
+	
+	toolbar = {
+		settings: $("toolbar_settings"),
+		login: $("toolbar_login") };
+	
+	for( menu in toolbar ) new ToggleMenu(toolbar[menu]);
+	
 	// TODO
 	// temporary function testing only, not real button actions
 	$("btn_run").onclick = function(){
@@ -74,7 +94,7 @@ window.onload = function(){
 		throw new Error("NotImplemented");
 	};
 };
-
+/*
 window.onerror = function( msg, url, line ){
 	function toHex(s){
 		var output = "";
@@ -92,4 +112,4 @@ window.onerror = function( msg, url, line ){
 	document.body.onkeyup = function(){ location.reload(); };
 	return true;
 };
-
+*/
