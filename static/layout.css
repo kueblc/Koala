@@ -42,7 +42,7 @@ h1, h2 {
 #content {
 	top: 44px;
 	bottom: 44px;
-	padding: 0 16px 16px 0;
+	padding: 0 16px 0 0;
 }
 
 #footer {
@@ -106,16 +106,14 @@ h1, h2 {
 .column {
 	float: left;
 	height: 100%;
+	padding: 0 0 16px 16px;
 }
 
 .column > div {
-	padding: 16px 0 0 16px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+	padding: 16px 0 0;
 }
 
-.panel, .panel > h2, .panel > .header, .panel > .footer {
+.panel, .panel > h2, .panel > .header, .panel > .footer, .column, .column > div {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
