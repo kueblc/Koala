@@ -4,15 +4,6 @@
  * Manages the panels
  */
 
-function Panel( element ){
-	/* INIT */
-	var api = this;
-	api.element = element;
-	api.title = element.children[0].textContent || element.children[0].innerText;
-
-	return api;
-};
-
 function PanelManager( desk, dock ){
 	/* INIT */
 	var api = this;
@@ -22,6 +13,25 @@ function PanelManager( desk, dock ){
 
 	var columns = desk.children;
 
+	var panels = [];
+
+	function Panel( i, element ){
+		var panel = this;
+
+		panel.i = i;
+		panel.element = element;
+
+		var titlebar = element.children[0];
+		panel.title = titlebar.textContent || titlebar.innerText;
+		titlebar.ondblclick = function(){ api.minPanel(panel); };
+
+		panel.icon = document.createElement('button');
+		panel.icon.innerHTML = panel.title;
+		panel.icon.ondblclick = function(){ api.maxPanel(panel); };
+
+		return panel;
+	};
+
 	// interpret initial contents
 	for( var i = 0; i < columns.length; i++ ){
 		var column = columns[i];
@@ -29,7 +39,8 @@ function PanelManager( desk, dock ){
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
 			row.height = Number(/\d+/.exec(row.style.height));
-			row.panel = new Panel(row.children[0]);
+			row.panel = new Panel(panels.length,row.children[0]);
+			panels.push(row.panel);
 		}
 	}
 
@@ -61,35 +72,36 @@ function PanelManager( desk, dock ){
 		}
 	};
 
-	api.addPanel = function(panel,col,row){
-		if( columns[col] ){
-			column = columns[col];
-			// update sizes of other rows
-			rows = column.children;
-			newHeight = 100/(rows.length+1);
-			subHeight = newHeight/rows.length || 0;
-			for( var i = 0; i < rows.length; i++ ){
-				rows[i].height -= subHeight;
-				rows[i].style.height = rows[i].height+'%';
-			}
-			// add new panel to the DOM
-			panel.height = newHeight;
-			panel.style.height = newHeight+'%';
-			column.insertBefore(panel,column.children[row]||null);
+	api.addRow = function(panel,column,pos){
+		// update sizes of other rows
+		rows = column.children;
+		newHeight = 100/(rows.length+1);
+		subHeight = newHeight/rows.length || 0;
+		for( var i = 0; i < rows.length; i++ ){
+			rows[i].height -= subHeight;
+			rows[i].style.height = rows[i].height+'%';
 		}
+		// create and add new row to the DOM
+		row = document.createElement('div');
+		row.height = newHeight;
+		row.style.height = newHeight+'%';
+		row.panel = panel;
+		row.appendChild(panel.element);
+		column.insertBefore(row,pos);
 	};
 
-	api.removePanel = function(panel){
-		// remove the panel from the DOM
-		column = panel.parentNode;
-		column.removeChild(panel);
+	api.removeRow = function(panel){
+		// remove the row from the DOM
+		row = panel.element.parentNode;
+		column = row.parentNode;
+		column.removeChild(row);
 		rows = column.children;
 		if( rows.length === 0 ){
-			// remove the empty column
-			api.removeColumn(column);
+			// remove the empty column, unless its the only one
+			(columns.length-1) && api.removeColumn(column);
 		} else {
 			// update sizes of other rows
-			addHeight = panel.height/rows.length;
+			addHeight = row.height/rows.length;
 			for( var i = 0; i < rows.length; i++ ){
 				rows[i].height += addHeight;
 				rows[i].style.height = rows[i].height+'%';
@@ -97,9 +109,27 @@ function PanelManager( desk, dock ){
 		}
 	};
 
-	api.movePanel = function(panel,col,row){
-		api.removePanel(panel);
-		api.addPanel(panel,col,row);
+	api.newPanel = function(element,column,pos){
+		panel = new Panel( panels.length, element );
+		panels.push(panel);
+		api.addRow(panel,column,pos);
+	};
+
+	api.minPanel = function(panel){
+		api.removeRow(panel);
+		// TODO
+		dock.appendChild(panel.icon);
+	};
+
+	api.maxPanel = function(panel){
+		// TODO
+		dock.removeChild(panel.icon);
+		api.addRow(panel,columns[0],null);
+	};
+
+	api.movePanel = function(panel,column,pos){
+		api.removeRow(panel);
+		api.addRow(panel,column,pos);
 	};
 
 	return api;

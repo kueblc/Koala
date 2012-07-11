@@ -48,7 +48,12 @@ h1, h2 {
 #footer {
 	bottom: 0;
 	height: 44px;
-	padding: 2px 16px;
+}
+
+#footer > button {
+	font-size: 20px;
+	padding: 4px 6px;
+	margin: 4px;
 }
 
 #header > h1 {
