@@ -14,12 +14,21 @@ function PanelManager( desk, dock, animationTime ){
 	var columns = desk.children;
 
 	var panels = [];
+	var selection = null;
 
 	function Panel( i, element ){
 		var panel = this;
 
 		panel.i = i;
 		panel.element = element;
+
+		element.addEventListener('click',
+			function(e){
+				var e = e || window.event;
+				e.cancelBubble = true;
+				e.stopPropagation && e.stopPropagation();
+				selection = panel;
+			}, false);
 
 		var titlebar = element.children[0];
 		panel.title = titlebar.textContent || titlebar.innerText;
@@ -35,14 +44,45 @@ function PanelManager( desk, dock, animationTime ){
 	// interpret initial contents
 	for( var i = 0; i < columns.length; i++ ){
 		var column = columns[i];
+		column.addEventListener('click',
+			function(e){
+				var e = e || window.event;
+				e.cancelBubble = true;
+				e.stopPropagation && e.stopPropagation();
+				if(selection){
+					api.movePanel(selection,this,null);
+					selection = null;
+				}
+			}, false);
 		column.width = Number(/\d+/.exec(column.style.width));
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
+			row.addEventListener('click',
+				function(e){
+					var e = e || window.event;
+					e.cancelBubble = true;
+					e.stopPropagation && e.stopPropagation();
+					if(selection){
+						api.movePanel(selection,this.parentNode,this);
+						selection = null;
+					}
+				}, false);
 			row.height = Number(/\d+/.exec(row.style.height));
 			row.panel = new Panel(panels.length,row.children[0]);
 			panels.push(row.panel);
 		}
 	}
+
+	desk.addEventListener('click',
+		function(e){
+			var e = e || window.event;
+			e.cancelBubble = true;
+			e.stopPropagation && e.stopPropagation();
+			if(selection){
+				api.movePanel(selection,api.addColumn(null),null);
+				selection = null;
+			}
+		}, false);
 
 	api.addColumn = function(pos){
 		// determine the width of the new column
@@ -58,7 +98,8 @@ function PanelManager( desk, dock, animationTime ){
 		column.className = 'column';
 		column.width = newWidth;
 		column.style.width = newWidth+'%';
-		desk.insertBefore(column,columns[pos]||null);
+		desk.insertBefore(column,pos);
+		return column;
 	};
 
 	api.removeColumn = function(column){
@@ -140,8 +181,12 @@ function PanelManager( desk, dock, animationTime ){
 	};
 
 	api.movePanel = function(panel,column,pos){
-		api.removeRow(panel);
-		api.addRow(panel,column,pos);
+		// don't move a panel to itself
+		if( panel.element.parentNode !== pos ){
+			api.removeRow(panel);
+			window.setTimeout(
+				function(){api.addRow(panel,column,pos);}, animationTime );
+		}
 	};
 
 	return api;
