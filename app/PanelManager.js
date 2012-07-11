@@ -4,7 +4,7 @@
  * Manages the panels
  */
 
-function PanelManager( desk, dock ){
+function PanelManager( desk, dock, animationTime ){
 	/* INIT */
 	var api = this;
 
@@ -62,14 +62,16 @@ function PanelManager( desk, dock ){
 	};
 
 	api.removeColumn = function(column){
-		// remove the column from the DOM
-		desk.removeChild(column);
-		addWidth = column.width/columns.length || 0;
 		// update the width of other columns
+		addWidth = column.width/(columns.length-1) || 0;
 		for( var i = 0; i < columns.length; i++ ){
 			columns[i].width += addWidth;
 			columns[i].style.width = columns[i].width+'%';
 		}
+		column.style.width = 0;
+		column.style.padding = 0;
+		// remove the column from the DOM after the animation ends
+		window.setTimeout( function(){desk.removeChild(column);}, animationTime );
 	};
 
 	api.addRow = function(panel,column,pos){
@@ -94,18 +96,28 @@ function PanelManager( desk, dock ){
 		// remove the row from the DOM
 		row = panel.element.parentNode;
 		column = row.parentNode;
-		column.removeChild(row);
 		rows = column.children;
-		if( rows.length === 0 ){
+		if( rows.length === 1 ){
 			// remove the empty column, unless its the only one
-			(columns.length-1) && api.removeColumn(column);
+			if( columns.length !== 1 ){
+				api.removeColumn(column);
+			} else {
+				row.style.height = 0;
+				// remove the row from the DOM after the animation ends
+				window.setTimeout(
+					function(){column.removeChild(row);}, animationTime );
+			}
 		} else {
 			// update sizes of other rows
-			addHeight = row.height/rows.length;
+			addHeight = row.height/(rows.length-1);
 			for( var i = 0; i < rows.length; i++ ){
 				rows[i].height += addHeight;
 				rows[i].style.height = rows[i].height+'%';
 			}
+			row.style.height = 0;
+			row.style.padding = 0;
+			// remove the row from the DOM after the animation ends
+			window.setTimeout( function(){column.removeChild(row);}, animationTime );
 		}
 	};
 

@@ -85,7 +85,7 @@ window.onload = function(){
 	
 	for( menu in toolbar ) new ToggleMenu(toolbar[menu]);
 	
-	pm = new PanelManager( $("content"), $("footer") );
+	pm = new PanelManager( $("content"), $("footer"), 1000 );
 	
 	// TODO
 	// temporary function testing only, not real button actions

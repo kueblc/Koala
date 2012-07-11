@@ -112,10 +112,20 @@ h1, h2 {
 	float: left;
 	height: 100%;
 	padding: 0 0 16px 16px;
+	/* eyecandy */
+	transition: width 1s, padding 1s;
+	-moz-transition: width 1s, padding 1s;
+	-webkit-transition: width 1s, padding 1s;
+	-o-transition: width 1s, padding 1s;
 }
 
 .column > div {
 	padding: 16px 0 0;
+	/* eyecandy */
+	transition: height 1s, padding 1s;
+	-moz-transition: height 1s, padding 1s;
+	-webkit-transition: height 1s, padding 1s;
+	-o-transition: height 1s, padding 1s;
 }
 
 .panel, .panel > h2, .panel > .header, .panel > .footer, .column, .column > div {
