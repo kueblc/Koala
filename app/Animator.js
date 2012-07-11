@@ -9,20 +9,28 @@ function Animation( element, properties, units, duration, rate, transition, cb )
 	var startTime = new Date();
 	
 	// obtain starting and differential values
-	var styles = element.style,
+	var style = element.style,
 		start = {},
 		diff = {};
 	for( prop in properties ){
 		// regex to extract numbers
-		start[prop] = Number(/-?\d+(\.\d+)?/.exec(styles[prop]));
+		start[prop] = Number(/-?\d+(\.\d+)?/.exec(style[prop]));
 		diff[prop] = properties[prop] - start[prop];
 	}
 	
-	// animation timer
+	// animation tick
 	var timer = window.setInterval( function(){
+		// determine the animation progress
 		var time = new Date() - startTime;
-		var progress = time / duration;
-		
+		var progress = Math.min( transition( time / duration ), 1 );
+		// set property values
+		for( prop in properties )
+			style[prop] = (diff[prop] * progress + start[prop]) + units[prop];
+		if( progress === 1 ){
+			// clear timer and callback
+			window.clearInterval(timer);
+			cb && cb();
+		}
 	}, rate );
 };
 
