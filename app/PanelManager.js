@@ -140,6 +140,16 @@ function PanelManager( desk, dock, animationTime ){
 		row.style.height = newHeight+'%';
 		row.panel = panel;
 		row.appendChild(panel.element);
+		row.addEventListener('click',
+			function(e){
+				var e = e || window.event;
+				e.cancelBubble = true;
+				e.stopPropagation && e.stopPropagation();
+				if(selection){
+					api.movePanel(selection,this.parentNode,this);
+					selection = null;
+				}
+			}, false);
 		column.insertBefore(row,pos);
 	};
 
