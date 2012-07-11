@@ -98,6 +98,16 @@ function PanelManager( desk, dock, animationTime ){
 		column.className = 'column';
 		column.width = newWidth;
 		column.style.width = newWidth+'%';
+		column.addEventListener('click',
+			function(e){
+				var e = e || window.event;
+				e.cancelBubble = true;
+				e.stopPropagation && e.stopPropagation();
+				if(selection){
+					api.movePanel(selection,this,null);
+					selection = null;
+				}
+			}, false);
 		desk.insertBefore(column,pos);
 		return column;
 	};
