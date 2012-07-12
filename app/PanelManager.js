@@ -22,13 +22,13 @@ function PanelManager( desk, dock, animationTime ){
 		panel.i = i;
 		panel.element = element;
 
-		element.addEventListener('click',
+		element.onclick =
 			function(e){
 				var e = e || window.event;
 				e.cancelBubble = true;
 				e.stopPropagation && e.stopPropagation();
 				selection = panel;
-			}, false);
+			};
 
 		var titlebar = element.children[0];
 		panel.title = titlebar.textContent || titlebar.innerText;
@@ -44,7 +44,7 @@ function PanelManager( desk, dock, animationTime ){
 	// interpret initial contents
 	for( var i = 0; i < columns.length; i++ ){
 		var column = columns[i];
-		column.addEventListener('click',
+		column.onclick =
 			function(e){
 				var e = e || window.event;
 				e.cancelBubble = true;
@@ -53,11 +53,11 @@ function PanelManager( desk, dock, animationTime ){
 					api.movePanel(selection,this,null);
 					selection = null;
 				}
-			}, false);
+			};
 		column.width = Number(/\d+/.exec(column.style.width));
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
-			row.addEventListener('click',
+			row.onclick =
 				function(e){
 					var e = e || window.event;
 					e.cancelBubble = true;
@@ -66,14 +66,14 @@ function PanelManager( desk, dock, animationTime ){
 						api.movePanel(selection,this.parentNode,this);
 						selection = null;
 					}
-				}, false);
+				};
 			row.height = Number(/\d+/.exec(row.style.height));
 			row.panel = new Panel(panels.length,row.children[0]);
 			panels.push(row.panel);
 		}
 	}
 
-	desk.addEventListener('click',
+	desk.onclick =
 		function(e){
 			var e = e || window.event;
 			e.cancelBubble = true;
@@ -82,7 +82,7 @@ function PanelManager( desk, dock, animationTime ){
 				api.movePanel(selection,api.addColumn(null),null);
 				selection = null;
 			}
-		}, false);
+		};
 
 	api.addColumn = function(pos){
 		// determine the width of the new column
@@ -98,7 +98,7 @@ function PanelManager( desk, dock, animationTime ){
 		column.className = 'column';
 		column.width = newWidth;
 		column.style.width = newWidth+'%';
-		column.addEventListener('click',
+		column.onclick =
 			function(e){
 				var e = e || window.event;
 				e.cancelBubble = true;
@@ -107,7 +107,7 @@ function PanelManager( desk, dock, animationTime ){
 					api.movePanel(selection,this,null);
 					selection = null;
 				}
-			}, false);
+			};
 		desk.insertBefore(column,pos);
 		return column;
 	};
@@ -140,7 +140,7 @@ function PanelManager( desk, dock, animationTime ){
 		row.style.height = newHeight+'%';
 		row.panel = panel;
 		row.appendChild(panel.element);
-		row.addEventListener('click',
+		row.onclick =
 			function(e){
 				var e = e || window.event;
 				e.cancelBubble = true;
@@ -149,7 +149,7 @@ function PanelManager( desk, dock, animationTime ){
 					api.movePanel(selection,this.parentNode,this);
 					selection = null;
 				}
-			}, false);
+			};
 		column.insertBefore(row,pos);
 	};
 
