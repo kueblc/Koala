@@ -31,6 +31,8 @@ function PanelManager( desk, dock, animationTime ){
 		var style = element.style,
 			startX = 0,
 			startY = 0;
+		// disable selection on grip in IE
+		grip.onselectstart = function(){ return false; };
 		grip.onmousedown = function dragStart(e){
 			var e = e || window.event;
 			startX = e.clientX;
@@ -41,12 +43,13 @@ function PanelManager( desk, dock, animationTime ){
 			style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
 			document.onmousemove = drag;
 			document.onmouseup = dragEnd;
+			// prevent selection while dragging
+			e.preventDefault && e.preventDefault();
 		};
 		function drag(e){
 			var e = e || window.event;
 			style.left = e.clientX - startX + 'px';
 			style.top = e.clientY - startY + 'px';
-			return true;
 		};
 		function dragEnd(e){
 			// stop watching mouse movements
