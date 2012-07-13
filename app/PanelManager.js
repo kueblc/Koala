@@ -5,6 +5,86 @@
  */
 
 function PanelManager( desk, dock, animationTime ){
+
+	/* PRIVATE CLASSES */
+	function Panel( i, element ){
+		var panel = this;
+
+		panel.i = i;
+		panel.element = element;
+		element.panel = panel;
+
+		var titlebar = element.children[0];
+		panel.title = titlebar.textContent || titlebar.innerText;
+		titlebar.ondblclick = function(){ api.minPanel(panel); };
+
+		panel.icon = document.createElement('button');
+		panel.icon.innerHTML = panel.title;
+		panel.icon.ondblclick = function(){ api.maxPanel(panel); };
+
+		new Draggable( element, titlebar, dropped );
+
+		return panel;
+	};
+
+	function Draggable( element, grip, dropCb ){
+		var style = element.style,
+			startX = 0,
+			startY = 0;
+		grip.onmousedown = function dragStart(e){
+			var e = e || window.event;
+			startX = e.clientX;
+			startY = e.clientY;
+			grip.style.cursor = 'move';
+			style.MozTransition = style.webkitTransition = 'box-shadow 1s';
+			style.zIndex = 9;
+			style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
+			document.onmousemove = drag;
+			document.onmouseup = dragEnd;
+		};
+		function drag(e){
+			var e = e || window.event;
+			style.left = e.clientX - startX + 'px';
+			style.top = e.clientY - startY + 'px';
+			return true;
+		};
+		function dragEnd(e){
+			// stop watching mouse movements
+			document.onmousemove = null;
+			document.onmouseup = null;
+			// determine the drop target
+			var e = e || window.event;
+			style.display = 'none';
+			var target = document.elementFromPoint(e.clientX,e.clientY);
+			if( target.nodeType === 3 ) target = target.parentNode;
+			style.display = '';
+			// animate element back to starting position
+			grip.style.cursor = 'auto';
+			style.MozTransition = style.webkitTransition = 'left 1s, top 1s, z-index 1s, box-shadow 1s';
+			style.left = 0;
+			style.top = 0;
+			style.zIndex = 0;
+			style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+			// callback if present
+			dropCb && dropCb(element,target);
+		};
+	};
+
+
+	// drop handler
+	function dropped(selection,target){
+		// get the panel object
+		selection = selection.panel || selection;
+		// determine if its a column, row, or desk
+		if(target.className === 'column'){
+			api.movePanel(selection,target,null);
+		} else if(target.parentNode.className === 'column'){
+			api.movePanel(selection,target.parentNode,target);
+		} else if(target === desk){
+			api.movePanel(selection,api.addColumn(null),null);
+		}
+	};
+
 	/* INIT */
 	var api = this;
 
@@ -16,73 +96,17 @@ function PanelManager( desk, dock, animationTime ){
 	var panels = [];
 	var selection = null;
 
-	function Panel( i, element ){
-		var panel = this;
-
-		panel.i = i;
-		panel.element = element;
-
-		element.onclick =
-			function(e){
-				var e = e || window.event;
-				e.cancelBubble = true;
-				e.stopPropagation && e.stopPropagation();
-				selection = panel;
-			};
-
-		var titlebar = element.children[0];
-		panel.title = titlebar.textContent || titlebar.innerText;
-		titlebar.ondblclick = function(){ api.minPanel(panel); };
-
-		panel.icon = document.createElement('button');
-		panel.icon.innerHTML = panel.title;
-		panel.icon.ondblclick = function(){ api.maxPanel(panel); };
-
-		return panel;
-	};
-
 	// interpret initial contents
 	for( var i = 0; i < columns.length; i++ ){
 		var column = columns[i];
-		column.onclick =
-			function(e){
-				var e = e || window.event;
-				e.cancelBubble = true;
-				e.stopPropagation && e.stopPropagation();
-				if(selection){
-					api.movePanel(selection,this,null);
-					selection = null;
-				}
-			};
 		column.width = Number(/\d+/.exec(column.style.width));
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
-			row.onclick =
-				function(e){
-					var e = e || window.event;
-					e.cancelBubble = true;
-					e.stopPropagation && e.stopPropagation();
-					if(selection){
-						api.movePanel(selection,this.parentNode,this);
-						selection = null;
-					}
-				};
 			row.height = Number(/\d+/.exec(row.style.height));
 			row.panel = new Panel(panels.length,row.children[0]);
 			panels.push(row.panel);
 		}
 	}
-
-	desk.onclick =
-		function(e){
-			var e = e || window.event;
-			e.cancelBubble = true;
-			e.stopPropagation && e.stopPropagation();
-			if(selection){
-				api.movePanel(selection,api.addColumn(null),null);
-				selection = null;
-			}
-		};
 
 	api.addColumn = function(pos){
 		// determine the width of the new column
@@ -98,16 +122,6 @@ function PanelManager( desk, dock, animationTime ){
 		column.className = 'column';
 		column.width = newWidth;
 		column.style.width = newWidth+'%';
-		column.onclick =
-			function(e){
-				var e = e || window.event;
-				e.cancelBubble = true;
-				e.stopPropagation && e.stopPropagation();
-				if(selection){
-					api.movePanel(selection,this,null);
-					selection = null;
-				}
-			};
 		desk.insertBefore(column,pos);
 		return column;
 	};
@@ -140,16 +154,6 @@ function PanelManager( desk, dock, animationTime ){
 		row.style.height = newHeight+'%';
 		row.panel = panel;
 		row.appendChild(panel.element);
-		row.onclick =
-			function(e){
-				var e = e || window.event;
-				e.cancelBubble = true;
-				e.stopPropagation && e.stopPropagation();
-				if(selection){
-					api.movePanel(selection,this.parentNode,this);
-					selection = null;
-				}
-			};
 		column.insertBefore(row,pos);
 	};
 
