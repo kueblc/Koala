@@ -4,6 +4,16 @@
  * Handles all animation effects
  */
 
+var Transition = {
+	linear: function(x){ return x; },
+	easeIn: function(x){ return x*x; },
+	easeOut: function(x){ return x*x - 2*x + 1; },
+	ease: function(x){
+		if( x < .5 ) return 2*x*x;
+		x = 1 - x;
+		return 1 - 2*x*x;
+	} };
+
 function Animation( element, properties, units, duration, rate, transition, cb ){
 	// record the start time
 	var startTime = new Date();
