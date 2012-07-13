@@ -23,8 +23,7 @@ function Animation( element, properties, units, duration, rate, transition, cb )
 		start = {},
 		diff = {};
 	for( prop in properties ){
-		// regex to extract numbers
-		start[prop] = Number(/-?\d+(\.\d+)?/.exec(style[prop]));
+		start[prop] = parseFloat(style[prop]) || 0;
 		diff[prop] = properties[prop] - start[prop];
 	}
 	
