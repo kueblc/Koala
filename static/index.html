@@ -15,6 +15,7 @@
 		<script src="../app/User.js" type="text/javascript"></script>
 		<script src="../app/Server.js" type="text/javascript"></script>
 		<script src="../app/Animator.js" type="text/javascript"></script>
+		<script src="../app/FileBrowser.js" type="text/javascript"></script>
 		<script src="../app/Koala.js" type="text/javascript"></script>
 		<link id="theme" rel="stylesheet" type="text/css" href="themes/basic.css">
 	</head>
@@ -47,9 +48,9 @@
 		<div id='content'>
 			<div class='column' style='width:22%'>
 				<div style='height:100%'>
-					<div class='panel'>
+					<div class='panel' id='panel_filebrowser'>
 						<h2>file browser</h2>
-						<div class='header menu'>
+						<div class='header menu' id='address'>
 							<button>+</button>
 							<button>home</button>
 						</div>
@@ -59,8 +60,8 @@
 							<li><div></div><input type="text" value="untitled.k"></li>
 						</ul>
 						<div class='footer'>
-							<button>new</button>
-							<button>delete</button>
+							<button id='btn_new'>new</button>
+							<button id='btn_delete'>delete</button>
 						</div>
 					</div>
 				</div>

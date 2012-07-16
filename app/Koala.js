@@ -51,7 +51,7 @@ var koala = {
 	}
 };
 
-var parser, editor, compiler, server, user;
+var parser, editor, compiler, server, user, fs, fbrowser;
 window.onload = function(){
 	// TODO
 	// testing...
@@ -93,6 +93,14 @@ window.onload = function(){
 	$("btn_test").onclick = function(){
 		throw new Error("NotImplemented");
 	};
+	
+	fs = new FS();
+	fbrowser = new FileBrowser( fs,
+		function( file ){
+			console.log(file);
+		} );
+	
+	$("btn_new").onclick = fbrowser.addFolder;
 };
 /*
 window.onerror = function( msg, url, line ){
