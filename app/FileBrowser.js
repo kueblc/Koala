@@ -32,23 +32,25 @@ function FileBrowser(fs,onOpen){
 		};
 	};
 	
-	function addIcon( file ){
+	function addIcon( id ){
+		var file = fs.get(id);
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
 			title = document.createElement('input');
-		icon.className = file._dir ? 'dir' : 'file';
+		icon.className = file._type;
 		title.type = 'text';
 		title.value = file._name;
 		container.appendChild(icon);
 		container.appendChild(title);
-		container.ondblclick = file._dir ?
+		container.ondblclick = (file._type === 'dir') ?
 			function(){ cwd.push(file._name); api.update(); updateAddress(); } :
 			function(){ onOpen && onOpen( file ); };
 		display.appendChild(container);
 	};
 	
 	api.addFolder = function(){
-		addIcon( fs.addFolder( cwd.join(''), prompt("New folder name") ) );
+		newdir = fs.add( cwd.join(''), prompt("New folder name"), 'dir' );
+		newdir && addIcon(newdir);
 	};
 	
 	// updates the display
@@ -56,7 +58,7 @@ function FileBrowser(fs,onOpen){
 		// clear the display
 		display.innerHTML = '';
 		// add each file to the display
-		var folder = fs.getFolder( cwd.join('/') );
+		var folder = fs.get( fs.resolvePath(cwd.join('/')) );
 		for( name in folder._data ){
 			var file = folder._data[name];
 			addIcon( file );
@@ -77,77 +79,103 @@ function FS(root){
 	/* INIT */
 	var api = this;
 	
-	// default the root node to a blank fs
+	// default to a blank fs
 	var root = root || {
-		_name: '/',
-		_dir: true,
-		_data: {},
-		_meta: {},
-		_parent: null };
+		id: 1,
+		size: 1,
+		0: { _name: '/', _type: 'dir', _parent: null, _data: {} }
+	};
 	
-	// finds the directory node for the given path or null if it does not exist
-	api.getFolder = function( path ){
+	// adds a node to the fs
+	api.mknode = function( parent, name, type ){
+		// update size and get a new file id
+		root.size++;
+		var child = root.id++;
+		// set file properties
+		root[child] = {
+			_name: name,
+			_type: type,
+			_parent: parent,
+			_data: {}
+		};
+		// be sure to inform parent of the new child node
+		root[parent]._data[name] = child;
+		return child;
+	};
+	
+	api.rmnode = function( id ){
+		// recursive remove if it is a folder
+		if( root[id]._type === 'dir' )
+			for( file in root[id]._data )
+				api.rmnode( root[id]._data[file] )
+		// remove the reference and file
+		root.size--;
+		delete root[ root[id]._parent ]._data[ root[id]._name ];
+		delete root[id];
+	};
+	
+	api.mvnode = function( id, parent, name ){
+		// remove old reference
+		delete root[ root[id]._parent ]._data[ root[id]._name ];
+		// update file name and parent
+		root[id]._name = name;
+		root[id]._parent = parent;
+		// add new reference
+		root[parent]._data[name] = id;
+		return id;
+	};
+	
+	// finds the directory node for the given path
+	// returns null if it is not a directory
+	api.resolvePath = function( path ){
 		var path = path.split('/');
-		var node = root;
+		var id = 0;
 		for( var i = 0; i < path.length; i++ ){
 			if( path[i] === '' ) continue;
-			node = node._data[ path[i] ];
-			if( !(node && node._dir) )
+			id = root[id]._data[ path[i] ];
+			if( !( id && root[id]._type === 'dir' ) )
 				return null;
 		}
-		return node;
+		return id;
+	};
+	
+	// adds a new file to the fs
+	api.add = function( path, name, type ){
+		// find the directory node
+		var parent = api.resolvePath(path);
+		// return null if it does not exist or name has already been taken
+		if( (parent === null) || root[parent]._data[name] ) return null;
+		// otherwise make the new node and return the file id
+		return api.mknode( parent, name, type );
+	};
+	
+	// removes a file from the fs
+	api.remove = function( path, name ){
+		// find the directory node
+		var parent = api.resolvePath(path);
+		// return null if it does not exist
+		if( !parent || !root[parent]._data[name] ) return null;
+		// otherwise remove the node and return success
+		api.rmnode( root[parent]._data[name] );
+		return true;
+	};
+	
+	// moves a file from src to dest
+	api.move = function( src, oldName, dest, newName ){
+		// find the directories
+		var s = api.resolvePath(src),
+			d = api.resolvePath(dest);
+		// return null if file does not exist or destination already exists
+		if( !s || !root[s]._data[oldName] || !d || root[d]._data[newName] )
+			return null;
+		// otherwise proceed to move file and return success
+		api.mvnode( root[s]._data[oldName], d, newName );
+		return true;
 	};
 	
 	// returns a reference to a node
-	api.get = function( path, name ){
-		var parent = api.getFolder(path);
-		return parent && parent._data[name];
-	};
-	
-	// adds a folder to the fs
-	api.addFolder = function( path, name ){
-		// find the directory node, return null if it does not exist
-		var parent = api.getFolder(path);
-		if( !parent ) return null;
-		// return null if the name has already been taken
-		if( parent._data[name] ) return null;
-		// otherwise construct the folder node
-		parent._data[name] = {
-			_name: name,
-			_dir: true,
-			_data: {},
-			_meta: {},
-			_parent: parent };
-		return parent._data[name];
-	};
-	
-	// adds a file node to the fs
-	api.addFile = function( path, name, data, meta ){
-		// find the directory node, return null if it does not exist
-		var parent = api.getFolder(path);
-		if( !parent ) return null;
-		// return null if the name has already been taken
-		if( parent._data[name] ) return null;
-		// otherwise construct the file node
-		parent._data[name] = {
-			_name: name,
-			_dir: false,
-			_data: data,
-			_meta: meta || {},
-			_parent: parent };
-		return parent._data[name];
-	};
-	
-	// remove a file or folder
-	api.remove = function( path, name ){
-		// find the directory node, return null if it does not exist
-		var parent = api.getFolder(path);
-		if( parent && parent._data[name] ){
-			parent._data[name] = undefined;
-			return true;
-		}
-		// return null if the node does not exist
-		return null;
+	api.get = function( id ){
+		return root[id];
 	};
 
 	return api;
