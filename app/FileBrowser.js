@@ -177,6 +177,9 @@ function FS(root){
 	api.get = function( id ){
 		return root[id];
 	};
+	
+	api.serialize = function(){ return JSON.stringify(root); };
+	api.deserialize = function(data){ root = JSON.parse(data); };
 
 	return api;
 };
