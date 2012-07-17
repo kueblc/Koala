@@ -40,11 +40,14 @@ function FileBrowser(fs,onOpen){
 		icon.className = file._type;
 		title.type = 'text';
 		title.value = file._name;
-		container.appendChild(icon);
-		container.appendChild(title);
+		title.onchange = function(){
+			fs.mvnode( id, file._parent, title.value );
+		};
 		container.ondblclick = (file._type === 'dir') ?
 			function(){ cwd.push(file._name); api.update(); updateAddress(); } :
 			function(){ onOpen && onOpen( file ); };
+		container.appendChild(icon);
+		container.appendChild(title);
 		display.appendChild(container);
 	};
 	
