@@ -51,7 +51,7 @@ var koala = {
 	}
 };
 
-var parser, editor, compiler, server, user;
+var parser, editor, compiler, server, user, anim, pm;
 window.onload = function(){
 	// TODO
 	// testing...
@@ -84,6 +84,8 @@ window.onload = function(){
 		login: $("toolbar_login") };
 	
 	for( menu in toolbar ) new ToggleMenu(toolbar[menu]);
+	
+	pm = new PanelManager( $("content"), $("footer"), 1000 );
 	
 	// TODO
 	// temporary function testing only, not real button actions
