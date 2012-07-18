@@ -52,7 +52,9 @@ function FileBrowser(fs,onOpen){
 	};
 	
 	api.addFolder = function(){
-		newdir = fs.add( cwd.join('/'), prompt("New folder name"), 'dir' );
+		var n = prompt("Filename");
+		var ext = n.split('.')[1] || 'dir';
+		newdir = fs.add( cwd.join('/'), n, ext );
 		newdir && addIcon(newdir);
 	};
 	
