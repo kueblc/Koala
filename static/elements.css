@@ -12,8 +12,8 @@
 	float: left;
 	list-style-type: none;
 	margin: 8px;
-	width: 128px;
-	height: 128px;
+	width: 96px;
+	height: 96px;
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
@@ -27,11 +27,21 @@
 }
 
 #files div {
-	overflow: hidden;
 	margin: 4px 16px;
-	padding: 8px;
-	width: 78px;
-	height: 78px;
+	width: 64px;
+	height: 64px;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+#files div.text {
+	width: 62px;
+	height: 62px;
+	/* padding: 8px; */
+	overflow: hidden;
 	white-space: pre;
 	text-overflow: ellipsis;
 	background: #fff;
@@ -42,17 +52,13 @@
 	box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.05) inset;
 	-moz-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.05) inset;
 	-webkit-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.05) inset;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
-	user-select: none;
 }
 
 #files input[type=text] {
 	border: none;
 	width: 100%;
 	text-align: center;
+	text-overflow: ellipsis;
 	background: none;
 	outline: none;
 }
