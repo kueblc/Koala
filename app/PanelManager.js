@@ -7,10 +7,9 @@
 function PanelManager( desk, dock, animationTime ){
 
 	/* PRIVATE CLASSES */
-	function Panel( i, element ){
+	function Panel( element ){
 		var panel = this;
 
-		panel.i = i;
 		panel.element = element;
 		element.panel = panel;
 
@@ -96,7 +95,6 @@ function PanelManager( desk, dock, animationTime ){
 
 	var columns = desk.children;
 
-	var panels = [];
 	var selection = null;
 
 	// interpret initial contents
@@ -106,8 +104,7 @@ function PanelManager( desk, dock, animationTime ){
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
 			row.height = Number(/\d+/.exec(row.style.height));
-			row.panel = new Panel(panels.length,row.children[0]);
-			panels.push(row.panel);
+			row.panel = new Panel(row.children[0]);
 		}
 	}
 
@@ -190,8 +187,7 @@ function PanelManager( desk, dock, animationTime ){
 	};
 
 	api.newPanel = function(element,column,pos){
-		panel = new Panel( panels.length, element );
-		panels.push(panel);
+		panel = new Panel( element );
 		api.addRow(panel,column,pos);
 	};
 
