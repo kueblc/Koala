@@ -40,6 +40,7 @@ function FileBrowser(fs,onOpen){
 		icon.className = file._type;
 		title.type = 'text';
 		title.value = file._name;
+		title.onfocus = function(){ title.select(); };
 		title.onchange = function(){
 			fs.mvnode( id, file._parent, title.value );
 		};
