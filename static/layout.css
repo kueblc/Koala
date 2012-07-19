@@ -44,7 +44,7 @@ h1, h2 {
 #content {
 	top: 44px;
 	bottom: 44px;
-	padding: 0 16px 0 0;
+	padding: 8px;
 }
 
 #footer {
@@ -113,7 +113,6 @@ h1, h2 {
 .column {
 	float: left;
 	height: 100%;
-	padding: 0 0 16px 16px;
 	/* eyecandy */
 	transition: width 1s, padding 1s;
 	-moz-transition: width 1s, padding 1s;
@@ -122,7 +121,7 @@ h1, h2 {
 }
 
 .column > div {
-	padding: 16px 0 0;
+	padding: 8px;
 	/* eyecandy */
 	transition: height 1s, padding 1s;
 	-moz-transition: height 1s, padding 1s;
