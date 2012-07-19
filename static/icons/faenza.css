@@ -1,0 +1,13 @@
+/* Faenza icons by tiheum released under GPL
+ * http://tiheum.deviantart.com/art/Faenza-Icons-173323228
+ * Converted to CSS spritesheet for use with The Koala Project
+ */
+
+/* default icon should be at 0,0 */
+#files div { background: url(faenza.png) 0 0; }
+
+#files .dir { background-position: 0 -64px; }
+#files .src { background-position: 0 -128px; }
+#files .exe { background-position: 0 -192px; }
+#files .txt { background-position: 0 -256px; }
+#files .pkg { background-position: 0 -320px; }

@@ -40,6 +40,7 @@ function FileBrowser(fs,onOpen){
 		icon.className = file._type;
 		title.type = 'text';
 		title.value = file._name;
+		title.onfocus = function(){ title.select(); };
 		title.onchange = function(){
 			fs.mvnode( id, file._parent, title.value );
 		};
@@ -52,7 +53,9 @@ function FileBrowser(fs,onOpen){
 	};
 	
 	api.addFolder = function(){
-		newdir = fs.add( cwd.join('/'), prompt("New folder name"), 'dir' );
+		var n = prompt("Filename");
+		var ext = n.split('.')[1] || 'dir';
+		newdir = fs.add( cwd.join('/'), n, ext );
 		newdir && addIcon(newdir);
 	};
 	
