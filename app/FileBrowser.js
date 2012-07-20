@@ -85,23 +85,24 @@ function FileBrowser(fs,onOpen){
 		// for each file dropped
 		var files = e.dataTransfer.files;
 		for( var i = 0; i < files.length; i++ ){
-			// filter out huge files
-			if( files[i].size > 4*1024*1024 ){
+			// filter out huge files (size in bytes)
+			if( files[i].size > 100*1024 ){
 				alert("FILE TOO BIG");
+				continue;
+			}
+			// try to create a new file with the name and type
+			var newfile = fs.add( cwd.join('/'), files[i].name, files[i].type );
+			// abort on failure
+			if( !newfile ){
+				alert("FILENAME IS TAKEN");
 				continue;
 			}
 			// upload
 			var file = new FileReader();
 			file.onload = (function(upload){
 				return function(e){
-					// add file
-					var n = upload.name;
-					var ext = upload.type;
-					newfile = fs.add( cwd.join('/'), upload.name, upload.type );
-					if( newfile ){
-						fs.get(newfile)._data = e.target.result;
-						addIcon(newfile);
-					}
+					fs.get(newfile)._data = e.target.result;
+					addIcon(newfile);
 				};
 			})(files[i]);
 			file.readAsDataURL(files[i]);
