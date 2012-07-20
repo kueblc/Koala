@@ -78,6 +78,42 @@ function FileBrowser(fs,onOpen){
 	api.update();
 	updateAddress();
 	
+	/* drop handler for uploads */
+	display.addEventListener( 'drop', function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		// for each file dropped
+		var files = e.dataTransfer.files;
+		for( var i = 0; i < files.length; i++ ){
+			// filter out huge files
+			if( files[i].size > 4*1024*1024 ){
+				alert("FILE TOO BIG");
+				continue;
+			}
+			// upload
+			var file = new FileReader();
+			file.onload = (function(upload){
+				return function(e){
+					// add file
+					var n = upload.name;
+					var ext = upload.type;
+					newfile = fs.add( cwd.join('/'), upload.name, upload.type );
+					if( newfile ){
+						fs.get(newfile)._data = e.target.result;
+						addIcon(newfile);
+					}
+				};
+			})(files[i]);
+			file.readAsDataURL(files[i]);
+		}
+	}, false );
+	
+	display.addEventListener( 'dragover', function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}, false );
+	
 	return api;
 };
 
