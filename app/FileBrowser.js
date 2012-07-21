@@ -34,24 +34,43 @@ function FileBrowser(fs,onOpen){
 	
 	function addIcon( id ){
 		var file = fs.get(id);
+		/* create the dom elements */
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
 			title = document.createElement('input');
+		/* set the icon image */
 		icon.className = file._type.match('[^\/]*');
-		// basic thumbnail
+		/* handle thumbnailing */
 		if( icon.className === 'text' && file._data.substr ){
 			icon.innerText = icon.textContent = file._data.substr(0,60);
 		}
 		
+		/* set the icon title */
 		title.type = 'text';
 		title.value = file._name;
+		/* select on focus */
 		title.onfocus = function(){ title.select(); };
+		/* renames file */
 		title.onchange = function(){
 			fs.mvnode( id, file._parent, title.value );
 		};
+		
+		/* double click opens folders and files */
 		container.ondblclick = (file._type === 'dir') ?
 			function(){ cwd.push(file._name); api.update(); updateAddress(); } :
 			function(){ onOpen && onOpen( file ); };
+		
+		/* drag to desktop download */
+		container.draggable = true;
+		container.addEventListener( 'dragstart', function(e){
+			console.log('icon dragstart');
+			e.dataTransfer.setData( "DownloadURL",
+				file._type + ':' + file._name + ':' +
+				//'data:' + file._type + ';base64,' +
+				file._data );
+		}, false );
+		
+		/* add the new icon to dom */
 		container.appendChild(icon);
 		container.appendChild(title);
 		display.appendChild(container);
