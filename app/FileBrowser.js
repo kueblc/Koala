@@ -37,7 +37,12 @@ function FileBrowser(fs,onOpen){
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
 			title = document.createElement('input');
-		icon.className = file._type;
+		icon.className = file._type.match('[^\/]*');
+		// basic thumbnail
+		if( icon.className === 'text' && file._data.substr ){
+			icon.innerText = icon.textContent = file._data.substr(0,60);
+		}
+		
 		title.type = 'text';
 		title.value = file._name;
 		title.onfocus = function(){ title.select(); };
@@ -99,13 +104,23 @@ function FileBrowser(fs,onOpen){
 			}
 			// upload
 			var file = new FileReader();
-			file.onload = (function(upload){
-				return function(e){
-					fs.get(newfile)._data = e.target.result;
-					addIcon(newfile);
-				};
-			})(files[i]);
-			file.readAsDataURL(files[i]);
+			file.onload = function(e){
+				fs.get(newfile)._data = e.target.result;
+				addIcon(newfile);
+			};
+			// error handling
+			file.onerror = function(e){
+				alert("FILE UPLOAD ERROR");
+				console.log(e);
+				// remove failed upload file
+				fs.rmnode(newfile);
+			};
+			// upload text documents as text
+			if( files[i].type.match('text.*') ){
+				file.readAsText(files[i]);
+			} else {
+				file.readAsDataURL(files[i]);
+			}
 		}
 	}, false );
 	

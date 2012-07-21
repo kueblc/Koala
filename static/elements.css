@@ -20,7 +20,12 @@
 	cursor: pointer;
 }
 
-#files > li:hover {
+#files > li:hover div {
+	opacity: 0.7;
+	filter: alpha(opacity = 70);
+}
+
+#files > li.selected {
 	background: #f5f5f5;
 	border: 1px solid #eee;
 	margin: 7px;
@@ -28,8 +33,12 @@
 
 #files div {
 	margin: 4px 16px;
-	width: 64px;
-	height: 64px;
+	width: 48px;
+	height: 48px;
+	padding: 8px;
+	overflow: hidden;
+	font-family: monospace;
+	font-size: 8px;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
@@ -37,11 +46,11 @@
 	user-select: none;
 }
 
+/*
 #files div.text {
 	width: 62px;
 	height: 62px;
-	/* padding: 8px; */
-	overflow: hidden;
+	padding: 8px;
 	white-space: pre;
 	text-overflow: ellipsis;
 	background: #fff;
@@ -53,6 +62,7 @@
 	-moz-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.05) inset;
 	-webkit-box-shadow: 0 4px 8px rgba(0,0,0,.1), 0 0 0 4px #fff inset, 0 -16px 40px rgba(0,0,0,.05) inset;
 }
+*/
 
 #files input[type=text] {
 	border: none;
