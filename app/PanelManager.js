@@ -7,11 +7,14 @@
 function PanelManager( desk, dock, animationTime ){
 
 	/* PRIVATE CLASSES */
-	function Panel( element ){
+	function Panel( element, col, row ){
 		var panel = this;
 
 		panel.element = element;
 		element.panel = panel;
+		
+		panel.col = col;
+		panel.row = row;
 
 		var titlebar = element.children[0];
 		panel.title = titlebar.textContent || titlebar.innerText;
@@ -56,10 +59,10 @@ function PanelManager( desk, dock, animationTime ){
 			document.onmouseup = null;
 			// determine the drop target
 			var e = e || window.event;
-			style.display = 'none';
-			var target = document.elementFromPoint(e.clientX,e.clientY);
-			if( target.nodeType === 3 ) target = target.parentNode;
-			style.display = '';
+	//		style.display = 'none';
+	//		var target = document.elementFromPoint(e.clientX,e.clientY);
+	//		if( target.nodeType === 3 ) target = target.parentNode;
+	//		style.display = '';
 			// animate element back to starting position
 			grip.style.cursor = 'auto';
 			style.MozTransition = style.webkitTransition = 'left 1s, top 1s, z-index 1s, box-shadow 1s';
@@ -67,24 +70,60 @@ function PanelManager( desk, dock, animationTime ){
 			style.top = 0;
 			style.zIndex = 0;
 			style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+			// find the position of the center of the panel relative to the desk
+			var x = element.offsetLeft + (element.clientWidth / 2),
+				y = element.offsetTop + (element.clientHeight / 2);
+			console.debug('x: '+x+'\ny: '+y);
+			console.debug(e.target);
+			console.debug(element);
 			// callback if present
-			dropCb && dropCb(element,target);
+			dropCb && dropCb(element,x,y);
 		};
 	};
 
-
 	// drop handler
-	function dropped(selection,target){
+	function dropped(selection,x,y){
 		// get the panel object
-		selection = selection.panel || selection;
-		// determine if its a column, row, or desk
-		if(target.className === 'column'){
-			api.movePanel(selection,target,null);
-		} else if(target.parentNode.className === 'column'){
-			api.movePanel(selection,target.parentNode,target);
-		} else if(target === desk){
-			api.movePanel(selection,api.addColumn(null),null);
+		var panel = selection.panel || selection;
+		var vert_divider = 0;
+		for( var col = 0; col < columns.length; col++ ){
+			var vert_range = Math.min( columns[col].clientWidth * 0.1, 64 );
+			if( x < (vert_divider + vert_range) ){
+				// insert column
+				console.log("Insert Column @ "+col);
+				api.insertColumn(panel,columns[col]);
+				return;
+			}
+			vert_divider += columns[col].clientWidth;
+			if( x < (vert_divider - vert_range) ){
+				// add row
+				var horz_divider = 0;
+				var rows = columns[col].children;
+				for( var row = 0; row < rows.length; row++ ){
+					var horz_range = rows[row].clientHeight * 0.5;
+					horz_divider += horz_range;
+					if( y < horz_divider ){
+						// move row, only if we need to
+						if( panel.row !== rows[row] &&
+							panel.row.nextSibling !== rows[row] ){
+							console.log("Insert Row @ "+col+","+row);
+							api.movePanel(panel,columns[col],rows[row]);
+						} else console.log("Insert Row Cancelled @ "+col+","+row);
+						return;
+					}
+					horz_divider += horz_range;
+				}
+				// append row, only if we need to
+				if( panel.col !== columns[col] || panel.row.nextSibling ){
+					api.movePanel(panel,columns[col],null);
+					console.log("Append Row @ "+col);
+				} else console.log("Append Row Cancelled @ "+col);
+				return;
+			}
 		}
+		// append column
+		console.log("Append Column");
+		api.insertColumn(panel,null);
 	};
 
 	/* INIT */
@@ -104,7 +143,7 @@ function PanelManager( desk, dock, animationTime ){
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
 			row.height = Number(/\d+/.exec(row.style.height));
-			row.panel = new Panel(row.children[0]);
+			row.panel = new Panel(row.children[0],column,row);
 		}
 	}
 
@@ -136,7 +175,9 @@ function PanelManager( desk, dock, animationTime ){
 		column.style.width = 0;
 		column.style.padding = 0;
 		// remove the column from the DOM after the animation ends
-		window.setTimeout( function(){desk.removeChild(column);}, animationTime );
+		//window.setTimeout( function(){
+			desk.removeChild(column);
+		//}, animationTime );
 	};
 
 	api.addRow = function(panel,column,pos){
@@ -153,6 +194,8 @@ function PanelManager( desk, dock, animationTime ){
 		row.height = newHeight;
 		row.style.height = newHeight+'%';
 		row.panel = panel;
+		panel.col = column;
+		panel.row = row;
 		row.appendChild(panel.element);
 		column.insertBefore(row,pos);
 	};
@@ -169,8 +212,9 @@ function PanelManager( desk, dock, animationTime ){
 			} else {
 				row.style.height = 0;
 				// remove the row from the DOM after the animation ends
-				window.setTimeout(
-					function(){column.removeChild(row);}, animationTime );
+				//window.setTimeout( function(){
+					column.removeChild(row);
+				//}, animationTime );
 			}
 		} else {
 			// update sizes of other rows
@@ -182,12 +226,14 @@ function PanelManager( desk, dock, animationTime ){
 			row.style.height = 0;
 			row.style.padding = 0;
 			// remove the row from the DOM after the animation ends
-			window.setTimeout( function(){column.removeChild(row);}, animationTime );
+			//window.setTimeout( function(){
+				column.removeChild(row);
+			//}, animationTime );
 		}
 	};
 
 	api.newPanel = function(element,column,pos){
-		panel = new Panel( element );
+		panel = new Panel( element, column, pos );
 		api.addRow(panel,column,pos);
 	};
 
@@ -203,13 +249,22 @@ function PanelManager( desk, dock, animationTime ){
 		api.addRow(panel,columns[0],null);
 	};
 
-	api.movePanel = function(panel,column,pos){
-		// don't move a panel to itself
-		if( panel.element.parentNode !== pos ){
-			api.removeRow(panel);
-			window.setTimeout(
-				function(){api.addRow(panel,column,pos);}, animationTime );
-		}
+	api.movePanel = function(panel,column,row){
+		api.removeRow(panel);
+		//window.setTimeout( function(){
+			api.addRow(panel,column,row);
+		//}, animationTime );
+	};
+	
+	api.insertColumn = function(panel,column){
+		// do not proceed if it is the only row and the new column is adjacent
+		if( panel.element.parentNode.parentNode.children.length === 1 &&
+			( column === panel.col || column === panel.col.nextSibling ) ){
+			console.log("Insert Column Cancelled");
+			return;
+		};
+		// otherwise move the panel
+		api.movePanel(panel,api.addColumn(column),null);
 	};
 
 	return api;
