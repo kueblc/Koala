@@ -182,22 +182,40 @@ function PanelManager( desk, float, dock, animationTime ){
 	function Panel( panel ){
 		var titlebar = panel.children[0],
 			icon = document.createElement('button'),
+			minimize = document.createElement('button'),
 			style = panel.style,
 			diffX = 0,
 			diffY = 0;
 		
 		var title = titlebar.textContent || titlebar.innerText;
 
-		panel.icon = icon;
-		icon.innerHTML = panel.title;
-		
-		titlebar.ondblclick = function(){ pm.minPanel(panel); };
-		icon.ondblclick = function(){ pm.maxPanel(panel); };
+		icon.innerHTML = title;
+		icon.ondblclick = restorePanel;
 
+		minimize.onmousedown = minimizePanel;
+
+		titlebar.appendChild(minimize);
 		// disable selection on grip in IE
 		titlebar.onselectstart = function(){ return false; };
-
 		titlebar.onmousedown = grabPanel;
+
+		function minimizePanel(e){
+			// detach the panel
+			var cell = panel.parentElement;
+			cell.removeChild(panel);
+			grid.removeCell(cell);
+			// add the restore button
+			dock.appendChild(icon);
+			// stop propagation to titlebar
+			e && e.stopPropagation && e.stopPropagation();
+		};
+
+		function restorePanel(){
+			// detach the restore button
+			dock.removeChild(icon);
+			// add the panel
+			grid.addRow(0).appendChild(panel);
+		};
 
 		function grabPanel(e){
 			// get the event object, panel geometry, and the cell of the grid
@@ -268,22 +286,6 @@ function PanelManager( desk, float, dock, animationTime ){
 	pm.newPanel = function(panel,col,row){
 		Panel( panel );
 		grid.addRow(col,row).appendChild(panel);
-	};
-
-	pm.minPanel = function(panel){
-		// detach the panel
-		var cell = panel.parentElement
-		cell.removeChild(panel);
-		grid.removeCell(cell);
-		// add the restore button
-		dock.appendChild(panel.icon);
-	};
-
-	pm.maxPanel = function(panel){
-		// detach the restore button
-		dock.removeChild(panel.icon);
-		// add the panel
-		grid.addRow(0).appendChild(panel);
 	};
 
 	return pm;

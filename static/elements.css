@@ -82,6 +82,11 @@ button:hover {
 .tab > button:hover {
 }
 
+h2 > button {
+	float: right;
+	height: 16px;
+}
+
 #canvas {
 	position: relative;
 }
