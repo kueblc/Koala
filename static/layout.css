@@ -15,7 +15,7 @@ body {
 	height: 100%;
 }
 
-#header, #content, #footer {
+#header, #content, #float, #footer {
 	position: absolute;
 	width: 100%;
 	-webkit-box-sizing: border-box;
@@ -26,6 +26,11 @@ body {
 #header, #footer {
 	font-family: "Trebuchet MS";
 	z-index: 1;
+}
+
+#float {
+	background: rgba(255,255,255,0.3);
+	z-index: 2;
 }
 
 h1, h2 {
@@ -41,7 +46,7 @@ h1, h2 {
 	height: 44px;
 }
 
-#content {
+#content, #float {
 	top: 44px;
 	bottom: 44px;
 	padding: 8px;

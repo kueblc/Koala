@@ -1,153 +1,25 @@
 /* PanelManager.js
  * written by Colin Kuebler 2012
  * Part of The Koala Project, licensed under GPLv3
- * Manages the panels
+ * Contains code relevant to managing the panels
  */
 
-function PanelManager( desk, dock, animationTime ){
+function Grid( container ){
+	var grid = this;
 
-	/* PRIVATE CLASSES */
-	function Panel( element, col, row ){
-		var panel = this;
-
-		panel.element = element;
-		element.panel = panel;
-		
-		panel.col = col;
-		panel.row = row;
-
-		var titlebar = element.children[0];
-		panel.title = titlebar.textContent || titlebar.innerText;
-		titlebar.ondblclick = function(){ api.minPanel(panel); };
-
-		panel.icon = document.createElement('button');
-		panel.icon.innerHTML = panel.title;
-		panel.icon.ondblclick = function(){ api.maxPanel(panel); };
-
-		new Draggable( element, titlebar, dropped );
-
-		return panel;
-	};
-
-	function Draggable( element, grip, dropCb ){
-		var style = element.style,
-			startX = 0,
-			startY = 0;
-		// disable selection on grip in IE
-		grip.onselectstart = function(){ return false; };
-		grip.onmousedown = function dragStart(e){
-			var e = e || window.event;
-			startX = e.clientX;
-			startY = e.clientY;
-			grip.style.cursor = 'move';
-			style.MozTransition = style.webkitTransition = 'box-shadow 1s';
-			style.zIndex = 9;
-			style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
-			document.onmousemove = drag;
-			document.onmouseup = dragEnd;
-			// prevent selection while dragging
-			e.preventDefault && e.preventDefault();
-		};
-		function drag(e){
-			var e = e || window.event;
-			style.left = e.clientX - startX + 'px';
-			style.top = e.clientY - startY + 'px';
-		};
-		function dragEnd(e){
-			// stop watching mouse movements
-			document.onmousemove = null;
-			document.onmouseup = null;
-			// determine the drop target
-			var e = e || window.event;
-	//		style.display = 'none';
-	//		var target = document.elementFromPoint(e.clientX,e.clientY);
-	//		if( target.nodeType === 3 ) target = target.parentNode;
-	//		style.display = '';
-			// animate element back to starting position
-			grip.style.cursor = 'auto';
-			style.MozTransition = style.webkitTransition = 'left 1s, top 1s, z-index 1s, box-shadow 1s';
-			style.left = 0;
-			style.top = 0;
-			style.zIndex = 0;
-			style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-			// find the position of the center of the panel relative to the desk
-			var x = element.offsetLeft + (element.clientWidth / 2),
-				y = element.offsetTop + (element.clientHeight / 2);
-			console.debug('x: '+x+'\ny: '+y);
-			console.debug(e.target);
-			console.debug(element);
-			// callback if present
-			dropCb && dropCb(element,x,y);
-		};
-	};
-
-	// drop handler
-	function dropped(selection,x,y){
-		// get the panel object
-		var panel = selection.panel || selection;
-		var vert_divider = 0;
-		for( var col = 0; col < columns.length; col++ ){
-			var vert_range = Math.min( columns[col].clientWidth * 0.1, 64 );
-			if( x < (vert_divider + vert_range) ){
-				// insert column
-				console.log("Insert Column @ "+col);
-				api.insertColumn(panel,columns[col]);
-				return;
-			}
-			vert_divider += columns[col].clientWidth;
-			if( x < (vert_divider - vert_range) ){
-				// add row
-				var horz_divider = 0;
-				var rows = columns[col].children;
-				for( var row = 0; row < rows.length; row++ ){
-					var horz_range = rows[row].clientHeight * 0.5;
-					horz_divider += horz_range;
-					if( y < horz_divider ){
-						// move row, only if we need to
-						if( panel.row !== rows[row] &&
-							panel.row.nextSibling !== rows[row] ){
-							console.log("Insert Row @ "+col+","+row);
-							api.movePanel(panel,columns[col],rows[row]);
-						} else console.log("Insert Row Cancelled @ "+col+","+row);
-						return;
-					}
-					horz_divider += horz_range;
-				}
-				// append row, only if we need to
-				if( panel.col !== columns[col] || panel.row.nextSibling ){
-					api.movePanel(panel,columns[col],null);
-					console.log("Append Row @ "+col);
-				} else console.log("Append Row Cancelled @ "+col);
-				return;
-			}
-		}
-		// append column
-		console.log("Append Column");
-		api.insertColumn(panel,null);
-	};
-
-	/* INIT */
-	var api = this;
-
-	var desk = desk,
-		dock = dock;
-
-	var columns = desk.children;
-
-	var selection = null;
+	var columns = container.children;
 
 	// interpret initial contents
 	for( var i = 0; i < columns.length; i++ ){
 		var column = columns[i];
-		column.width = Number(/\d+/.exec(column.style.width));
+		column.width = parseFloat(column.style.width);
 		for( var j = 0; j < column.children.length; j++ ){
 			var row = column.children[j];
-			row.height = Number(/\d+/.exec(row.style.height));
-			row.panel = new Panel(row.children[0],column,row);
+			row.height = parseFloat(row.style.height);
 		}
 	}
 
-	api.addColumn = function(pos){
+	grid.addColumn = function(x){
 		// determine the width of the new column
 		newWidth = 100/(columns.length+1);
 		subWidth = newWidth/columns.length || 0;
@@ -161,11 +33,18 @@ function PanelManager( desk, dock, animationTime ){
 		column.className = 'column';
 		column.width = newWidth;
 		column.style.width = newWidth+'%';
-		desk.insertBefore(column,pos);
-		return column;
+		container.insertBefore(column,columns[x]||null);
+		// add a new row
+		return grid.addRow(x);
 	};
 
-	api.removeColumn = function(column){
+	grid.removeColumn = function(x){
+		grid.removeColumnByElement(columns[x]);
+	};
+
+	grid.removeColumnByElement = function(column){
+		// don't remove the last column
+		if( columns.length === 1 ) return;
 		// update the width of other columns
 		addWidth = column.width/(columns.length-1) || 0;
 		for( var i = 0; i < columns.length; i++ ){
@@ -176,47 +55,37 @@ function PanelManager( desk, dock, animationTime ){
 		column.style.padding = 0;
 		// remove the column from the DOM after the animation ends
 		//window.setTimeout( function(){
-			desk.removeChild(column);
+			container.removeChild(column);
 		//}, animationTime );
 	};
 
-	api.addRow = function(panel,column,pos){
+	grid.addRow = function(x,y){
+		if( x === undefined ) x = columns.length-1;
 		// update sizes of other rows
-		rows = column.children;
-		newHeight = 100/(rows.length+1);
-		subHeight = newHeight/rows.length || 0;
+		var column = columns[x];
+		var rows = column.children;
+		var newHeight = 100/(rows.length+1);
+		var subHeight = newHeight/rows.length || 0;
 		for( var i = 0; i < rows.length; i++ ){
 			rows[i].height -= subHeight;
 			rows[i].style.height = rows[i].height+'%';
 		}
 		// create and add new row to the DOM
-		row = document.createElement('div');
+		var row = document.createElement('div');
 		row.height = newHeight;
 		row.style.height = newHeight+'%';
-		row.panel = panel;
-		panel.col = column;
-		panel.row = row;
-		row.appendChild(panel.element);
-		column.insertBefore(row,pos);
+		column.insertBefore(row,rows[y]||null);
+		return row;
 	};
 
-	api.removeRow = function(panel){
-		// remove the row from the DOM
-		row = panel.element.parentNode;
-		column = row.parentNode;
-		rows = column.children;
-		if( rows.length === 1 ){
-			// remove the empty column, unless its the only one
-			if( columns.length !== 1 ){
-				api.removeColumn(column);
-			} else {
-				row.style.height = 0;
-				// remove the row from the DOM after the animation ends
-				//window.setTimeout( function(){
-					column.removeChild(row);
-				//}, animationTime );
-			}
-		} else {
+	grid.removeRow = function(x,y){
+		grid.removeCell( grid.get( x, y ) );
+	};
+
+	grid.removeCell = function(row){
+		var column = row.parentNode;
+		var rows = column.children;
+		if( rows.length !== 1 ){
 			// update sizes of other rows
 			addHeight = row.height/(rows.length-1);
 			for( var i = 0; i < rows.length; i++ ){
@@ -224,49 +93,199 @@ function PanelManager( desk, dock, animationTime ){
 				rows[i].style.height = rows[i].height+'%';
 			}
 			row.style.height = 0;
-			row.style.padding = 0;
 			// remove the row from the DOM after the animation ends
 			//window.setTimeout( function(){
 				column.removeChild(row);
 			//}, animationTime );
+		} else {
+			// remove the empty column
+			row.style.height = 0;
+			// remove the row from the DOM after the animation ends
+			//window.setTimeout( function(){
+				column.removeChild(row);
+				grid.removeColumnByElement(column);
+			//}, animationTime );
 		}
 	};
 
-	api.newPanel = function(element,column,pos){
-		panel = new Panel( element, column, pos );
-		api.addRow(panel,column,pos);
+	grid.columns = function(){ return columns; };
+
+	grid.rows = function(x){ return columns[x].children; };
+
+	grid.get = function(x,y){
+		var x = x || columns.length - 1;
+		var rows = columns[x].children;
+		var y = y || rows.length - 1;
+		return rows[y];
 	};
 
-	api.minPanel = function(panel){
-		api.removeRow(panel);
-		// TODO
+	grid.insertCellAt = function( x, y ){
+		// determine which column to insert
+		var currentX = container.offsetLeft;
+		for( var col = 0; col < columns.length; col++ ){
+			var xRange = Math.min( columns[col].clientWidth * 0.1, 64 );
+			if( x < (currentX + xRange) ){
+				// insert column
+				console.log("addColumn "+col);
+				return grid.addColumn(col);
+			}
+			currentX += columns[col].clientWidth;
+			if( x < (currentX - xRange) ){
+				// determine which row to insert
+				var currentY = container.offsetTop,
+					rows = grid.rows(col);
+				for( var row = 0; row < rows.length; row++ ){
+					var yRange = rows[row].clientHeight * 0.5;
+					if( y < (currentY + yRange) ){
+						// insert row
+						console.log("addRow "+col+","+row);
+						return grid.addRow(col,row);
+					}
+					currentY += rows[row].clientHeight;
+				}
+				// append row
+						console.log("addRow "+col);
+				return grid.addRow(col);
+			}
+		}
+		// append column
+		console.log("addColumn");
+		return grid.addColumn();
+	};
+
+	grid.forEachCell = function( func ){
+		for( var col = 0; col < columns.length; col++ ){
+			var rows = columns[col].children;
+			for( var row = 0; row < rows.length; row++ ){
+				func( rows[row] );
+			}
+		}
+	};
+
+	return grid;
+};
+
+
+function PanelManager( desk, float, dock, animationTime ){
+
+	/* INIT */
+	var pm = this;
+
+	var grid = Grid(desk);
+
+	float.style.display = 'none';
+
+	grid.forEachCell( function(row){
+		Panel( row.children[0] );
+	} );
+
+	function Panel( panel ){
+		var titlebar = panel.children[0],
+			icon = document.createElement('button'),
+			style = panel.style,
+			diffX = 0,
+			diffY = 0;
+		
+		var title = titlebar.textContent || titlebar.innerText;
+
+		panel.icon = icon;
+		icon.innerHTML = panel.title;
+		
+		titlebar.ondblclick = function(){ pm.minPanel(panel); };
+		icon.ondblclick = function(){ pm.maxPanel(panel); };
+
+		// disable selection on grip in IE
+		titlebar.onselectstart = function(){ return false; };
+
+		titlebar.onmousedown = grabPanel;
+
+		function grabPanel(e){
+			// get the event object, panel geometry, and the cell of the grid
+			var e = e || window.event,
+				x = panel.offsetLeft - 8,
+				y = panel.offsetTop - 8,
+				w = panel.clientWidth,
+				h = panel.clientHeight,
+				cell = panel.parentElement;
+			// store the starting position
+			diffX = x - e.clientX;
+			diffY = y - e.clientY;
+			// start listening for mousemove and mouseup events
+			document.onmousemove = movePanel;
+			document.onmouseup = dropPanel;
+			// prevent selection while dragging
+			e.preventDefault && e.preventDefault();
+			// detach the panel
+			cell.removeChild(panel);
+			grid.removeCell(cell);
+			// set the panel's absolute geometry
+			style.left = x+'px';
+			style.top = y+'px';
+			style.width = w+'px';
+			style.height = h+'px';
+			// attach the panel to the floating layer
+			float.style.display = '';
+			float.appendChild(panel);
+			// add floating styles
+			style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
+			titlebar.style.cursor = 'move';
+		};
+
+		function movePanel(e){
+			var e = e || window.event;
+			style.left = e.clientX + diffX + 'px';
+			style.top = e.clientY + diffY + 'px';
+		};
+
+		function dropPanel(e){
+			var e = e || window.event;
+			// stop watching mouse movements
+			document.onmousemove = null;
+			document.onmouseup = null;
+			// find the center of the panel
+			var x = panel.clientWidth / 2 + panel.offsetLeft,
+				y = panel.clientHeight / 2 + panel.offsetTop;
+			// find the best place for the panel
+			var cell = grid.insertCellAt(x,y);
+			// detach the panel from the floating layer
+			float.removeChild(panel);
+			float.style.display = 'none';
+			// reset the panel geometry
+			var style = panel.style;
+			style.left = '0';
+			style.top = '0';
+			style.width = '100%';
+			style.height = '100%';
+			// add the panel to the grid
+			cell.appendChild(panel);
+			// remove floating styles
+			style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+			titlebar.style.cursor = 'auto';
+		};
+
+	};
+
+	pm.newPanel = function(panel,col,row){
+		Panel( panel );
+		grid.addRow(col,row).appendChild(panel);
+	};
+
+	pm.minPanel = function(panel){
+		// detach the panel
+		var cell = panel.parentElement
+		cell.removeChild(panel);
+		grid.removeCell(cell);
+		// add the restore button
 		dock.appendChild(panel.icon);
 	};
 
-	api.maxPanel = function(panel){
-		// TODO
+	pm.maxPanel = function(panel){
+		// detach the restore button
 		dock.removeChild(panel.icon);
-		api.addRow(panel,columns[0],null);
+		// add the panel
+		grid.addRow(0).appendChild(panel);
 	};
 
-	api.movePanel = function(panel,column,row){
-		api.removeRow(panel);
-		//window.setTimeout( function(){
-			api.addRow(panel,column,row);
-		//}, animationTime );
-	};
-	
-	api.insertColumn = function(panel,column){
-		// do not proceed if it is the only row and the new column is adjacent
-		if( panel.element.parentNode.parentNode.children.length === 1 &&
-			( column === panel.col || column === panel.col.nextSibling ) ){
-			console.log("Insert Column Cancelled");
-			return;
-		};
-		// otherwise move the panel
-		api.movePanel(panel,api.addColumn(column),null);
-	};
-
-	return api;
+	return pm;
 };
 
