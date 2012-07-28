@@ -113,9 +113,9 @@ function Grid( container ){
 	grid.rows = function(x){ return columns[x].children; };
 
 	grid.get = function(x,y){
-		var x = x || columns.length - 1;
+		if( x === undefined ) x = columns.length - 1;
 		var rows = columns[x].children;
-		var y = y || rows.length - 1;
+		if( y === undefined ) y = rows.length - 1;
 		return rows[y];
 	};
 
@@ -162,6 +162,106 @@ function Grid( container ){
 		}
 	};
 
+	function rowResize(x,y){
+		var upperRow = grid.get(x,y),
+			lowerRow = grid.get(x,y+1);
+		return function(e){
+			var e = e || window.event;
+			var target = e.target || e.srcElement;
+			if( target !== upperRow ) return false;
+			// prevent selection while dragging
+			e.preventDefault && e.preventDefault();
+			var startPos = e.clientY,
+				columnPercent = 100 / upperRow.parentNode.clientHeight,
+				upperPercent = upperRow.height,
+				lowerPercent = lowerRow.height;
+			document.onmouseup = dropGrip;
+			document.onmousemove = function(f){
+				var f = f || window.event;
+				var percentDelta = ( f.clientY - startPos ) * columnPercent;
+				// clamp the change so no panel drops below 10%
+				if( (upperPercent + percentDelta) < 10 )
+					percentDelta = 10 - upperPercent;
+				if( (lowerPercent - percentDelta) < 10 )
+					percentDelta = lowerPercent - 10;
+				// apply the changes
+				upperRow.height = upperPercent + percentDelta;
+				lowerRow.height = lowerPercent - percentDelta;
+				upperRow.style.height = upperRow.height+'%';
+				lowerRow.style.height = lowerRow.height+'%';
+			};
+		};
+	};
+
+	function columnResize(x){
+		var leftCol = columns[x],
+			rightCol = columns[x+1];
+		return function(e){
+			var e = e || window.event;
+			var target = e.target || e.srcElement;
+			if( target !== leftCol ) return true;
+			// prevent selection while dragging
+			e.preventDefault && e.preventDefault();
+			var startPos = e.clientX,
+				percent = 100 / container.clientWidth,
+				leftPercent = leftCol.width,
+				rightPercent = rightCol.width;
+			document.onmouseup = dropGrip;
+			document.onmousemove = function(f){
+				var f = f || window.event;
+				var percentDelta = ( f.clientX - startPos ) * percent;
+				// clamp the change so no panel drops below 10%
+				if( (leftPercent + percentDelta) < 10 )
+					percentDelta = 10 - leftPercent;
+				if( (rightPercent - percentDelta) < 10 )
+					percentDelta = rightPercent - 10;
+				// apply the changes
+				leftCol.width = leftPercent + percentDelta;
+				rightCol.width = rightPercent - percentDelta;
+				leftCol.style.width = leftCol.width+'%';
+				rightCol.style.width = rightCol.width+'%';
+			};
+			
+		};
+	};
+
+	function dropGrip(e){
+		var e = e || window.event;
+		// stop watching mouse movements
+		document.onmousemove = null;
+		document.onmouseup = null;
+	};
+
+	grid.updateResizeGrips = function(){
+		var x, y;
+		for( x = 0; x < columns.length; x++ ){
+			var rows = columns[x].children;
+			for( y = 0; y < rows.length-1; y++ ){
+				// make each row grippable
+				var row = rows[y];
+				row.style.cursor = 'row-resize';
+				row.onmousedown = rowResize(x,y);
+			}
+			// remove grip from the last row
+			var lastRow = rows[y];
+			if(lastRow){
+				lastRow.style.cursor = 'default';
+				lastRow.onmousedown = null;
+			}
+			// skip the last column
+			if( x === columns.length-1 ) break;
+			// make each column grippable
+			var column = columns[x];
+			column.style.cursor = 'col-resize';
+			column.onmousedown = columnResize(x);
+		}
+		// remove grip from the last column
+		var lastColumn = columns[x];
+		lastColumn.style.cursor = 'default';
+		lastColumn.onmousedown = null;
+	};
+	grid.updateResizeGrips();
+
 	return grid;
 };
 
@@ -201,9 +301,10 @@ function PanelManager( desk, float, dock, animationTime ){
 
 		function minimizePanel(e){
 			// detach the panel
-			var cell = panel.parentElement;
+			var cell = panel.parentNode;
 			cell.removeChild(panel);
 			grid.removeCell(cell);
+			grid.updateResizeGrips();
 			// add the restore button
 			dock.appendChild(icon);
 			// stop propagation to titlebar
@@ -215,16 +316,17 @@ function PanelManager( desk, float, dock, animationTime ){
 			dock.removeChild(icon);
 			// add the panel
 			grid.addRow(0).appendChild(panel);
+			grid.updateResizeGrips();
 		};
 
 		function grabPanel(e){
 			// get the event object, panel geometry, and the cell of the grid
 			var e = e || window.event,
-				x = panel.offsetLeft - 8,
-				y = panel.offsetTop - 8,
-				w = panel.clientWidth,
-				h = panel.clientHeight,
-				cell = panel.parentElement;
+				x = panel.offsetLeft - 16,
+				y = panel.offsetTop - 16,
+				w = panel.clientWidth + 2,
+				h = panel.clientHeight + 2,
+				cell = panel.parentNode;
 			// store the starting position
 			diffX = x - e.clientX;
 			diffY = y - e.clientY;
@@ -265,6 +367,7 @@ function PanelManager( desk, float, dock, animationTime ){
 				y = panel.clientHeight / 2 + panel.offsetTop;
 			// find the best place for the panel
 			var cell = grid.insertCellAt(x,y);
+			grid.updateResizeGrips();
 			// detach the panel from the floating layer
 			float.removeChild(panel);
 			float.style.display = 'none';
@@ -277,7 +380,7 @@ function PanelManager( desk, float, dock, animationTime ){
 			// add the panel to the grid
 			cell.appendChild(panel);
 			// remove floating styles
-			style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+			style.boxShadow = '';
 			titlebar.style.cursor = 'auto';
 		};
 
