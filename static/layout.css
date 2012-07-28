@@ -93,17 +93,18 @@ h1, h2 {
 	background: #ccc;
 }
 
-#header > ul > li > div {
+#header > ul > li > form {
 	position: absolute;
 	display: none;
 	top: 100%;
 	right: -1px;
 	width: 250px;
-	padding: 12px;
+	padding: 12px 12px 0;
 	cursor: auto;
 	background: #eee;
 	border: 1px solid #888;
 	clip: rect(0px 999px 999px -99px);
+	font-size: 20px;
 }
 
 /*#header > ul > li:hover > div {

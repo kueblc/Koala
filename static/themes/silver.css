@@ -18,7 +18,7 @@ body {
 	background: 0 -43px repeat-x url('gr.png');
 }
 
-#header > ul > li > div {
+#header > ul > li > form {
 	border-radius: 0 0 6px 6px;
 	-moz-border-radius: 0 0 6px 6px;
 	-webkit-border-radius: 0 0 6px 6px;

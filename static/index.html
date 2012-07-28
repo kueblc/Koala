@@ -26,8 +26,8 @@
 		<div id='header'>
 			<h1>the koala project</h1>
 			<ul>
-				<li id='toolbar_settings'>settings<div>
-					theme
+				<li id='toolbar_settings'>settings<form>
+					<label>theme</label>
 					<select id='theme_sel' autocomplete='off'>
 						<option value='basic' selected>Basic</option>
 						<option value='silver'>Silver</option>
@@ -37,15 +37,13 @@
 						<option value='koalarch'>koalarch</option>
 						<option value='black'>Black</option>
 					</select>
-				</div></li>
-				<li id='toolbar_login'>login<div>
-					<p>username
-						<input name='user' type='text' id='login_username' class='input'>
-					</p>
-					<p>password
-						<input name='pass' type='password' id='login_password' class='input'>
-					</p>
-				</div></li>
+				</form></li>
+				<li id='toolbar_login'>login<form>
+					<label>username</label>
+					<input name='user' type='text' id='login_username' class='input'>
+					<label>password</label>
+					<input name='pass' type='password' id='login_password' class='input'>
+				</form></li>
 			</ul>
 		</div>
 		<div id='content'>
@@ -94,14 +92,12 @@
 						<h2>properties</h2>
 						<div class='header tab'><button class='current'>name</button><button>placement</button><button>colors</button></div>
 						<div class='content head'>
-							<div id='p_name'>
-								<p>title
-									<input name='title' type='text' id='title' class='input'>
-								</p>
-								<p>author
-									<input name='author' type='text' id='author' class='input'>
-								</p>
-							</div>
+							<form>
+								<label>title</label>
+								<input name='title' type='text' id='title' class='input'>
+								<label>author</label>
+								<input name='author' type='text' id='author' class='input'>
+							</form>
 						</div>
 					</div>
 				</div>
