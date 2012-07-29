@@ -68,14 +68,22 @@ window.onload = function(){
 	anim = new Animator();
 	
 	function ToggleMenu( elem ){
-		var lock = true;
-		elem.onmousedown = function(){ lock = false; };
-		elem.onmouseup = function(){ lock = true; };
+		var lock = false;
+		function set(){ lock = true; };
+		function reset(){ lock = false; };
+		var form = elem.children[0];
+		/* var fields = form.elements;
+		for( var i = 0; i < fields.length; i++ ){
+			fields[i].onfocus = set;
+			fields[i].onblur = reset;
+		} */
+		elem.onmousedown = set;
+		elem.onmouseup = reset;
 		elem.onmouseover = function(){
-			elem.children[0].style.display = 'block';
+			form.style.display = 'block';
 		};
 		elem.onmouseout = function(){
-			lock && (elem.children[0].style.display = 'none');
+			lock || (form.style.display = '');
 		};
 	};
 	
