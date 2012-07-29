@@ -34,19 +34,43 @@ function FileBrowser(fs,onOpen){
 	
 	function addIcon( id ){
 		var file = fs.get(id);
+		/* create the dom elements */
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
 			title = document.createElement('input');
-		icon.className = file._type;
+		/* set the icon image */
+		icon.className = file._type.match('[^\/]*');
+		/* handle thumbnailing */
+		if( icon.className === 'text' && file._data.substr ){
+			icon.innerText = icon.textContent = file._data.substr(0,60);
+		}
+		
+		/* set the icon title */
 		title.type = 'text';
 		title.value = file._name;
+		/* select on focus */
 		title.onfocus = function(){ title.select(); };
+		/* renames file */
 		title.onchange = function(){
 			fs.mvnode( id, file._parent, title.value );
 		};
+		
+		/* double click opens folders and files */
 		container.ondblclick = (file._type === 'dir') ?
 			function(){ cwd.push(file._name); api.update(); updateAddress(); } :
 			function(){ onOpen && onOpen( file ); };
+		
+		/* drag to desktop download */
+		container.draggable = true;
+		container.addEventListener( 'dragstart', function(e){
+			console.log('icon dragstart');
+			e.dataTransfer.setData( "DownloadURL",
+				file._type + ':' + file._name + ':' +
+				//'data:' + file._type + ';base64,' +
+				file._data );
+		}, false );
+		
+		/* add the new icon to dom */
 		container.appendChild(icon);
 		container.appendChild(title);
 		display.appendChild(container);
@@ -77,6 +101,53 @@ function FileBrowser(fs,onOpen){
 	
 	api.update();
 	updateAddress();
+	
+	/* drop handler for uploads */
+	display.addEventListener( 'drop', function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		// for each file dropped
+		var files = e.dataTransfer.files;
+		for( var i = 0; i < files.length; i++ ){
+			// filter out huge files (size in bytes)
+			if( files[i].size > 100*1024 ){
+				alert("FILE TOO BIG");
+				continue;
+			}
+			// try to create a new file with the name and type
+			var newfile = fs.add( cwd.join('/'), files[i].name, files[i].type );
+			// abort on failure
+			if( !newfile ){
+				alert("FILENAME IS TAKEN");
+				continue;
+			}
+			// upload
+			var file = new FileReader();
+			file.onload = function(e){
+				fs.get(newfile)._data = e.target.result;
+				addIcon(newfile);
+			};
+			// error handling
+			file.onerror = function(e){
+				alert("FILE UPLOAD ERROR");
+				console.log(e);
+				// remove failed upload file
+				fs.rmnode(newfile);
+			};
+			// upload text documents as text
+			if( files[i].type.match('text.*') ){
+				file.readAsText(files[i]);
+			} else {
+				file.readAsDataURL(files[i]);
+			}
+		}
+	}, false );
+	
+	display.addEventListener( 'dragover', function(e){
+		e.stopPropagation();
+		e.preventDefault();
+		e.dataTransfer.dropEffect = 'copy';
+	}, false );
 	
 	return api;
 };
