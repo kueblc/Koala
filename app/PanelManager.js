@@ -292,7 +292,7 @@ function PanelManager( desk, float, dock, animationTime ){
 		icon.innerHTML = title;
 		icon.ondblclick = restorePanel;
 
-		minimize.onmousedown = minimizePanel;
+		minimize.onclick = minimizePanel;
 
 		titlebar.appendChild(minimize);
 		// disable selection on grip in IE
@@ -307,8 +307,6 @@ function PanelManager( desk, float, dock, animationTime ){
 			grid.updateResizeGrips();
 			// add the restore button
 			dock.appendChild(icon);
-			// stop propagation to titlebar
-			e && e.stopPropagation && e.stopPropagation();
 		};
 
 		function restorePanel(){
@@ -320,9 +318,13 @@ function PanelManager( desk, float, dock, animationTime ){
 		};
 
 		function grabPanel(e){
-			// get the event object, panel geometry, and the cell of the grid
-			var e = e || window.event,
-				x = panel.offsetLeft - 16,
+			// abort drag start if target was not the grip
+			var e = e || window.event;
+			var target = e.target || e.srcElement;
+			if( target.nodeType === 3 ) target = target.parentNode;
+			if( target !== titlebar ) return true;
+			// get panel geometry and current cell
+			var x = panel.offsetLeft - 16,
 				y = panel.offsetTop - 16,
 				w = panel.clientWidth + 2,
 				h = panel.clientHeight + 2,
