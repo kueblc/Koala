@@ -63,7 +63,6 @@ function FileBrowser(fs,onOpen){
 		/* drag to desktop download */
 		container.draggable = true;
 		container.addEventListener( 'dragstart', function(e){
-			console.log('icon dragstart');
 			e.dataTransfer.setData( "DownloadURL",
 				file._type + ':' + file._name + ':' +
 				//'data:' + file._type + ';base64,' +

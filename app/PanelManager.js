@@ -126,7 +126,6 @@ function Grid( container ){
 			var xRange = Math.min( columns[col].clientWidth * 0.1, 64 );
 			if( x < (currentX + xRange) ){
 				// insert column
-				console.log("addColumn "+col);
 				return grid.addColumn(col);
 			}
 			currentX += columns[col].clientWidth;
@@ -138,18 +137,15 @@ function Grid( container ){
 					var yRange = rows[row].clientHeight * 0.5;
 					if( y < (currentY + yRange) ){
 						// insert row
-						console.log("addRow "+col+","+row);
 						return grid.addRow(col,row);
 					}
 					currentY += rows[row].clientHeight;
 				}
 				// append row
-						console.log("addRow "+col);
 				return grid.addRow(col);
 			}
 		}
 		// append column
-		console.log("addColumn");
 		return grid.addColumn();
 	};
 
