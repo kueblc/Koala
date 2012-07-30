@@ -8,6 +8,6 @@
 
 #files .dir { background-position: 0 -64px; }
 #files .src { background-position: 0 -128px; }
-#files .exe { background-position: 0 -192px; }
-#files .txt { background-position: 0 -256px; }
+#files .application { background-position: 0 -192px; }
+#files .text { background-position: 0 -256px; }
 #files .pkg { background-position: 0 -320px; }

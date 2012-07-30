@@ -22,18 +22,29 @@ function FileBrowser(fs,defaultApps){
 		};
 	};
 	
-	
 	function addIcon( id ){
+		/* get file info */
 		var file = fs.get(id);
+		var filetype = file._type.split('/',1)[0];
 		/* create the dom elements */
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
 			title = document.createElement('input');
 		/* set the icon image */
-		icon.className = file._type.match('[^\/]*');
-		/* handle thumbnailing */
-		if( icon.className === 'text' && file._data.substr ){
-			icon.innerText = icon.textContent = file._data.substr(0,60);
+		if( filetype === 'text' && file._data.substr ){
+			icon.className = '';
+			var thumbnail = document.createElement('pre');
+			// get a 5x10 text preview
+			var data = file._data;
+			var previewLines = data.split('\n',5);
+			var preview = '';
+			for( var i = 0; i < previewLines.length; i++ )
+				preview += previewLines[i].substr(0,10) + '\n';
+			thumbnail.innerText =
+				thumbnail.textContent = preview;
+			icon.appendChild(thumbnail);
+		} else {
+			icon.className = filetype;
 		}
 		
 		/* set the icon title */
@@ -51,7 +62,7 @@ function FileBrowser(fs,defaultApps){
 			function(){ cwd.push(file._name); api.update(); } :
 			function(){
 				var handler = api.defaultApps[file._type] ||
-					api.defaultApps[icon.className];
+					api.defaultApps[filetype];
 				handler && handler(file);
 			};
 		
