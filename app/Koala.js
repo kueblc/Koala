@@ -105,10 +105,12 @@ window.onload = function(){
 	};
 	
 	fs = new FS();
-	fbrowser = new FileBrowser( fs,
-		function( file ){
-			console.log(file);
-		} );
+	fbrowser = new FileBrowser( fs, {
+		'text': function(file){
+			editor.input.value = file._data;
+			editor.update();
+		}
+	} );
 	
 	$("btn_new").onclick = fbrowser.addFolder;
 };

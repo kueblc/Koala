@@ -4,7 +4,7 @@
  * Handles the operations of the file browser
  */
 
-function FileBrowser(fs,onOpen){
+function FileBrowser(fs,defaultApps){
 	/* INIT */
 	var api = this;
 	
@@ -13,24 +13,15 @@ function FileBrowser(fs,onOpen){
 	
 	var cwd = [''];
 	
-	api.seek = function(x){
-		cwd = cwd.slice(0,x);
-		api.update();
-		updateAddress();
-	};
+	api.defaultApps = defaultApps || {};
 	
-	function updateAddress(){
-		locationBar.innerHTML = '';
-		for( var i = 0; i < cwd.length; i++ ){
-			var button = document.createElement('button');
-			button.pos = i + 1;
-			button.onclick = function(){
-				api.seek(this.pos);
-			};
-			button.innerHTML = cwd[i] || "home";
-			locationBar.appendChild(button);
+	function seek(x){
+		return function(){
+			cwd = cwd.slice(0,x);
+			api.update();
 		};
 	};
+	
 	
 	function addIcon( id ){
 		var file = fs.get(id);
@@ -57,8 +48,12 @@ function FileBrowser(fs,onOpen){
 		
 		/* double click opens folders and files */
 		container.ondblclick = (file._type === 'dir') ?
-			function(){ cwd.push(file._name); api.update(); updateAddress(); } :
-			function(){ onOpen && onOpen( file ); };
+			function(){ cwd.push(file._name); api.update(); } :
+			function(){
+				var handler = api.defaultApps[file._type] ||
+					api.defaultApps[icon.className];
+				handler && handler(file);
+			};
 		
 		/* drag to desktop download */
 		container.draggable = true;
@@ -84,13 +79,21 @@ function FileBrowser(fs,onOpen){
 	
 	// updates the display
 	api.update = function(){
-		// clear the display
+		// clear the file display
 		display.innerHTML = '';
 		// add each file to the display
 		var folder = fs.get( fs.resolvePath(cwd.join('/')) );
-		for( name in folder._data ){
-			var file = folder._data[name];
+		for( var filename in folder._data ){
+			var file = folder._data[filename];
 			addIcon( file );
+		}
+		// update the addressbar
+		locationBar.innerHTML = '';
+		for( var i = 0; i < cwd.length; i++ ){
+			var button = document.createElement('button');
+			button.onclick = seek(i+1);
+			button.innerHTML = cwd[i] || "home";
+			locationBar.appendChild(button);
 		}
 	};
 	
@@ -99,7 +102,6 @@ function FileBrowser(fs,onOpen){
 	}
 	
 	api.update();
-	updateAddress();
 	
 	/* drop handler for uploads */
 	display.addEventListener && display.addEventListener( 'drop', function(e){
