@@ -21,8 +21,8 @@ function Grid( container ){
 
 	grid.addColumn = function(x){
 		// determine the width of the new column
-		newWidth = 100/(columns.length+1);
-		subWidth = newWidth/columns.length || 0;
+		var newWidth = 100/(columns.length+1);
+		var subWidth = newWidth/columns.length;
 		// update the width of other columns
 		for( var i = 0; i < columns.length; i++ ){
 			columns[i].width -= subWidth;
@@ -46,7 +46,7 @@ function Grid( container ){
 		// don't remove the last column
 		if( columns.length === 1 ) return;
 		// update the width of other columns
-		addWidth = column.width/(columns.length-1) || 0;
+		var addWidth = column.width/(columns.length-1);
 		for( var i = 0; i < columns.length; i++ ){
 			columns[i].width += addWidth;
 			columns[i].style.width = columns[i].width+'%';
@@ -271,7 +271,7 @@ function PanelManager( desk, float, dock, animationTime ){
 	/* INIT */
 	var pm = this;
 
-	var grid = Grid(desk);
+	var grid = new Grid(desk);
 
 	float.style.display = 'none';
 

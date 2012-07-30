@@ -91,7 +91,7 @@ window.onload = function(){
 		settings: $("toolbar_settings"),
 		login: $("toolbar_login") };
 	
-	for( menu in toolbar ) new ToggleMenu(toolbar[menu]);
+	for( var menu in toolbar ) new ToggleMenu(toolbar[menu]);
 	
 	pm = new PanelManager( $("content"), $("float"), $("footer"), 1000 );
 	

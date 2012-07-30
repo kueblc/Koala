@@ -103,7 +103,7 @@ function FileBrowser(fs,onOpen){
 	updateAddress();
 	
 	/* drop handler for uploads */
-	display.addEventListener( 'drop', function(e){
+	display.addEventListener && display.addEventListener( 'drop', function(e){
 		e.stopPropagation();
 		e.preventDefault();
 		// for each file dropped
@@ -143,7 +143,7 @@ function FileBrowser(fs,onOpen){
 		}
 	}, false );
 	
-	display.addEventListener( 'dragover', function(e){
+	display.addEventListener && display.addEventListener( 'dragover', function(e){
 		e.stopPropagation();
 		e.preventDefault();
 		e.dataTransfer.dropEffect = 'copy';
