@@ -319,6 +319,8 @@ function PanelManager( desk, float, dock, animationTime ){
 			var target = e.target || e.srcElement;
 			if( target.nodeType === 3 ) target = target.parentNode;
 			if( target !== titlebar ) return true;
+			// abort if not left click
+			if( (e.which || e.button) !== 1 ) return true;
 			// get panel geometry and current cell
 			var x = panel.offsetLeft - 16,
 				y = panel.offsetTop - 16,
