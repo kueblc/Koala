@@ -226,6 +226,31 @@ form > input, form > select {
 	margin-bottom: 12px;
 }
 
+/* context menu */
+ul.contextmenu {
+	display: block;
+	position: absolute;
+	font: menu;
+	background: Menu;
+	color: MenuText;
+	border: 1px solid ThreeDShadow;
+	box-shadow: 0 5px 18px rgba(0,0,0,0.6);
+	-moz-box-shadow: 0 5px 18px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 0 5px 18px rgba(0,0,0,0.6);
+}
+
+ul.contextmenu > li {
+	display: block;
+	width: 150px;
+	padding: .2em 1em;
+	cursor: default;
+}
+
+ul.contextmenu > li:hover {
+	background: Highlight;
+	color: HighlightText;
+}
+
 /* bsod easter egg */
 #bsod {
 	position: absolute;

@@ -51,6 +51,38 @@ var koala = {
 	}
 };
 
+// creates a right click menu on elem
+function addContext( elem, options ){
+	// generate the menu
+	var menu = document.createElement("ul");
+		menu.className = 'contextmenu';
+		menu.onmousedown = closeMenu;
+	for( var i in options ){
+		var item = document.createElement("li");
+			item.innerHTML = i;
+			item.onmousedown = options[i];
+		menu.appendChild(item);
+	}
+	function openMenu(e){
+		// position the menu at the mouse position
+		e = e || window.event;
+		menu.style.left = ( e.pageX || e.clientX + document.body.scrollLeft
+			+ document.documentElement.scrollLeft )+'px';
+		menu.style.top = ( e.pageY || e.clientY + document.body.scrollTop
+			+ document.documentElement.scrollTop )+'px';
+		document.body.appendChild(menu);
+		// hide the menu on the next click
+		document.onmousedown = closeMenu;
+		// cancel the default action
+		return false;
+	};
+	function closeMenu(){
+		document.body.removeChild(menu);
+		document.onmousedown = null;
+	};
+	elem.oncontextmenu = openMenu;
+};
+
 var parser, editor, compiler, server, user, anim, pm, fs, fbrowser;
 window.onload = function(){
 	// TODO
@@ -113,6 +145,15 @@ window.onload = function(){
 	} );
 	
 	$("btn_new").onclick = fbrowser.addFolder;
+	
+	// context menu test
+	addContext( $("files"), {
+		'New': fbrowser.addFolder,
+		'Cu<u>t</u>': function(){ console.log('context cut'); },
+		'<u>C</u>opy': function(){ console.log('context copy'); },
+		'<u>P</u>aste': function(){ console.log('context paste'); },
+		'<u>A</u>bout': function(){ console.log('context about'); }
+	} );
 };
 /*
 window.onerror = function( msg, url, line ){
