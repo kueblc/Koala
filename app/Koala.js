@@ -51,15 +51,18 @@ var koala = {
 	}
 };
 
-// creates a right click menu on elem
-function addContext( elem, options ){
+// creates a right click menu
+function ContextMenu( options ){
 	// generate the menu
 	var menu = document.createElement("ul");
 		menu.className = 'contextmenu';
-		menu.onmousedown = closeMenu;
+	var keymap = {};
 	for( var i in options ){
 		var item = document.createElement("li");
-			item.innerHTML = i;
+			item.innerHTML = i.replace( /_(.)/, function(_,x){
+				keymap[x.toUpperCase()] = options[i];
+				return '<u>'+x+'</u>';
+			} );
 			item.onmousedown = options[i];
 		menu.appendChild(item);
 	}
@@ -80,7 +83,7 @@ function addContext( elem, options ){
 		document.body.removeChild(menu);
 		document.onmousedown = null;
 	};
-	elem.oncontextmenu = openMenu;
+	return openMenu;
 };
 
 var parser, editor, compiler, server, user, anim, pm, fs, fbrowser;
@@ -147,13 +150,13 @@ window.onload = function(){
 	$("btn_new").onclick = fbrowser.addFolder;
 	
 	// context menu test
-	addContext( $("files"), {
-		'New': fbrowser.addFolder,
-		'Cu<u>t</u>': function(){ console.log('context cut'); },
-		'<u>C</u>opy': function(){ console.log('context copy'); },
-		'<u>P</u>aste': function(){ console.log('context paste'); },
-		'<u>A</u>bout': function(){ console.log('context about'); }
-	} );
+	$("files").oncontextmenu = ContextMenu({
+		'_New': fbrowser.addFolder,
+		'Cu_t': function(){ console.log('context cut'); },
+		'_Copy': function(){ console.log('context copy'); },
+		'_Paste': function(){ console.log('context paste'); },
+		'_About': function(){ console.log('context about'); }
+	});
 };
 /*
 window.onerror = function( msg, url, line ){
