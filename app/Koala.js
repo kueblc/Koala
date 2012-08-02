@@ -92,7 +92,7 @@ window.onload = function(){
 	// testing...
 	parser = { tokenize: koala.lang.tokenize, identify: koala.lang.assoc };
 	
-	editor = new TextareaDecorator( $("rta_in"), parser );
+	editor = new Editor( parser );
 	
 	compiler = new Compiler( parser );
 	
@@ -130,21 +130,9 @@ window.onload = function(){
 	
 	pm = new PanelManager( $("content"), $("float"), $("footer"), 1000 );
 	
-	// TODO
-	// temporary function testing only, not real button actions
-	$("btn_run").onclick = function(){
-		compiler.interpret( editor.input.value );
-	};
-	$("btn_test").onclick = function(){
-		throw new Error("NotImplemented");
-	};
-	
 	fs = new FS();
 	fbrowser = new FileBrowser( fs, {
-		'text': function(file){
-			editor.input.value = file._data;
-			editor.update();
-		}
+		'text': editor.open
 	} );
 	
 	$("btn_new").onclick = fbrowser.addFolder;
