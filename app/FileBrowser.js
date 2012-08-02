@@ -63,7 +63,7 @@ function FileBrowser(fs,defaultApps){
 			function(){
 				var handler = api.defaultApps[file._type] ||
 					api.defaultApps[filetype];
-				handler && handler(file);
+				handler && handler(id);
 			};
 		
 		/* drag to desktop download */
@@ -114,52 +114,55 @@ function FileBrowser(fs,defaultApps){
 	
 	api.update();
 	
+	function upload( file, dest ){
+		// filter out huge files (size in bytes)
+		if( file.size > 100*1024 )
+			return alert("FILE TOO BIG");
+		// try to create a new file with the name and type
+		var id = fs.add( dest, file.name, file.type );
+		// abort on failure
+		if( !id ) return alert("FILENAME IS TAKEN");
+		// create a FileReader
+		var reader = new FileReader();
+		// on upload success
+		reader.onload = function(e){
+			fs.get(id)._data = e.target.result;
+			addIcon(id);
+		};
+		// on upload failure
+		reader.onerror = function(e){
+			alert("FILE UPLOAD ERROR");
+			console.log(e);
+			// remove failed upload file
+			fs.rmnode(id);
+		};
+		// begin the upload, upload text documents as text
+		if( file.type.split('/',1)[0] === 'text' ){
+			reader.readAsText(file);
+		} else {
+			reader.readAsDataURL(file);
+		}
+	};
+	
 	/* drop handler for uploads */
-	display.addEventListener && display.addEventListener( 'drop', function(e){
+	display.ondrop = function(e){
 		e.stopPropagation();
-		e.preventDefault();
+		//e.preventDefault();
 		// for each file dropped
 		var files = e.dataTransfer.files;
+		var dest = cwd.join('/');
 		for( var i = 0; i < files.length; i++ ){
-			// filter out huge files (size in bytes)
-			if( files[i].size > 100*1024 ){
-				alert("FILE TOO BIG");
-				continue;
-			}
-			// try to create a new file with the name and type
-			var newfile = fs.add( cwd.join('/'), files[i].name, files[i].type );
-			// abort on failure
-			if( !newfile ){
-				alert("FILENAME IS TAKEN");
-				continue;
-			}
-			// upload
-			var file = new FileReader();
-			file.onload = function(e){
-				fs.get(newfile)._data = e.target.result;
-				addIcon(newfile);
-			};
-			// error handling
-			file.onerror = function(e){
-				alert("FILE UPLOAD ERROR");
-				console.log(e);
-				// remove failed upload file
-				fs.rmnode(newfile);
-			};
-			// upload text documents as text
-			if( files[i].type.match('text.*') ){
-				file.readAsText(files[i]);
-			} else {
-				file.readAsDataURL(files[i]);
-			}
+			upload( files[i], dest );
 		}
-	}, false );
+		return false;
+	};
 	
-	display.addEventListener && display.addEventListener( 'dragover', function(e){
+	display.ondragover = function(e){
 		e.stopPropagation();
-		e.preventDefault();
+		//e.preventDefault();
 		e.dataTransfer.dropEffect = 'copy';
-	}, false );
+		return false;
+	};
 	
 	return api;
 };
