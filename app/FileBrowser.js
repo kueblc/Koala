@@ -22,6 +22,32 @@ function FileBrowser(fs,defaultApps){
 		};
 	};
 	
+	// async method to scale an image to fit inside maxW x maxH
+	function scaleImage( data, maxW, maxH, cb ){
+		// create an image object to hold our data
+		var image = new Image;
+		// we must wait until the image is loaded
+		image.onload = function(){
+			// determine the image dimensions and find the best scaling factor
+			var w = image.width;
+			var h = image.height;
+			var scale = Math.min( maxW/w, maxH/h, 1 );
+			// apply the scaling
+			w *= scale;
+			h *= scale;
+			// create a canvas of the desired size
+			var canvas = document.createElement('canvas');
+			canvas.width = w;
+			canvas.height = h;
+			// draw our scaled image to the canvas
+			canvas.getContext('2d').drawImage( image, 0, 0, w, h );
+			// callback with the resized image data
+			cb( canvas.toDataURL() );
+		};
+		// load the data into the image object
+		image.src = data;
+	};
+	
 	function addIcon( id ){
 		/* get file info */
 		var file = fs.get(id);
@@ -43,6 +69,14 @@ function FileBrowser(fs,defaultApps){
 			thumbnail.innerText =
 				thumbnail.textContent = preview;
 			icon.appendChild(thumbnail);
+		} else if( filetype === 'image' ){
+			scaleImage( file._data, 48, 48, function(img){
+				var thumbnail = new Image;
+				thumbnail.src = img;
+				thumbnail.draggable = false;
+				icon.className = 'blank';
+				icon.appendChild(thumbnail);
+			});
 		} else {
 			icon.className = filetype;
 		}

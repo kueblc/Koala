@@ -6,6 +6,7 @@
 /* default icon should be at 0,0 */
 #files div { background: url(faenza.png) 0 0; }
 
+#files .blank { background: 0; }
 #files .dir { background-position: 0 -64px; }
 #files .src { background-position: 0 -128px; }
 #files .application { background-position: 0 -192px; }
