@@ -99,7 +99,22 @@ function FileBrowser(fs,defaultApps){
 					api.defaultApps[filetype];
 				handler && handler(id);
 			};
-		
+		/* register a context menu for this item */
+		container.oncontextmenu = ContextMenu({
+			'_Open': container.ondblclick,
+			'_Delete': function(){
+				if( confirm("Are you sure you want to delete this file?") ){
+					fs.rmnode(id);
+					api.update();
+				}
+			},
+			'_About': function(){
+				alert( "Name: " + file._name +
+					"\nType: " + file._type +
+					"\nSize: " + file._data.length + " bytes"
+				);
+			}
+		});
 		/* drag to desktop download */
 		container.draggable = true;
 		container.addEventListener( 'dragstart', function(e){

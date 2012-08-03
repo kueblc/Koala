@@ -76,6 +76,8 @@ function ContextMenu( options ){
 		document.body.appendChild(menu);
 		// hide the menu on the next click
 		document.onmousedown = closeMenu;
+		// prevent other contextmenu events from firing
+		e.stopPropagation && e.stopPropagation();
 		// cancel the default action
 		return false;
 	};
