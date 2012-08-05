@@ -57,7 +57,7 @@ function FileBrowser(fs,defaultApps){
 			icon = document.createElement('div'),
 			title = document.createElement('input');
 		/* set the icon image */
-		if( filetype === 'text' && file._data.substr ){
+		if( filetype === 'text' && file._data !== '' ){
 			icon.className = '';
 			var thumbnail = document.createElement('pre');
 			// get a 5x10 text preview

@@ -25,7 +25,7 @@ function FS(root){
 			_name: name,
 			_type: type,
 			_parent: parent,
-			_data: {}
+			_data: (type === 'dir') ? {} : ''
 		};
 		// be sure to inform parent of the new child node
 		root[parent]._data[name] = child;
