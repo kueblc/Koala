@@ -28,7 +28,9 @@ var koala = {
 		genparser: function(){
 			var rulesrc = [];
 			for( var cmd in koala.lang.commands ){
-				rulesrc.push( cmd );
+				rulesrc.push(
+					cmd.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&" )
+				);
 			}
 			koala.lang.rules.cmd = new RegExp( "^("+rulesrc.join('|')+")", "i" );
 			rulesrc = [];
