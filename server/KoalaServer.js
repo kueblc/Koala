@@ -29,7 +29,8 @@ var STATIC_FILES = [
 	'themes/koalarch.css',
 	'themes/silver.css',
 	'icons/faenza.css',
-	'icons/faenza.png' ];
+	'icons/faenza.png',
+	'images/home.png' ];
 
 var STATIC_PATH = 'static/';
 

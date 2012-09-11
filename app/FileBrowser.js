@@ -152,7 +152,7 @@ function FileBrowser(fs,defaultApps){
 		for( var i = 0; i < cwd.length; i++ ){
 			var button = document.createElement('button');
 			button.onclick = seek(i+1);
-			button.innerHTML = cwd[i] || "home";
+			button.innerHTML = cwd[i] || "/";
 			locationBar.appendChild(button);
 		}
 	};

@@ -92,6 +92,13 @@
 	outline: none;
 }
 
+#address > button:first-child {
+	background-image: url("images/home.png");
+	background-repeat: no-repeat;
+	background-position: center center;
+	color: transparent;
+}
+
 button {
 	font-size: 14px;
 	padding: 2px 8px;
