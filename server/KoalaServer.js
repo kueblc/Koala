@@ -27,13 +27,20 @@ var STATIC_FILES = [
 	'themes/koalabook.css',
 	'themes/koalaplex.css',
 	'themes/koalarch.css',
-	'themes/silver.css' ];
+	'themes/silver.css',
+	'icons/faenza.css',
+	'icons/faenza.png' ];
 
 var STATIC_PATH = 'static/';
 
 var JS_FILES = [
+	'app/Animator.js',
 	'app/Compiler.js',
+	'app/Editor.js',
+	'app/FileBrowser.js',
+	'app/FS.js',
 	'app/Koala.js',
+	'app/PanelManager.js',
 	'app/Parser.js',
 	'app/Server.js',
 	'app/TextareaDecorator.js',

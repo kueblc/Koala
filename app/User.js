@@ -18,7 +18,7 @@ function User( server ){
 	var user_field = $("login_username"),
 		pass_field = $("login_password");
 	
-	var li = user_field.parentNode.parentNode.parentNode;
+	var li = user_field.parentNode.parentNode;
 	
 	var setLi = function( str ){
 		li.replaceChild( document.createTextNode(str), li.firstChild );
