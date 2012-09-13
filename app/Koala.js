@@ -58,14 +58,35 @@ function ContextMenu( options ){
 	// generate the menu
 	var menu = document.createElement("ul");
 		menu.className = 'contextmenu';
+		// prevent spawning a context menu in a context menu
+		menu.oncontextmenu = function(e){
+			// prevent other contextmenu events from firing
+			e.stopPropagation && e.stopPropagation();
+			// cancel the default action
+			return false;
+		};
 	var keymap = {};
 	for( var i in options ){
 		var item = document.createElement("li");
+			// underlines the first character following an underscore
 			item.innerHTML = i.replace( /_(.)/, function(_,x){
+				// make this character a shortcut to this menu item
 				keymap[x.toUpperCase()] = options[i];
 				return '<u>'+x+'</u>';
 			} );
-			item.onmousedown = options[i];
+			item.onmousedown = function(e){
+				// prevent other mousedown events from firing
+				e.stopPropagation && e.stopPropagation();
+				// don't highlight contextmenu text
+				return false;
+			};
+			// creates a closure to store callback
+			item.onclick = (function(callback){
+				return function(){
+					closeMenu();
+					callback();
+				};
+			})( options[i] );
 		menu.appendChild(item);
 	}
 	function openMenu(e){
