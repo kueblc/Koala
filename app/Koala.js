@@ -65,13 +65,13 @@ function ContextMenu( options ){
 			// cancel the default action
 			return false;
 		};
-	var keymap = {};
+	var keyMap = {};
 	for( var i in options ){
 		var item = document.createElement("li");
 			// underlines the first character following an underscore
 			item.innerHTML = i.replace( /_(.)/, function(_,x){
 				// make this character a shortcut to this menu item
-				keymap[x.toUpperCase()] = options[i];
+				keyMap[x.toUpperCase()] = options[i];
 				return '<u>'+x+'</u>';
 			} );
 			item.onmousedown = function(e){
@@ -99,6 +99,8 @@ function ContextMenu( options ){
 		document.body.appendChild(menu);
 		// hide the menu on the next click
 		document.onmousedown = closeMenu;
+		// catch key events
+		document.onkeydown = shortcut;
 		// prevent other contextmenu events from firing
 		e.stopPropagation && e.stopPropagation();
 		// cancel the default action
@@ -107,6 +109,16 @@ function ContextMenu( options ){
 	function closeMenu(){
 		document.body.removeChild(menu);
 		document.onmousedown = null;
+		document.onkeydown = null;
+	};
+	// handles keyboard shortcuts in contextmenu
+	function shortcut(e){
+		e = e || window.event;
+		var key = String.fromCharCode( e.which || e.keyCode );
+		if( keyMap[key] ){
+			closeMenu();
+			keyMap[key]();
+		}
 	};
 	return openMenu;
 };
