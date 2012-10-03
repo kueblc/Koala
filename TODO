@@ -66,14 +66,21 @@ Resources:
 		https://developer.mozilla.org/En/DragDrop/Recommended_Drag_Types
 		http://www.thecssninja.com/javascript/gmail-dragout
 		http://help.dottoro.com/ljmpcqdb.php
+		http://paul.kinlan.me/drag-to-desktop-in-js/
+		http://stackoverflow.com/questions/4100927/chrome-filereader
+	Drag selection area
+		http://stackoverflow.com/questions/4002059/get-dom-elements-inside-a-rectangle-area-of-a-page
+		http://threedubmedia.com/code/event/drop/demo/selection
 	Node.js based minification
 		https://github.com/GoalSmashers/clean-css
 		https://github.com/mishoo/UglifyJS
 		https://github.com/Qard/crsh
-	In browser interpretters/compilers; prolog, lisp
+	In browser interpretters/compilers; prolog, lisp, coffeescript, basic
 		http://ioctl.org/logic/prolog1
 		http://lambda-the-ultimate.org/node/892
 		http://joeganley.com/code/jslisp.html
+		http://coffeescript.org/documentation/docs/nodes.html
+		http://www.calormen.com/applesoft/
 	Node.js example server
 		https://github.com/ry/node_chat
 	AJAX
@@ -98,10 +105,37 @@ Resources:
 		http://pajhome.org.uk/crypt/md5/
 		http://www.ietf.org/rfc/rfc2104.txt
 	Node.js Reference
+		http://nodejs.org/docs/v0.4.9/api/process.html
 		http://nodejs.org/docs/v0.4.9/api/crypto.html
 		http://nodejs.org/docs/v0.4.9/api/globals.html
+	HTML5 Polyfills
+		https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-Browser-Polyfills
+	Flash-like WebGL API
+		http://lib.ivank.net
+	CSS Animation/Transition stuff
+		http://www.impressivewebs.com/css3-transitions-javascript/
+		http://marakana.com/static/bookshelf/css3_transitions_tutorial/javascript.html
+		http://ryanflorence.com/cssanimation/
+		http://stackoverflow.com/questions/2794148/css3-transition-events
+	CSS toggle switch
+		https://github.com/ghinda/css-toggle-switch
+		http://jsfiddle.net/DMfvx/88/
+	Grammar
+		http://www.lysator.liu.se/c/ANSI-C-grammar-y.html
 
 ~ scraps ~
+CLIENT ===========
+== Sort by property
+array.sort(function(a, b) { 
+    return a.prop - b.prop;
+});
+== which element has keyboard focus (read only)
+document.activeElement
+// https://developer.mozilla.org/en-US/docs/HTML/Global_attributes
+== element can gain keyboard focus
+element.tabindex = -1;
+
+SERVER ===========
 == Dealing with Buffers & Strings, Base64 & binary
 > console.log(new Buffer("Hello World").toString('base64'));
 SGVsbG8gV29ybGQ=
