@@ -57,7 +57,7 @@ function Stage(){
 	};
 	
 	api.title = function(x){
-		title.textContent = title.innerText = x;
+		title.replaceChild( document.createTextNode(x), title.firstChild );
 	};
 	
 	api.js = function(x){
