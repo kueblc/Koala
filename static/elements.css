@@ -115,7 +115,7 @@ button:hover {
 
 .tab > button {
 	margin-top: 3px;
-	margin-left: -2px;
+	float: left;
 }
 
 .tab > button.current {
