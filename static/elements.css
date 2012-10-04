@@ -129,18 +129,34 @@ h2 > button {
 	height: 16px;
 }
 
+.footer > span {
+	float: left;
+	display: block;
+	font-size: 14px;
+	padding: 4px 2px;
+	color: #888;
+}
+
+.footer > button {
+	float: right;
+}
+
 #canvas {
 	position: relative;
 }
 
 #canvas.shadow:before {
-	content: "design your app's layout here!";
+	content: "see your hardwork here!";
 	display: block;
 	margin: -8px 0;
 	position: absolute;
 	top: 50%;
 	width: 100%;
 	text-align: center;
+}
+
+iframe {
+	border: none;
 }
 
 .input {

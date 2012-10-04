@@ -31,6 +31,17 @@ function Editor( parser ){
 	$("btn_save").onclick = function(){
 		api.save( currentFile );
 	};
+	$("btn_compile").onclick = function(){
+		var filename = prompt("Save as");
+		if( !filename ) return;
+		// try to create a new file with the name and type
+		file = fs.add( '/', filename, 'application/javascript' );
+		// abort on failure
+		if( !file ) return alert("FILENAME IS TAKEN");
+		fs.get(file)._data = '(function(){' +
+			compiler.compile( display.input.value ) +
+			'})();window.close();';
+	};
 	
 	function switchTo( id ){
 		// if the file is already in focus, do nothing
