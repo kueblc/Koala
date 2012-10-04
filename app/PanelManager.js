@@ -278,6 +278,8 @@ function PanelManager( desk, float, dock, animationTime ){
 	function Panel( panel ){
 		var titlebar = panel.children[0],
 			icon = document.createElement('button'),
+			close = document.createElement('button'),
+			maximize = document.createElement('button'),
 			minimize = document.createElement('button'),
 			style = panel.style,
 			diffX = 0,
@@ -288,9 +290,22 @@ function PanelManager( desk, float, dock, animationTime ){
 		icon.innerHTML = title;
 		icon.ondblclick = restorePanel;
 
+		close.className = 'close';
+		maximize.className = 'max';
+		minimize.className = 'min';
+
+		close.innerHTML = '&times;';
+		maximize.innerHTML = '+';
+		minimize.innerHTML = '-';
+
+		//close.onclick = closePanel;
+		//maximize.onclick = maximizePanel;
 		minimize.onclick = minimizePanel;
 
+		titlebar.appendChild(close);
+		titlebar.appendChild(maximize);
 		titlebar.appendChild(minimize);
+		
 		// disable selection on grip in IE
 		titlebar.onselectstart = function(){ return false; };
 		titlebar.onmousedown = grabPanel;

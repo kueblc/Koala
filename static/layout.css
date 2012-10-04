@@ -156,6 +156,7 @@ h1, h2 {
 }
 
 .panel > h2 {
+	overflow: hidden;
 	padding: 2px 8px;
 	font-size: 14px;
 	height: 21px;
@@ -163,12 +164,18 @@ h1, h2 {
 }
 
 .panel > .header {
+	overflow: hidden;
 	height: 30px;
 	top: 21px;
 	padding: 2px 8px;
 }
 
+.panel > .tab {
+	overflow: visible !important;
+}
+
 .panel > .footer {
+	overflow: hidden;
 	height: 30px;
 	bottom: 0;
 	padding: 2px 8px;
@@ -195,6 +202,7 @@ h1, h2 {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	height: 25px;
+	margin-bottom: 4px;
 }
 
 .panel > .scroll {
