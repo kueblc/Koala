@@ -16,7 +16,9 @@ function Stage(){
 		head = null;
 	
 	var footer = $('exec_ctrl'),
-		closebtn = document.createElement('button');
+		closebtn = document.createElement('button'),
+		status = document.createElement('span');
+		footer.appendChild(status);
 		closebtn.innerHTML = 'close';
 		closebtn.onclick = function(){ api.close() };
 	
@@ -29,21 +31,28 @@ function Stage(){
 			"<head><\/head><body><\/body>"
 		);
 		head = iframe.contentWindow.document.firstChild;
+		status.innerHTML = '';
 		footer.appendChild( closebtn );
+		// reroute sandboxed commands
+		iframe.contentWindow.parent = null;
+		iframe.contentWindow.close = function(){ api.close(); };
 	};
 	
 	var unload = function(){
-		container.replaceChild( shadow, iframe );
-		iframe = null;
-		head = null;
-		api.title('stage');
-		footer.removeChild( closebtn );
+		if( iframe ){
+			container.replaceChild( shadow, iframe );
+			iframe = null;
+			head = null;
+			footer.removeChild( closebtn );
+			status.innerHTML = 'done';
+			api.title('stage');
+		}
 	};
 	
 	
 	/* PUBLIC */
 	api.reset = function(){
-		if( iframe ) unload();
+		unload();
 		load();
 	};
 	
@@ -61,7 +70,7 @@ function Stage(){
 	};
 	
 	api.close = function(){
-		if( iframe ) unload();
+		unload();
 	};
 	
 	api.open = function( id ){

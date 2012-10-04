@@ -129,6 +129,18 @@ h2 > button {
 	height: 16px;
 }
 
+.footer > span {
+	float: left;
+	display: block;
+	font-size: 14px;
+	padding: 4px 2px;
+	color: #888;
+}
+
+.footer > button {
+	float: right;
+}
+
 #canvas {
 	position: relative;
 }
