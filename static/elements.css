@@ -125,8 +125,38 @@ button:hover {
 }
 
 h2 > button {
+	-moz-transition: background 0.4s ease 0s;
+	background: #ddd;
+	color: #ddd;
 	float: right;
-	height: 16px;
+	font-size: 14px;
+	height: 18px;
+	line-height: 0;
+	margin-left: 2px;
+	margin-top: -5px;
+	margin-bottom: 4px;
+	padding: 0 0 4px;
+	text-align: center;
+	font-weight: bold;
+	width: 24px;
+	outline: none;
+}
+
+h2 > button:hover {
+	color: #fff;
+	outline: none;
+}
+
+h2 > button.min:hover {
+	background: blue;
+}
+
+h2 > button.max:hover {
+	background: lime;
+}
+
+h2 > button.close:hover {
+	background: red;
 }
 
 #canvas {
