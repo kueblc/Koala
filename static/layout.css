@@ -170,6 +170,10 @@ h1, h2 {
 	padding: 2px 8px;
 }
 
+.panel > .tab {
+	overflow: visible !important;
+}
+
 .panel > .footer {
 	overflow: hidden;
 	height: 30px;
