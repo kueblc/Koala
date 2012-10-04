@@ -123,7 +123,7 @@ function ContextMenu( options ){
 	return openMenu;
 };
 
-var parser, editor, compiler, server, user, anim, pm, fs, fbrowser;
+var parser, editor, compiler, server, user, anim, pm, fs, fbrowser, stage;
 window.onload = function(){
 	// TODO
 	// testing...
@@ -138,6 +138,8 @@ window.onload = function(){
 	user = new User( server );
 	
 	anim = new Animator();
+	
+	stage = new Stage();
 	
 	function ToggleMenu( elem ){
 		var lock = false;
@@ -169,7 +171,8 @@ window.onload = function(){
 	
 	fs = new FS();
 	fbrowser = new FileBrowser( fs, {
-		'text': editor.open
+		'text': editor.open,
+		'application': stage.open
 	} );
 	
 	$("btn_new").onclick = fbrowser.addFolder;

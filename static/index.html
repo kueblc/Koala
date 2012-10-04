@@ -19,6 +19,7 @@
 		<script src="../app/FS.js" type="text/javascript"></script>
 		<script src="../app/FileBrowser.js" type="text/javascript"></script>
 		<script src="../app/Editor.js" type="text/javascript"></script>
+		<script src="../app/Stage.js" type="text/javascript"></script>
 		<script src="../app/Koala.js" type="text/javascript"></script>
 		<link id="theme" rel="stylesheet" type="text/css" href="themes/basic.css">
 		<link id="icon" rel="stylesheet" type="text/css" href="icons/faenza.css">
@@ -62,7 +63,17 @@
 				</div>
 			</div>
 			<div class='column' style='width:44%'>
-				<div style='height:100%'>
+				<div style='height:60%'>
+					<div class='panel' id='panel_stage'>
+						<h2>stage</h2>
+						<div class='content stretch foot'>
+							<div id='canvas' class='shadow'></div>
+						</div>
+						<div class='footer' id='exec_ctrl'>
+						</div>
+					</div>
+				</div>
+				<div style='height:40%'>
 					<div class='panel' id='panel_editor'>
 						<h2>editor</h2>
 						<div class='header tab' id='editor_tabs'>
@@ -83,7 +94,6 @@
 					<div class='panel'>
 						<h2>workbench</h2>
 						<div class='content stretch'>
-							<div id='canvas' class='shadow'></div>
 						</div>
 					</div>
 				</div>

@@ -186,7 +186,8 @@ function FileBrowser(fs,defaultApps){
 			fs.rmnode(id);
 		};
 		// begin the upload, upload text documents as text
-		if( file.type.split('/',1)[0] === 'text' ){
+		if( file.type.split('/',1)[0] === 'text' ||
+			file.type === 'application/javascript' ){
 			reader.readAsText(file);
 		} else {
 			reader.readAsDataURL(file);
