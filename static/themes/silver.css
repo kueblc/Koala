@@ -73,6 +73,18 @@ body {
 	border-bottom: 1px solid #ccc;
 }
 
+.menu {
+	-webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.scroll ~ .footer {
+	-webkit-box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
 button {
 	border: 1px solid #aaa;
 	background: #eee;

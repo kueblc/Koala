@@ -181,7 +181,7 @@ h2 > button.close:hover {
 }
 
 #canvas.shadow:before {
-	content: "see your hardwork here!";
+	content: "see your hard work here!";
 	display: block;
 	margin: -8px 0;
 	position: absolute;
