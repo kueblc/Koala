@@ -123,7 +123,7 @@ function ContextMenu( options ){
 	return openMenu;
 };
 
-var parser, editor, compiler, server, user, anim, pm, fs, fbrowser, stage;
+var parser, editor, compiler, server, user, anim, pm, fs, fbrowser, stage, dictionary;
 window.onload = function(){
 	// TODO
 	// testing...
@@ -140,6 +140,8 @@ window.onload = function(){
 	anim = new Animator();
 	
 	stage = new Stage();
+	
+	dictionary = new Dictionary();
 	
 	function ToggleMenu( elem ){
 		var lock = false;
