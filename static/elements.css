@@ -99,6 +99,11 @@
 	color: transparent;
 }
 
+#search {
+	height: 25px;
+	width: 100%;
+}
+
 button {
 	font-size: 14px;
 	padding: 2px 8px;
@@ -237,12 +242,14 @@ iframe {
 .ldt {
 }
 
-.ldt .cmd { color: green; }
-.ldt .num { color: navy; }
-.ldt .str { color: blue; }
-.ldt .box { color: red; }
-.ldt .cmt { color: gray; }
-.ldt .err { border-bottom: 1px dotted red; }
+span.cmd { color: green; }
+span.num { color: navy; }
+span.str { color: blue; }
+span.box { color: red; }
+span.cmt { color: gray; }
+span.err { border-bottom: 1px dotted red; }
+
+span.code { font-family: monospace; }
 
 /* show tabs */
 .ldt .arr {
