@@ -406,17 +406,35 @@ function PanelManager( desk, float, dock, animationTime ){
 			}
 			return null;
 		};
+		
+		// adds convenient methods for button manipulation
+		function buttonMgr( e ){
+			e.buttons = e.getElementsByTagName('button');
+			e.makeButton = function( str, cb ){
+				var button = document.createElement('button');
+				button.appendChild( document.createTextNode(str) );
+				e.appendChild( button );
+				return button;
+			};
+		};
 
 		/* PUBLIC */
+		// quick access to panel components
 		panel.header = findByClass( panel, 'header' );
 		panel.content = findByClass( panel, 'content' );
 		panel.footer = findByClass( panel, 'footer' );
+		// sets the panel titlebar text
 		panel.setTitle = function(s){
 			titlebar.replaceChild(
 				document.createTextNode(s),
 				titlebar.firstChild );
 		};
+		// add button methods to header
+		if( panel.header ) buttonMgr( panel.header );
 		if( panel.footer ){
+			// add button methods to footer
+			buttonMgr( panel.footer );
+			// add status message methods
 			var status = document.createElement('span');
 			panel.footer.appendChild(status);
 			panel.setStatus = function(s){
