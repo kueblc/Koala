@@ -104,6 +104,19 @@
 	width: 100%;
 }
 
+#panel_dictionary ul {
+	padding: 0;
+}
+
+#panel_dictionary li {
+	padding: 8px;
+	border-bottom: 1px solid #ccc;
+}
+
+#panel_dictionary li:hover {
+	background: #f5f5f5;
+}
+
 button {
 	font-size: 14px;
 	padding: 2px 8px;
