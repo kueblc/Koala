@@ -143,7 +143,7 @@ button:hover {
 }
 
 h2 > button {
-	-moz-transition: background 0.4s ease 0s;
+	-moz-transition: background 0.4s, color 0.4s;
 	background: #ddd;
 	color: #ddd;
 	float: right;
@@ -161,20 +161,21 @@ h2 > button {
 }
 
 h2 > button:hover {
-	color: #fff;
+	color: #888;
 	outline: none;
+	text-shadow: 0 1px #fff;
 }
 
 h2 > button.min:hover {
-	background: blue;
+	background: lightBlue;
 }
 
 h2 > button.max:hover {
-	background: lime;
+	background: lightGreen;
 }
 
 h2 > button.close:hover {
-	background: red;
+	background: salmon;
 }
 
 .footer > span {
