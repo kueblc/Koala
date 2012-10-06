@@ -21,8 +21,7 @@ function Dictionary(){
 	query.onkeyup = function(){
 		if( query.value === last ) return;
 		last = query.value;
-		var regex = query.value.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&" );
-		regex = new RegExp(regex,'i');
+		var regex = new RegExp( RegExp.escape(query.value), 'i' );
 		var count = 0;
 		for( var i = 0; i < entries.length; i++ ){
 			if( regex.test( entries[i].innerHTML ) ){
