@@ -124,6 +124,8 @@ var parser, editor, compiler, server, user, anim, pm, fs, fbrowser, stage, dicti
 window.onload = function(){
 	// TODO
 	// testing...
+	pm = new PanelManager( $("content"), $("float"), $("footer"), 1000 );
+	
 	parser = { tokenize: koala.lang.tokenize, identify: koala.lang.assoc };
 	
 	editor = new Editor( parser );
@@ -165,8 +167,6 @@ window.onload = function(){
 		login: $("toolbar_login") };
 	
 	for( var menu in toolbar ) new ToggleMenu(toolbar[menu]);
-	
-	pm = new PanelManager( $("content"), $("float"), $("footer"), 1000 );
 	
 	fs = new FS();
 	fbrowser = new FileBrowser( fs, {

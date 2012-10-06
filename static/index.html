@@ -54,8 +54,8 @@
 				<div style='height:100%'>
 					<div class='panel' id='panel_filebrowser'>
 						<h2>file browser</h2>
-						<div class='header menu' id='address'></div>
-						<ul id='files' class='content head scroll foot'></ul>
+						<div class='header menu'></div>
+						<ul class='content head scroll foot'></ul>
 						<div class='footer'>
 							<button id='btn_new'>new</button>
 							<button id='btn_refresh'>refresh</button>
@@ -70,14 +70,14 @@
 						<div class='content stretch foot'>
 							<div id='canvas' class='shadow'></div>
 						</div>
-						<div class='footer' id='exec_ctrl'>
+						<div class='footer'>
 						</div>
 					</div>
 				</div>
 				<div style='height:40%'>
 					<div class='panel' id='panel_editor'>
 						<h2>editor</h2>
-						<div class='header tab' id='editor_tabs'>
+						<div class='header tab'>
 							<button class='current'>new script</button>
 						</div>
 						<div class='content head stretch foot'>
@@ -96,17 +96,15 @@
 					<div class='panel' id='panel_dictionary'>
 						<h2>dictionary</h2>
 						<div class='header menu'><input name='search' type='text' id='search' class='input' placeholder='search'></div>
-						<div class='content head scroll foot'>
-							<ul><li><h3>Boxes</h3><p>A box is a place you can store something for as long as you'd like. You can use as many boxes as you like by giving each box a name. If you put something new in the box, it replaces anything already inside. Each script has its own boxes. You can use a box by putting its name in square brackets.</p><span class='code box'>[this is a box]</span></li>
-								<li><h3>Notes</h3><p>A note is a line of text that koala ignores. Use it to explain what the script is supposed to do. This will help others and even yourself, should you forget, to understand your script. Notes are created by a double hypen.</p><span class='code cmt'>-- this is an example</span></li>
-								<li><h3>Numbers</h3><p>A number is a set of digits with no space inbetween. You may optionally use a decimal point.</p><span class='code num'>123 45.0 -67 8.9</span></li>
-								<li><h3>Script</h3><p>A script is a recipe for how a computer does something. A program is run by following one or many scripts. There are several scripts that are builtin to koala. A script can run any other script just by writing its name followed by any information you want to give it.</p><span class='code cmd'>say </span><span class='code str'>"hello"</span></li>
-								<li><h3>Switch</h3><p>A switch has only two states. You can set it on or off, yes or no, true or false. Switches are useful when you want to make a decision.</p><span class='code num'>on yes true off no false</span></li>
-								<li><h3>Text</h3><p>Text is created by writing between either quotes or double quotes. If you want to type a quote inside the text, put a backslash behind it.</p><span class='code str'>"this is an example" 'so is this'</span></li>
-							</ul>
-						</div>
-						<div class='footer'>
-						</div>
+						<ul class='content head scroll foot'>
+							<li><h3>Boxes</h3><p>A box is a place you can store something for as long as you'd like. You can use as many boxes as you like by giving each box a name. If you put something new in the box, it replaces anything already inside. Each script has its own boxes. You can use a box by putting its name in square brackets.</p><span class='code box'>[this is a box]</span></li>
+							<li><h3>Notes</h3><p>A note is a line of text that koala ignores. Use it to explain what the script is supposed to do. This will help others and even yourself, should you forget, to understand your script. Notes are created by a double hypen.</p><span class='code cmt'>-- this is an example</span></li>
+							<li><h3>Numbers</h3><p>A number is a set of digits with no space inbetween. You may optionally use a decimal point.</p><span class='code num'>123 45.0 -67 8.9</span></li>
+							<li><h3>Script</h3><p>A script is a recipe for how a computer does something. A program is run by following one or many scripts. There are several scripts that are builtin to koala. A script can run any other script just by writing its name followed by any information you want to give it.</p><span class='code cmd'>say </span><span class='code str'>"hello"</span></li>
+							<li><h3>Switch</h3><p>A switch has only two states. You can set it on or off, yes or no, true or false. Switches are useful when you want to make a decision.</p><span class='code num'>on yes true off no false</span></li>
+							<li><h3>Text</h3><p>Text is created by writing between either quotes or double quotes. If you want to type a quote inside the text, put a backslash behind it.</p><span class='code str'>"this is an example" 'so is this'</span></li>
+						</ul>
+						<div class='footer'></div>
 					</div>
 				</div>
 			</div>

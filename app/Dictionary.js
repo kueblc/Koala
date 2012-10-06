@@ -10,10 +10,7 @@ function Dictionary(){
 	var panel = $('panel_dictionary');
 	var query = $('search');
 	
-	var entries = panel.children[2].children[0].children;
-	var footer = panel.children[3];
-	var status = document.createElement('span');
-		footer.appendChild(status);
+	var entries = panel.content.children;
 	//.scrollIntoView()
 	
 	var last = '';
@@ -32,11 +29,11 @@ function Dictionary(){
 			}
 		}
 		if( count === 0 ){
-			status.innerHTML = 'No results';
+			panel.setStatus('No results');
 		} else if( count === 1 ){
-			status.innerHTML = '1 result';
+			panel.setStatus('1 result');
 		} else {
-			status.innerHTML = count +' results';
+			panel.setStatus(count +' results');
 		}
 	};
 	

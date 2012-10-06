@@ -398,6 +398,31 @@ function PanelManager( desk, float, dock, animationTime ){
 			style.boxShadow = '';
 			titlebar.style.cursor = 'auto';
 		};
+		
+		function findByClass( e, str ){
+			for( var i = 0; i < e.children.length; i++ ){
+				if( e.children[i].className.indexOf(str) > -1 )
+					return e.children[i];
+			}
+			return null;
+		};
+
+		/* PUBLIC */
+		panel.header = findByClass( panel, 'header' );
+		panel.content = findByClass( panel, 'content' );
+		panel.footer = findByClass( panel, 'footer' );
+		panel.setTitle = function(s){
+			titlebar.replaceChild(
+				document.createTextNode(s),
+				titlebar.firstChild );
+		};
+		if( panel.footer ){
+			var status = document.createElement('span');
+			panel.footer.appendChild(status);
+			panel.setStatus = function(s){
+				status.textContent = status.innerText = s;
+			};
+		}
 
 	};
 

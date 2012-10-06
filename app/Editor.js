@@ -10,7 +10,7 @@ function Editor( parser ){
 	
 	var panel = $('panel_editor');
 	
-	var tabBar = $('editor_tabs'),
+	var tabBar = panel.header,
 		tabs = tabBar.getElementsByTagName('button');
 	
 	var display = new TextareaDecorator( $("rta_in"), parser );
