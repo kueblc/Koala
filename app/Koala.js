@@ -177,8 +177,6 @@ window.onload = function(){
 		'application': stage.open
 	} );
 	
-	$("btn_new").onclick = fbrowser.addFolder;
-	
 	// context menu test
 	$("files").oncontextmenu = ContextMenu({
 		'_New': fbrowser.addFolder,

@@ -214,6 +214,9 @@ function FileBrowser(fs,defaultApps){
 		return false;
 	};
 	
+	$("btn_new").onclick = api.addFolder;
+	$("btn_refresh").onclick = api.update;
+	
 	return api;
 };
 
