@@ -4,11 +4,11 @@
  */
 
 /* default icon should be at 0,0 */
-#files div { background: url(faenza.png) 0 0; }
+#panel_filebrowser .content div { background: url(faenza.png) 0 0; }
 
-#files .blank { background: 0; }
-#files .dir { background-position: 0 -64px; }
-#files .src { background-position: 0 -128px; }
-#files .application { background-position: 0 -192px; }
-#files .text { background-position: 0 -256px; }
-#files .pkg { background-position: 0 -320px; }
+#panel_filebrowser .content .blank { background: 0; }
+#panel_filebrowser .content .dir { background-position: 0 -64px; }
+#panel_filebrowser .content .src { background-position: 0 -128px; }
+#panel_filebrowser .content .application { background-position: 0 -192px; }
+#panel_filebrowser .content .text { background-position: 0 -256px; }
+#panel_filebrowser .content .pkg { background-position: 0 -320px; }

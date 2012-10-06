@@ -7,7 +7,7 @@
 function Stage(){
 	var api = this;
 	
-	var panel = $('panel_stage');;
+	var panel = $('panel_stage');
 	
 	var shadow = $('canvas'),
 		container = shadow.parentElement;
