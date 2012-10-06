@@ -110,7 +110,11 @@
 
 #panel_dictionary li {
 	padding: 8px;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px dotted #ccc;
+}
+
+#panel_dictionary li:last-child {
+	border-bottom: none;
 }
 
 #panel_dictionary li:hover {

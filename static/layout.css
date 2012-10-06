@@ -168,6 +168,7 @@ h1, h2, button {
 	height: 30px;
 	top: 21px;
 	padding: 2px 8px;
+	z-index: 1;
 }
 
 .panel > .tab {
