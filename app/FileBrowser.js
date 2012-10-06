@@ -8,8 +8,10 @@ function FileBrowser(fs,defaultApps){
 	/* INIT */
 	var api = this;
 	
-	var display = $('files'),
-		locationBar = $('address');
+	var panel = $('panel_filebrowser');
+	
+	var display = panel.content,
+		locationBar = panel.header;
 	
 	var cwd = [''];
 	

@@ -7,18 +7,15 @@
 function Stage(){
 	var api = this;
 	
-	var panel = $('panel_stage'),
-		title = panel.getElementsByTagName('h2')[0];
+	var panel = $('panel_stage');;
 	
 	var shadow = $('canvas'),
 		container = shadow.parentElement;
 		iframe = null;
 		head = null;
 	
-	var footer = $('exec_ctrl'),
-		closebtn = document.createElement('button'),
-		status = document.createElement('span');
-		footer.appendChild(status);
+	var footer = panel.footer,
+		closebtn = document.createElement('button');
 		closebtn.innerHTML = 'close';
 		closebtn.onclick = function(){ api.close() };
 	
@@ -31,7 +28,7 @@ function Stage(){
 			"<head><\/head><body><\/body>"
 		);
 		head = iframe.contentWindow.document.firstChild;
-		status.innerHTML = '';
+		panel.setStatus('');
 		footer.appendChild( closebtn );
 		// reroute sandboxed commands
 		iframe.contentWindow.parent = null;
@@ -44,8 +41,8 @@ function Stage(){
 			iframe = null;
 			head = null;
 			footer.removeChild( closebtn );
-			status.innerHTML = 'done';
-			api.title('stage');
+			panel.setStatus('done');
+			panel.setTitle('stage');
 		}
 	};
 	
@@ -54,10 +51,6 @@ function Stage(){
 	api.reset = function(){
 		unload();
 		load();
-	};
-	
-	api.title = function(x){
-		title.replaceChild( document.createTextNode(x), title.firstChild );
 	};
 	
 	api.js = function(x){
@@ -78,7 +71,7 @@ function Stage(){
 		var file = fs.get(id);
 		// load the sandbox
 		api.reset();
-		api.title( file._name );
+		panel.setTitle( file._name );
 		api.js( file._data );
 	};
 	
