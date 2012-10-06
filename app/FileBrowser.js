@@ -219,6 +219,15 @@ function FileBrowser(fs,defaultApps){
 	$("btn_new").onclick = api.addFolder;
 	$("btn_refresh").onclick = api.update;
 	
+	// context menu test
+	display.oncontextmenu = ContextMenu({
+		'_New': api.addFolder,
+		'Cu_t': function(){ console.log('context cut'); },
+		'_Copy': function(){ console.log('context copy'); },
+		'_Paste': function(){ console.log('context paste'); },
+		'_About': function(){ console.log('context about'); }
+	});
+	
 	return api;
 };
 

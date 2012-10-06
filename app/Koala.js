@@ -174,14 +174,6 @@ window.onload = function(){
 		'application': stage.open
 	} );
 	
-	// context menu test
-	$("files").oncontextmenu = ContextMenu({
-		'_New': fbrowser.addFolder,
-		'Cu_t': function(){ console.log('context cut'); },
-		'_Copy': function(){ console.log('context copy'); },
-		'_Paste': function(){ console.log('context paste'); },
-		'_About': function(){ console.log('context about'); }
-	});
 };
 /*
 window.onerror = function( msg, url, line ){
