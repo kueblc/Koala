@@ -40,3 +40,7 @@ var stringify = function( obj ){
 RegExp.escape = function(x){
 	return x.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&" );
 };
+
+String.prototype.contains = function(x){
+	return this.indexOf(x) !== -1;
+};
