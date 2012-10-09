@@ -4,7 +4,7 @@
  * Base class for panel applications
  */
 
-function Panel( panel, pm ){
+function Panel( panel, layout ){
 	var titlebar = panel.children[0],
 		icon = document.createElement('button'),
 		close = document.createElement('button'),
@@ -20,7 +20,7 @@ function Panel( panel, pm ){
 	panel.titlebar = titlebar;
 	
 	icon.innerHTML = title;
-	icon.ondblclick = function(){ pm.restorePanel(panel) };
+	icon.ondblclick = function(){ layout.restorePanel(panel) };
 
 	close.className = 'close';
 	maximize.className = 'max';
@@ -32,7 +32,7 @@ function Panel( panel, pm ){
 
 	//close.onclick = closePanel;
 	//maximize.onclick = maximizePanel;
-	minimize.onclick = function(){ pm.minimizePanel(panel); };
+	minimize.onclick = function(){ layout.minimizePanel(panel); };
 	titlebar.appendChild(close);
 	titlebar.appendChild(maximize);
 	titlebar.appendChild(minimize);
@@ -40,7 +40,7 @@ function Panel( panel, pm ){
 	// disable selection on grip in IE
 	titlebar.onselectstart = function(){ return false; };
 	
-	titlebar.onmousedown = function(e){ pm.grabPanel(e,panel); };
+	titlebar.onmousedown = function(e){ layout.grabPanel(e,panel); };
 	
 	function findByClass( e, str ){
 		for( var i = 0; i < e.children.length; i++ ){
