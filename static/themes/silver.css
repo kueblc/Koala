@@ -38,20 +38,29 @@ body {
 	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#f0f0f0));
 	border-top: 1px solid #ccc;
 	text-shadow: 0 1px #fff;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+	box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .panel {
 	background: #fff;
 	border: 1px solid #aaa;
-	border-radius: 6px 6px 0 0;
-	-moz-border-radius: 6px 6px 0 0;
 	-webkit-border-radius: 6px 6px 0 0;
-	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-moz-border-radius: 6px 6px 0 0;
+	border-radius: 6px 6px 0 0;
 	-webkit-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	-webkit-transition: -webkit-box-shadow 0.4s;
+	-moz-transition: -moz-box-shadow 0.4s, box-shadow 0.4s;
+	transition: box-shadow 0.4s;
+}
+
+.panel.drag {
+	-webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .panel > h2 {
@@ -64,6 +73,12 @@ body {
 	border-radius: 6px 6px 0 0;
 	-moz-border-radius: 6px 6px 0 0;
 	-webkit-border-radius: 6px 6px 0 0;
+}
+
+.panel > h2 > button {
+	transition: background 0.4s, color 0.4s;
+	-moz-transition: background 0.4s, color 0.4s;
+	-webkit-transition: background 0.4s, color 0.4s;
 }
 
 .menu, .tab {

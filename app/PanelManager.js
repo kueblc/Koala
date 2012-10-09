@@ -328,8 +328,7 @@ function PanelManager( desk, float, dock, animationTime ){
 		float.style.display = '';
 		float.appendChild(panel);
 		// add floating styles
-		style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
-		panel.titlebar.style.cursor = 'move';
+		panel.className = 'panel drag';
 	};
 
 	function movePanel(e,panel){
@@ -361,8 +360,7 @@ function PanelManager( desk, float, dock, animationTime ){
 		// add the panel to the grid
 		cell.appendChild(panel);
 		// remove floating styles
-		style.boxShadow = '';
-		panel.titlebar.style.cursor = 'auto';
+		panel.className = 'panel';
 	};
 
 	pm.newPanel = function(panel,col,row){

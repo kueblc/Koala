@@ -164,6 +164,10 @@ h1, h2, button {
 	z-index: 2;
 }
 
+.panel.drag > h2 {
+	cursor: move;
+}
+
 .panel > .header {
 	overflow: hidden;
 	height: 30px;

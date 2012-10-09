@@ -147,7 +147,6 @@ button:hover {
 }
 
 h2 > button {
-	-moz-transition: background 0.4s, color 0.4s;
 	background: #ddd;
 	color: #ddd;
 	float: right;
