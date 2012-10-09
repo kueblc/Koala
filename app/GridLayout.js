@@ -1,12 +1,14 @@
-/* PanelManager.js
+/* GridLayout.js
  * written by Colin Kuebler 2012
  * Part of The Koala Project, licensed under GPLv3
- * Responsible for laying out the panels
+ * Responsible for laying out the panels in flexible tiled boxes
  */
 
-function Grid( container ){
-	var grid = this;
+function GridLayout( container, float, dock, animationTime ){
+	var grid = {},
+		layout = this;
 
+	/* GRID */
 	var columns = container.children;
 
 	// interpret initial contents
@@ -258,30 +260,21 @@ function Grid( container ){
 	};
 	grid.updateResizeGrips();
 
-	return grid;
-};
-
-
-function PanelManager( desk, float, dock, animationTime ){
-
-	/* INIT */
-	var pm = this;
-
-	var grid = new Grid(desk);
+	/* LAYOUT */
 
 	float.style.display = 'none';
 
-	pm.minimizePanel = function(panel){
+	layout.minimizePanel = function(panel){
 		// detach the panel
 		var cell = panel.parentNode;
 		cell.removeChild(panel);
 		grid.removeCell(cell);
 		grid.updateResizeGrips();
 		// add the restore button
-		dock.appendChild(icon);
+		dock.appendChild(panel.icon);
 	};
 
-	pm.restorePanel = function(panel){
+	layout.restorePanel = function(panel){
 		// detach the restore button
 		dock.removeChild(panel.icon);
 		// add the panel
@@ -289,7 +282,7 @@ function PanelManager( desk, float, dock, animationTime ){
 		grid.updateResizeGrips();
 	};
 
-	pm.grabPanel = function(e,panel){
+	layout.grabPanel = function(e,panel){
 		// abort drag start if target was not the grip
 		var e = e || window.event;
 		var target = e.target || e.srcElement;
@@ -359,14 +352,14 @@ function PanelManager( desk, float, dock, animationTime ){
 		panel.className = 'panel';
 	};
 
-	pm.newPanel = function(panel,col,row){
-		Panel( panel, pm );
+	layout.newPanel = function(panel,col,row){
+		Panel( panel, layout );
 		grid.addRow(col,row).appendChild(panel);
 	};
 
 	grid.forEachCell( function(row){
-		Panel( row.children[0], pm );
+		Panel( row.children[0], layout );
 	} );
 
-	return pm;
+	return layout;
 };

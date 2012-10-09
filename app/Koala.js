@@ -124,7 +124,7 @@ var parser, editor, compiler, server, user, anim, pm, fs, fbrowser, stage, dicti
 window.onload = function(){
 	// TODO
 	// testing...
-	pm = new PanelManager( $("content"), $("float"), $("footer"), 1000 );
+	pm = new GridLayout( $("content"), $("float"), $("footer"), 1000 );
 	
 	parser = { tokenize: koala.lang.tokenize, identify: koala.lang.assoc };
 	
