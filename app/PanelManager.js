@@ -272,183 +272,187 @@ function PanelManager( desk, float, dock, animationTime ){
 	float.style.display = 'none';
 
 	grid.forEachCell( function(row){
-		Panel( row.children[0] );
+		Panel( row.children[0], pm );
 	} );
 
-	function Panel( panel ){
-		var titlebar = panel.children[0],
-			icon = document.createElement('button'),
-			close = document.createElement('button'),
-			maximize = document.createElement('button'),
-			minimize = document.createElement('button'),
-			style = panel.style,
-			diffX = 0,
-			diffY = 0;
-		
-		var title = titlebar.textContent || titlebar.innerText;
+	pm.minimizePanel = function(panel){
+		// detach the panel
+		var cell = panel.parentNode;
+		cell.removeChild(panel);
+		grid.removeCell(cell);
+		grid.updateResizeGrips();
+		// add the restore button
+		dock.appendChild(icon);
+	};
 
-		icon.innerHTML = title;
-		icon.ondblclick = restorePanel;
+	pm.restorePanel = function(panel){
+		// detach the restore button
+		dock.removeChild(panel.icon);
+		// add the panel
+		grid.addRow(0).appendChild(panel);
+		grid.updateResizeGrips();
+	};
 
-		close.className = 'close';
-		maximize.className = 'max';
-		minimize.className = 'min';
+	pm.grabPanel = function(e,panel){
+		// abort drag start if target was not the grip
+		var e = e || window.event;
+		var target = e.target || e.srcElement;
+		if( target.nodeType === 3 ) target = target.parentNode;
+		if( target !== panel.titlebar ) return true;
+		// abort if not left click
+		if( (e.which || e.button) !== 1 ) return true;
+		// get panel geometry and current cell
+		var x = panel.offsetLeft - 16,
+			y = panel.offsetTop - 16,
+			w = panel.clientWidth + 2,
+			h = panel.clientHeight + 2,
+			cell = panel.parentNode;
+		// store the starting position
+		diffX = x - e.clientX;
+		diffY = y - e.clientY;
+		// start listening for mousemove and mouseup events
+		document.onmousemove = function(e){ return movePanel(e,panel); }
+		document.onmouseup = function(e){ return dropPanel(e,panel); };
+		// prevent selection while dragging
+		e.preventDefault && e.preventDefault();
+		// detach the panel
+		cell.removeChild(panel);
+		grid.removeCell(cell);
+		// set the panel's absolute geometry
+		var style = panel.style;
+		style.left = x+'px';
+		style.top = y+'px';
+		style.width = w+'px';
+		style.height = h+'px';
+		// attach the panel to the floating layer
+		float.style.display = '';
+		float.appendChild(panel);
+		// add floating styles
+		style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
+		panel.titlebar.style.cursor = 'move';
+	};
 
-		close.innerHTML = '&times;';
-		maximize.innerHTML = '+';
-		minimize.innerHTML = '-';
+	function movePanel(e,panel){
+		var e = e || window.event;
+		panel.style.left = e.clientX + diffX + 'px';
+		panel.style.top = e.clientY + diffY + 'px';
+	};
 
-		//close.onclick = closePanel;
-		//maximize.onclick = maximizePanel;
-		minimize.onclick = minimizePanel;
-
-		titlebar.appendChild(close);
-		titlebar.appendChild(maximize);
-		titlebar.appendChild(minimize);
-		
-		// disable selection on grip in IE
-		titlebar.onselectstart = function(){ return false; };
-		titlebar.onmousedown = grabPanel;
-
-		function minimizePanel(e){
-			// detach the panel
-			var cell = panel.parentNode;
-			cell.removeChild(panel);
-			grid.removeCell(cell);
-			grid.updateResizeGrips();
-			// add the restore button
-			dock.appendChild(icon);
-		};
-
-		function restorePanel(){
-			// detach the restore button
-			dock.removeChild(icon);
-			// add the panel
-			grid.addRow(0).appendChild(panel);
-			grid.updateResizeGrips();
-		};
-
-		function grabPanel(e){
-			// abort drag start if target was not the grip
-			var e = e || window.event;
-			var target = e.target || e.srcElement;
-			if( target.nodeType === 3 ) target = target.parentNode;
-			if( target !== titlebar ) return true;
-			// abort if not left click
-			if( (e.which || e.button) !== 1 ) return true;
-			// get panel geometry and current cell
-			var x = panel.offsetLeft - 16,
-				y = panel.offsetTop - 16,
-				w = panel.clientWidth + 2,
-				h = panel.clientHeight + 2,
-				cell = panel.parentNode;
-			// store the starting position
-			diffX = x - e.clientX;
-			diffY = y - e.clientY;
-			// start listening for mousemove and mouseup events
-			document.onmousemove = movePanel;
-			document.onmouseup = dropPanel;
-			// prevent selection while dragging
-			e.preventDefault && e.preventDefault();
-			// detach the panel
-			cell.removeChild(panel);
-			grid.removeCell(cell);
-			// set the panel's absolute geometry
-			style.left = x+'px';
-			style.top = y+'px';
-			style.width = w+'px';
-			style.height = h+'px';
-			// attach the panel to the floating layer
-			float.style.display = '';
-			float.appendChild(panel);
-			// add floating styles
-			style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.4)';
-			titlebar.style.cursor = 'move';
-		};
-
-		function movePanel(e){
-			var e = e || window.event;
-			style.left = e.clientX + diffX + 'px';
-			style.top = e.clientY + diffY + 'px';
-		};
-
-		function dropPanel(e){
-			var e = e || window.event;
-			// stop watching mouse movements
-			document.onmousemove = null;
-			document.onmouseup = null;
-			// find the center of the panel
-			var x = panel.clientWidth / 2 + panel.offsetLeft,
-				y = panel.clientHeight / 2 + panel.offsetTop;
-			// find the best place for the panel
-			var cell = grid.insertCellAt(x,y);
-			grid.updateResizeGrips();
-			// detach the panel from the floating layer
-			float.removeChild(panel);
-			float.style.display = 'none';
-			// reset the panel geometry
-			var style = panel.style;
-			style.left = '0';
-			style.top = '0';
-			style.width = '100%';
-			style.height = '100%';
-			// add the panel to the grid
-			cell.appendChild(panel);
-			// remove floating styles
-			style.boxShadow = '';
-			titlebar.style.cursor = 'auto';
-		};
-		
-		function findByClass( e, str ){
-			for( var i = 0; i < e.children.length; i++ ){
-				if( e.children[i].className.indexOf(str) > -1 )
-					return e.children[i];
-			}
-			return null;
-		};
-		
-		// adds convenient methods for button manipulation
-		function buttonMgr( e ){
-			e.buttons = e.getElementsByTagName('button');
-			e.makeButton = function( str, cb ){
-				var button = document.createElement('button');
-				button.appendChild( document.createTextNode(str) );
-				e.appendChild( button );
-				return button;
-			};
-		};
-
-		/* PUBLIC */
-		// quick access to panel components
-		panel.header = findByClass( panel, 'header' );
-		panel.content = findByClass( panel, 'content' );
-		panel.footer = findByClass( panel, 'footer' );
-		// sets the panel titlebar text
-		panel.setTitle = function(s){
-			titlebar.replaceChild(
-				document.createTextNode(s),
-				titlebar.firstChild );
-		};
-		// add button methods to header
-		if( panel.header ) buttonMgr( panel.header );
-		if( panel.footer ){
-			// add button methods to footer
-			buttonMgr( panel.footer );
-			// add status message methods
-			var status = document.createElement('span');
-			panel.footer.appendChild(status);
-			panel.setStatus = function(s){
-				status.textContent = status.innerText = s;
-			};
-		}
-
+	function dropPanel(e,panel){
+		var e = e || window.event;
+		// stop watching mouse movements
+		document.onmousemove = null;
+		document.onmouseup = null;
+		// find the center of the panel
+		var x = panel.clientWidth / 2 + panel.offsetLeft,
+			y = panel.clientHeight / 2 + panel.offsetTop;
+		// find the best place for the panel
+		var cell = grid.insertCellAt(x,y);
+		grid.updateResizeGrips();
+		// detach the panel from the floating layer
+		float.removeChild(panel);
+		float.style.display = 'none';
+		// reset the panel geometry
+		var style = panel.style;
+		style.left = '0';
+		style.top = '0';
+		style.width = '100%';
+		style.height = '100%';
+		// add the panel to the grid
+		cell.appendChild(panel);
+		// remove floating styles
+		style.boxShadow = '';
+		panel.titlebar.style.cursor = 'auto';
 	};
 
 	pm.newPanel = function(panel,col,row){
-		Panel( panel );
+		Panel( panel, pm );
 		grid.addRow(col,row).appendChild(panel);
 	};
 
 	return pm;
+};
+
+function Panel( panel, pm ){
+	var titlebar = panel.children[0],
+		icon = document.createElement('button'),
+		close = document.createElement('button'),
+		maximize = document.createElement('button'),
+		minimize = document.createElement('button'),
+		style = panel.style,
+		diffX = 0,
+		diffY = 0;
+	
+	var title = titlebar.textContent || titlebar.innerText;
+
+	panel.icon = icon;
+	panel.titlebar = titlebar;
+	
+	icon.innerHTML = title;
+	icon.ondblclick = function(){ pm.restorePanel(panel) };
+
+	close.className = 'close';
+	maximize.className = 'max';
+	minimize.className = 'min';
+
+	close.innerHTML = '&times;';
+	maximize.innerHTML = '+';
+	minimize.innerHTML = '-';
+
+	//close.onclick = closePanel;
+	//maximize.onclick = maximizePanel;
+	minimize.onclick = function(){ pm.minimizePanel(panel); };
+	titlebar.appendChild(close);
+	titlebar.appendChild(maximize);
+	titlebar.appendChild(minimize);
+	
+	// disable selection on grip in IE
+	titlebar.onselectstart = function(){ return false; };
+	
+	titlebar.onmousedown = function(e){ pm.grabPanel(e,panel); };
+	
+	function findByClass( e, str ){
+		for( var i = 0; i < e.children.length; i++ ){
+			if( e.children[i].className.indexOf(str) > -1 )
+				return e.children[i];
+		}
+		return null;
+	};
+	
+	// adds convenient methods for button manipulation
+	function buttonMgr( e ){
+		e.buttons = e.getElementsByTagName('button');
+		e.makeButton = function( str, cb ){
+			var button = document.createElement('button');
+			button.appendChild( document.createTextNode(str) );
+			e.appendChild( button );
+			return button;
+		};
+	};
+
+	/* PUBLIC */
+	// quick access to panel components
+	panel.header = findByClass( panel, 'header' );
+	panel.content = findByClass( panel, 'content' );
+	panel.footer = findByClass( panel, 'footer' );
+	// sets the panel titlebar text
+	panel.setTitle = function(s){
+		titlebar.replaceChild(
+			document.createTextNode(s),
+			titlebar.firstChild );
+	};
+	// add button methods to header
+	if( panel.header ) buttonMgr( panel.header );
+	if( panel.footer ){
+		// add button methods to footer
+		buttonMgr( panel.footer );
+		// add status message methods
+		var status = document.createElement('span');
+		panel.footer.appendChild(status);
+		panel.setStatus = function(s){
+			status.textContent = status.innerText = s;
+		};
+	}
+
 };
 
