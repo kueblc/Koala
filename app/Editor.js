@@ -9,6 +9,7 @@ function Editor( parser ){
 	var api = this;
 	
 	var panel = $('panel_editor');
+	panel.icon.set('text');
 	
 	var fs = koala.services.fs,
 		compiler = koala.services.compiler;

@@ -8,6 +8,8 @@ function Dictionary(){
 	var api = this;
 	
 	var panel = $('panel_dictionary');
+	panel.icon.set('dict');
+	
 	var query = $('search');
 	
 	var entries = panel.content.children;

@@ -9,6 +9,7 @@ function FileBrowser(fs,defaultApps){
 	var api = this;
 	
 	var panel = $('panel_filebrowser');
+	panel.icon.set('file');
 	
 	var display = panel.content,
 		locationBar = panel.header;

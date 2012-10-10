@@ -20,6 +20,11 @@ function Panel( panel, layout ){
 	panel.titlebar = titlebar;
 	
 	icon.innerHTML = title;
+	icon.set = function(i){
+		var s = document.createElement('div');
+		s.className = i;
+		icon.insertBefore( s, icon.firstChild );
+	};
 	icon.ondblclick = function(){ layout.restorePanel(panel) };
 
 	close.className = 'close';

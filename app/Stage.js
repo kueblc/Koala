@@ -8,6 +8,7 @@ function Stage(){
 	var api = this;
 	
 	var panel = $('panel_stage');
+	panel.icon.set('exec');
 	
 	var fs = koala.services.fs;
 	
