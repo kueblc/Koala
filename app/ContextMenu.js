@@ -29,6 +29,7 @@ function ContextMenu( options ){
 			item.onmousedown = function(e){
 				// prevent other mousedown events from firing
 				e = e || window.event;
+				e.cancelBubble = true;
 				e.stopPropagation && e.stopPropagation();
 				// don't highlight contextmenu text
 				return false;
