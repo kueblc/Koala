@@ -25,7 +25,7 @@ function Panel( panel, layout ){
 		s.className = i;
 		icon.insertBefore( s, icon.firstChild );
 	};
-	icon.ondblclick = function(){ layout.restorePanel(panel) };
+	icon.onclick = function(){ layout.restorePanel(panel) };
 
 	close.className = 'close';
 	maximize.className = 'max';
