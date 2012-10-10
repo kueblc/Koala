@@ -17,9 +17,8 @@ function Stage(){
 		head = null;
 	
 	var footer = panel.footer,
-		closebtn = document.createElement('button');
-		closebtn.innerHTML = 'close';
-		closebtn.onclick = function(){ api.close() };
+		closebtn = footer.makeButton( 'close', function(){ api.close(); } );
+		closebtn.style.display = 'none';
 	
 	var load = function(){
 		// create an <iframe>
@@ -31,7 +30,7 @@ function Stage(){
 		);
 		head = iframe.contentWindow.document.firstChild;
 		panel.setStatus('');
-		footer.appendChild( closebtn );
+		closebtn.style.display = '';
 		// reroute sandboxed commands
 		iframe.contentWindow.parent = null;
 		iframe.contentWindow.close = function(){ api.close(); };
@@ -42,7 +41,7 @@ function Stage(){
 			container.replaceChild( shadow, iframe );
 			iframe = null;
 			head = null;
-			footer.removeChild( closebtn );
+			closebtn.style.display = 'none';
 			panel.setStatus('done');
 			panel.setTitle('stage');
 		}
