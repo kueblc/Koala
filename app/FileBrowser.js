@@ -216,8 +216,8 @@ function FileBrowser(fs,defaultApps){
 		return false;
 	};
 	
-	$("btn_new").onclick = api.addFolder;
-	$("btn_refresh").onclick = api.update;
+	panel.footer.makeButton( 'new', api.addFolder );
+	panel.footer.makeButton( 'refresh', api.update );
 	
 	// context menu test
 	display.oncontextmenu = ContextMenu({

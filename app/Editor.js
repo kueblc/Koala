@@ -23,15 +23,11 @@ function Editor( parser ){
 	} ];
 	tabs[0].onclick = function(){ switchTo(0); };
 	
-	// TODO
-	// temporary function testing only, not real button actions
-	$("btn_run").onclick = function(){
+	panel.footer.makeButton( 'run', function(){
 		compiler.interpret( display.input.value );
-	};
-	$("btn_save").onclick = function(){
-		api.save( currentFile );
-	};
-	$("btn_compile").onclick = function(){
+	} );
+	
+	panel.footer.makeButton( 'compile',  function(){
 		var filename = prompt("Save as");
 		if( !filename ) return;
 		// try to create a new file with the name and type
@@ -41,7 +37,11 @@ function Editor( parser ){
 		fs.get(file)._data = '(function(){' +
 			compiler.compile( display.input.value ) +
 			'})();window.close();';
-	};
+	} );
+	
+	panel.footer.makeButton( 'save', function(){
+		api.save( currentFile );
+	} );
 	
 	function switchTo( id ){
 		// if the file is already in focus, do nothing

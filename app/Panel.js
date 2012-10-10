@@ -56,6 +56,7 @@ function Panel( panel, layout ){
 		e.makeButton = function( str, cb ){
 			var button = document.createElement('button');
 			button.appendChild( document.createTextNode(str) );
+			button.onclick = cb;
 			e.appendChild( button );
 			return button;
 		};
