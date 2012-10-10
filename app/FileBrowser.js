@@ -120,12 +120,14 @@ function FileBrowser(fs,defaultApps){
 		});
 		/* drag to desktop download */
 		container.draggable = true;
-		container.addEventListener( 'dragstart', function(e){
-			e.dataTransfer.setData( "DownloadURL",
-				file._type + ':' + file._name + ':' +
-				//'data:' + file._type + ';base64,' +
-				file._data );
-		}, false );
+		if( container.addEventListener ){
+			container.addEventListener( 'dragstart', function(e){
+				e.dataTransfer.setData( "DownloadURL",
+					file._type + ':' + file._name + ':' +
+					//'data:' + file._type + ';base64,' +
+					file._data );
+			}, false );
+		}
 		
 		/* add the new icon to dom */
 		container.appendChild(icon);
@@ -135,6 +137,7 @@ function FileBrowser(fs,defaultApps){
 	
 	api.addFolder = function(){
 		var n = prompt("Filename");
+		if( !n ) return;
 		var ext = n.split('.')[1] || 'dir';
 		newdir = fs.add( cwd.join('/'), n, ext );
 		newdir && addIcon(newdir);

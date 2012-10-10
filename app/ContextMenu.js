@@ -12,6 +12,7 @@ function ContextMenu( options ){
 		// prevent spawning a context menu in a context menu
 		menu.oncontextmenu = function(e){
 			// prevent other contextmenu events from firing
+			e = e || window.event;
 			e.stopPropagation && e.stopPropagation();
 			// cancel the default action
 			return false;
@@ -27,6 +28,7 @@ function ContextMenu( options ){
 			} );
 			item.onmousedown = function(e){
 				// prevent other mousedown events from firing
+				e = e || window.event;
 				e.stopPropagation && e.stopPropagation();
 				// don't highlight contextmenu text
 				return false;
@@ -53,6 +55,7 @@ function ContextMenu( options ){
 		// catch key events
 		document.onkeydown = shortcut;
 		// prevent other contextmenu events from firing
+		e.cancelBubble = true;
 		e.stopPropagation && e.stopPropagation();
 		// cancel the default action
 		return false;

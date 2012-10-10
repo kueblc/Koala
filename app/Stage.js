@@ -25,20 +25,28 @@ function Stage(){
 		// create an <iframe>
 		iframe = document.createElement("iframe");
 		container.replaceChild( iframe, shadow );
-		
+		api.context = iframe.contentWindow;
 		iframe.contentWindow.document.write(
-			"<head><\/head><body><\/body>"
+			"<head><\/head><body style='border:0'><\/body>"
 		);
 		head = iframe.contentWindow.document.firstChild;
 		panel.setStatus('');
 		closebtn.style.display = '';
+		// attempt to conceal back references as a basic security measure
+		// TODO: find a safer way to sandbox code
+		try {
+			iframe.contentWindow.frameElement = null;
+			iframe.contentWindow.parent = null;
+			iframe.contentWindow.top = null;
+		} catch (e) { };
 		// reroute sandboxed commands
-		iframe.contentWindow.parent = null;
 		iframe.contentWindow.close = function(){ api.close(); };
+		iframe.contentWindow.alert = function(s){ alert(s); };
 	};
 	
 	var unload = function(){
 		if( iframe ){
+			api.context = null;
 			container.replaceChild( shadow, iframe );
 			iframe = null;
 			head = null;
