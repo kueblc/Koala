@@ -12,8 +12,8 @@ function Stage(){
 	var fs = koala.services.fs;
 	
 	var shadow = $('canvas'),
-		container = shadow.parentElement;
-		iframe = null;
+		container = shadow.parentElement,
+		iframe = null,
 		head = null;
 	
 	var footer = panel.footer,
