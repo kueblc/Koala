@@ -10,6 +10,9 @@ function Editor( parser ){
 	
 	var panel = $('panel_editor');
 	
+	var fs = koala.services.fs,
+		compiler = koala.services.compiler;
+	
 	var tabBar = panel.header,
 		tabs = tabBar.getElementsByTagName('button');
 	

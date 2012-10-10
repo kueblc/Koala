@@ -6,6 +6,8 @@
 
 var koala = {
 	version: 0.03,
+	services: {},
+	apps: {},
 	lang: {
 		commands: {
 			"say": null,
@@ -50,28 +52,7 @@ var koala = {
 	}
 };
 
-var parser, editor, compiler, server, user, anim, pm, fs, fbrowser, stage, dictionary;
 window.onload = function(){
-	// TODO
-	// testing...
-	pm = new GridLayout( $("content"), $("float"), $("footer"), 1000 );
-	
-	parser = { tokenize: koala.lang.tokenize, identify: koala.lang.assoc };
-	
-	editor = new Editor( parser );
-	
-	compiler = new Compiler( parser );
-	
-	server = new Server();
-	
-	user = new User( server );
-	
-	anim = new Animator();
-	
-	stage = new Stage();
-	
-	dictionary = new Dictionary();
-	
 	function ToggleMenu( elem ){
 		var lock = false;
 		function set(){ lock = true; };
@@ -98,11 +79,27 @@ window.onload = function(){
 	
 	for( var menu in toolbar ) new ToggleMenu(toolbar[menu]);
 	
-	fs = new FS();
-	fbrowser = new FileBrowser( fs, {
-		'text': editor.open,
-		'application': stage.open
-	} );
+	koala.services = {
+		layout: new GridLayout( $("content"), $("float"), $("footer"), 1000 ),
+		parser: { tokenize: koala.lang.tokenize, identify: koala.lang.assoc },
+		server: new Server(),
+		user: new User( koala.services.server ),
+		animator: new Animator(),
+		fs: new FS() };
+	
+	koala.services.compiler = new Compiler( koala.services.parser );
+	koala.services.user = new User( koala.services.server );
+	
+	koala.apps = {
+		editor: new Editor( koala.services.parser ),
+		stage: new Stage(),
+		dictionary: new Dictionary(),
+		files: new FileBrowser( koala.services.fs ) };
+	
+	koala.apps.files.defaultApps = {
+		'text': koala.apps.editor.open,
+		'application': koala.apps.stage.open
+	};
 	
 };
 /*

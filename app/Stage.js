@@ -9,6 +9,8 @@ function Stage(){
 	
 	var panel = $('panel_stage');
 	
+	var fs = koala.services.fs;
+	
 	var shadow = $('canvas'),
 		container = shadow.parentElement;
 		iframe = null;
