@@ -97,6 +97,7 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	color: transparent;
+	width: 28px;
 }
 
 #panel_dictionary input {
@@ -124,7 +125,6 @@
 button {
 	font-size: 14px;
 	padding: 2px 8px;
-	margin-right: 1px;
 	outline: none;
 }
 
@@ -138,6 +138,7 @@ button:hover {
 .tab > button {
 	margin-top: 3px;
 	float: left;
+	margin-right: 4px;
 }
 
 .tab > button.current {
@@ -191,6 +192,7 @@ h2 > button.close:hover {
 
 .footer > button {
 	float: right;
+	margin-left: 4px;
 }
 
 #canvas {
@@ -218,7 +220,7 @@ iframe {
 	-webkit-box-sizing: border-box;
 	outline: none;
 }
-/*
+
 .comment {
 	border: 1px solid #aaa;
 	box-shadow: 0 4px 8px #eee inset;
@@ -253,7 +255,7 @@ iframe {
 	border-top-color: #888;
 	left: 8px;
 }
-*/
+
 
 /* syntax highlighting */
 .ldt {

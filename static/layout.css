@@ -58,9 +58,13 @@ h1, h2, button {
 }
 
 #footer > button {
-	font-size: 20px;
+	font-size: 16px;
 	padding: 4px 6px;
-	margin: 4px;
+	margin: 6px;
+	margin-right: 0;
+	color: #222;
+	font-family: "Trebuchet MS";
+	text-shadow: 0 1px #fff;
 }
 
 #header > h1 {
