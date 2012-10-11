@@ -26,6 +26,7 @@ function Stage(){
 		// create an <iframe>
 		iframe = document.createElement("iframe");
 		container.replaceChild( iframe, shadow );
+		container.style.padding = 0;
 		api.context = iframe.contentWindow;
 		iframe.contentWindow.document.write(
 			"<head><\/head><body style='border:0'><\/body>"
@@ -49,6 +50,7 @@ function Stage(){
 		if( iframe ){
 			api.context = null;
 			container.replaceChild( shadow, iframe );
+			container.style.padding = '';
 			iframe = null;
 			head = null;
 			closebtn.style.display = 'none';
