@@ -83,7 +83,6 @@ window.onload = function(){
 		layout: new GridLayout( $("content"), $("float"), $("footer"), 1000 ),
 		parser: { tokenize: koala.lang.tokenize, identify: koala.lang.assoc },
 		server: new Server(),
-		user: new User( koala.services.server ),
 		animator: new Animator(),
 		fs: new FS() };
 	
