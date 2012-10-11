@@ -7,64 +7,22 @@
 var koala = {
 	version: 0.03,
 	services: {},
-	apps: {},
-	lang: {
-		commands: {
-			"say": null,
-			"ask": null,
-			"put": null,
-			"in": null,
-			"dojs": null
-		},
-		rules: {
-			wsp: /^([^\S\t]+)/,
-			arr: /^(\t)/,
-			cmt: /^(--[^\r\n]*)/,
-			str: /^("(\\.|[^"])*"?|'(\\.|[^'])*'?)/,
-			box: /^(\[[^\]]*\]?)/,
-			num: /^(-?(\d+\.?\d*|\.\d+))/,
-			cmd: null,
-			err: /^([^\s-"'\[\d]|-(?!-))+/
-		},
-		parser: null,
-		genparser: function(){
-			var rulesrc = [];
-			for( var cmd in koala.lang.commands )
-				rulesrc.push( RegExp.escape(cmd) );
-			koala.lang.rules.cmd = new RegExp( "^("+rulesrc.join('|')+")", "i" );
-			rulesrc = [];
-			for( var rule in koala.lang.rules ){
-				rulesrc.push( koala.lang.rules[rule].source.substr(1) );
-			}
-			koala.lang.parser = new RegExp( rulesrc.join('|'), "gi" );
-		},
-		tokenize: function(input){
-			if( !koala.lang.parser ) koala.lang.genparser();
-			return input.match(koala.lang.parser);
-		},
-		assoc: function(token){
-			for( var rule in koala.lang.rules ){
-				if( koala.lang.rules[rule].test(token) ){
-					return rule;
-				}
-			}
-		}
-	}
+	apps: {}
 };
 
 window.onload = function(){
 	koala.services = {
 		layout: new GridLayout( $("content"), $("float"), $("footer"), 1000 ),
-		parser: { tokenize: koala.lang.tokenize, identify: koala.lang.assoc },
+		lexer: new Lexer(),
 		server: new Server(),
 		animator: new Animator(),
 		fs: new FS() };
 	
-	koala.services.compiler = new Compiler( koala.services.parser );
+	koala.services.compiler = new Compiler( koala.services.lexer );
 	koala.services.user = new User( koala.services.server );
 	
 	koala.apps = {
-		editor: new Editor( koala.services.parser ),
+		editor: new Editor( koala.services.lexer ),
 		stage: new Stage(),
 		dictionary: new Dictionary(),
 		files: new FileBrowser( koala.services.fs ) };
