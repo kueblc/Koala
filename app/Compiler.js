@@ -4,19 +4,17 @@
  * Interprets and compiles koala script
  */
 
-function Compiler( parser ){
+function Compiler( lexer ){
 	/* INIT */
 	var api = this;
 
-	var parser = parser;
-
 	api.compile = function(script){
 		// tokenize and classify the tokens
-		var lex = parser.tokenize(script);
+		var lex = lexer.tokenize(script);
 		var types = [];
 		var output = ['var rv;'];
 		for( var i = 0; i < lex.length; i++ )
-			types.push( parser.identify(lex[i]) );
+			types.push( lexer.identify(lex[i]) );
 		// interpret each token
 		var i = 0;
 		while( i < lex.length ){

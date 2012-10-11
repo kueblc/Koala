@@ -4,7 +4,7 @@
  * Manages the text editor app
  */
 
-function Editor( parser ){
+function Editor( lexer ){
 	/* INIT */
 	var api = this;
 	
@@ -17,7 +17,7 @@ function Editor( parser ){
 	var tabBar = panel.header,
 		tabs = tabBar.getElementsByTagName('button');
 	
-	var display = new TextareaDecorator( $("rta_in"), parser );
+	var display = new TextareaDecorator( $("rta_in"), lexer );
 	
 	var currentFile = 0;
 	var openFiles = [ {
