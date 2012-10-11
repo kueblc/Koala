@@ -33,22 +33,4 @@ window.onload = function(){
 	};
 	
 };
-/*
-window.onerror = function( msg, url, line ){
-	function toHex(s){
-		var output = "";
-		var b16 = "0123456789ABCDEF";
-		for( var i = 0; i < s.length; i++ ){
-			var c = s.charCodeAt(i);
-			output += b16.charAt(c>>4) + b16.charAt(c&15) + " ";
-		}
-		return output;
-	}
-	document.body.style.background="blue";
-	var error = url.substring(url.lastIndexOf('/')+1)+":"+line+": "+msg+"\n"+navigator.userAgent;
-	document.body.innerHTML=
-		"<div id='bsod'><h1>the koala project</h1><p>A fatal error has occurred. An error report is being filed. Report details:</p><pre>"+error+"</pre><p>Press any key to continue</p></div>";
-	document.body.onkeyup = function(){ location.reload(); };
-	return true;
-};
-*/
+
