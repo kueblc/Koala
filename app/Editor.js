@@ -4,7 +4,7 @@
  * Manages the text editor app
  */
 
-function Editor( lexer ){
+function Editor( lexer, stage ){
 	/* INIT */
 	var api = this;
 	
@@ -28,7 +28,7 @@ function Editor( lexer ){
 	tabs[0].onclick = function(){ switchTo(0); };
 	
 	panel.footer.makeButton( 'run', function(){
-		compiler.interpret( display.input.value );
+		stage.interpret( compiler.compile( display.input.value ) );
 	} );
 	
 	panel.footer.makeButton( 'compile',  function(){
@@ -38,9 +38,8 @@ function Editor( lexer ){
 		file = fs.add( '/', filename, 'application/javascript' );
 		// abort on failure
 		if( !file ) return alert("FILENAME IS TAKEN");
-		fs.get(file)._data = '(function(){' +
-			compiler.compile( display.input.value ) +
-			'})();window.close();';
+		fs.get(file)._data = 
+			compiler.compile( display.input.value ) + 'window.close();';
 	} );
 	
 	panel.footer.makeButton( 'save', function(){

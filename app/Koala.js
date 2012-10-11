@@ -22,10 +22,11 @@ window.onload = function(){
 	koala.services.user = new User( koala.services.server );
 	
 	koala.apps = {
-		editor: new Editor( koala.services.lexer ),
 		stage: new Stage(),
 		dictionary: new Dictionary(),
 		files: new FileBrowser( koala.services.fs ) };
+	
+	koala.apps.editor = new Editor( koala.services.lexer, koala.apps.stage );
 	
 	koala.apps.files.defaultApps = {
 		'text': koala.apps.editor.open,

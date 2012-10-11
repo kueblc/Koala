@@ -1,7 +1,7 @@
 /* Compiler.js
  * written by Colin Kuebler 2011-2012
  * Part of The Koala Project, licensed under GPLv3
- * Interprets and compiles koala script
+ * Compiles koalascript to javascript
  */
 
 function Compiler( lexer ){
@@ -71,15 +71,7 @@ function Compiler( lexer ){
 			}
 		}
 		output.push( 'return rv;' );
-		return output.join(' ');
-	};
-
-	api.interpret = function(script){
-		try {
-			return Function( api.compile( script ) )();
-		} catch(e) {
-			throw new Error("KRuntimeError: "+e);
-		}
+		return '(function(){' + output.join(' ') + '})();';
 	};
 
 	return api;

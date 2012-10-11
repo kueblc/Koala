@@ -59,7 +59,7 @@ function toHex(s){
 	return output;
 };
 
-window.onerror = function( msg, url, line ){
+/*window.onerror = function( msg, url, line ){
 	// construct an error report
 	var report = {
 		Location: url.suffix('/') + ':' + line,
@@ -75,5 +75,5 @@ window.onerror = function( msg, url, line ){
 		reportStr + "</pre><p>Press any key to continue</p></div>";
 	document.onkeypress = function(){ location.reload(); };
 	return true;
-};
+};*/
 

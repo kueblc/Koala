@@ -18,10 +18,11 @@ function Stage(){
 		head = null;
 	
 	var footer = panel.footer,
-		closebtn = footer.makeButton( 'close', function(){ api.close(); } );
+		closebtn = footer.makeButton( 'reset', function(){ api.close(); } );
 		closebtn.style.display = 'none';
 	
 	var load = function(){
+		if( iframe ) return;
 		// create an <iframe>
 		iframe = document.createElement("iframe");
 		container.replaceChild( iframe, shadow );
@@ -83,6 +84,12 @@ function Stage(){
 		api.reset();
 		panel.setTitle( file._name );
 		api.js( file._data );
+	};
+	
+	api.interpret = function( str ){
+		load();
+		panel.setTitle('interactive mode');
+		api.js( str );
 	};
 	
 	return api;
