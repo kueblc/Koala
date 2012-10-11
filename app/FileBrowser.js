@@ -138,7 +138,7 @@ function FileBrowser(fs,defaultApps){
 	api.addFolder = function(){
 		var n = prompt("Filename");
 		if( !n ) return;
-		var ext = n.split('.')[1] || 'dir';
+		var ext = n.suffix('.') || 'dir';
 		newdir = fs.add( cwd.join('/'), n, ext );
 		newdir && addIcon(newdir);
 	};

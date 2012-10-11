@@ -46,7 +46,7 @@ String.prototype.contains = function(x){
 };
 
 String.prototype.suffix = function(delim){
-	return this.substring( this.lastIndexOf(delim) + 1 );
+	return this.substring( this.lastIndexOf(delim) + 1 || this.length );
 };
 
 function toHex(s){
