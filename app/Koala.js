@@ -53,32 +53,6 @@ var koala = {
 };
 
 window.onload = function(){
-	function ToggleMenu( elem ){
-		var lock = false;
-		function set(){ lock = true; };
-		function reset(){ lock = false; };
-		var form = elem.children[0];
-		/* var fields = form.elements;
-		for( var i = 0; i < fields.length; i++ ){
-			fields[i].onfocus = set;
-			fields[i].onblur = reset;
-		} */
-		elem.onmousedown = set;
-		elem.onmouseup = reset;
-		elem.onmouseover = function(){
-			form.style.display = 'block';
-		};
-		elem.onmouseout = function(){
-			lock || (form.style.display = '');
-		};
-	};
-	
-	toolbar = {
-		settings: $("toolbar_settings"),
-		login: $("toolbar_login") };
-	
-	for( var menu in toolbar ) new ToggleMenu(toolbar[menu]);
-	
 	koala.services = {
 		layout: new GridLayout( $("content"), $("float"), $("footer"), 1000 ),
 		parser: { tokenize: koala.lang.tokenize, identify: koala.lang.assoc },
