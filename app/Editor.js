@@ -108,6 +108,30 @@ function Editor( lexer, stage ){
 		fs.get(file)._data = tabFocus._data;
 	};
 	
+	api.close = function(){
+		if( !tabFocus ) return;
+		if( tabs.length === 1 ){
+			// if this is the last document, open a blank one after closing
+			tabFocus.parentNode.removeChild( tabFocus );
+			api.open();
+		} else {
+			// determine which tab to focus after closing this one
+			var nextFocus;
+			for( var i = 0; i < tabs.length; i++ ){
+				if( tabs[i] === tabFocus ){
+					if( i === tabs.length-1 ) nextFocus = tabs[i-1];
+					else nextFocus = tabs[i+1];
+					break;
+				}
+			}
+			// close this tab and refocus
+			tabFocus.parentNode.removeChild( tabFocus );
+			nextFocus.click();
+		}
+	};
+	
+	panel.onclose = api.close;
+	
 	api.open();
 	
 	return api;
