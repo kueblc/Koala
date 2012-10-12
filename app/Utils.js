@@ -4,7 +4,7 @@
  * Various utility functions
  */
 
-var MOD_DIR = '../modules/';
+var MOD_DIR = '../apps/';
 
 var require = function( module ){
 	var s = document.createElement('script');
@@ -13,30 +13,56 @@ var require = function( module ){
 	document.body.appendChild(s);
 };
 
+// shortcut to grab an element by its ID
 var $ = function(e){ return document.getElementById(e); };
 
-var stringify = function( obj ){
-	var t = typeof( obj );
-	// literals
-	if( t !== "object" || obj === null ){
-		// quote strings
-		if( t === "string" ) obj = '"'+obj.replace(/"/g,'\\"')+'"';
-		return String(obj);
-	// arrays
-	} else if( obj && obj.constructor === Array ){
-		var elem = [];
-		for( var n in obj )
-			elem.push(stringify(obj[n]));
-		return "["+elem+"]";
-	// objects
-	} else {
-		var elem = [];
-		for( var n in obj )
-			elem.push(stringify(n)+':'+stringify(obj[n]));
-		return "{"+elem+"}";
+// lightweight JSON polyfill
+JSON || (JSON = {
+	stringify: function stringify( obj ){
+		var t = typeof( obj );
+		// literals
+		if( t !== "object" || obj === null ){
+			// quote strings
+			if( t === "string" ) obj = '"'+obj.replace(/"/g,'\\"')+'"';
+			return String(obj);
+		// arrays
+		} else if( obj && obj.constructor === Array ){
+			var elem = [];
+			for( var n in obj )
+				elem.push(stringify(obj[n]));
+			return "["+elem+"]";
+		// objects
+		} else {
+			var elem = [];
+			for( var n in obj )
+				elem.push(stringify(n)+':'+stringify(obj[n]));
+			return "{"+elem+"}";
+		}
+	},
+	parse: function( str ){
+		// strict mode for safer eval (can't make globals)
+		"use strict";
+		var obj;
+		try {
+			eval( "obj = (" + str + ");" );
+		} catch(e) {}
+		return obj;
 	}
-};
+});
 
+// localStorage detection
+var storage = (function() {
+	var uid = new Date,
+		result;
+	try {
+		localStorage.setItem(uid, uid);
+		result = localStorage.getItem(uid) == uid;
+		localStorage.removeItem(uid);
+		return result && localStorage;
+	} catch(e) {}
+}());
+
+// native object enhancements
 RegExp.escape = function(x){
 	return x.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&" );
 };
