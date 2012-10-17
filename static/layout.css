@@ -80,6 +80,7 @@ h1, h2, button {
 
 #version {
 	display: inline-block;
+	cursor: default;
 	font-size: 18px;
 	font-weight: 100;
 	color: #888;
