@@ -78,6 +78,13 @@ h1, h2, button {
 	cursor: default;
 }
 
+#version {
+	display: inline-block;
+	font-size: 18px;
+	font-weight: 100;
+	color: #888;
+}
+
 #header > ul {
 	float: right;
 	height: 100%;

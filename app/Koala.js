@@ -11,6 +11,9 @@ var koala = {
 };
 
 window.onload = function(){
+	$("version").innerHTML = koala.version.toFixed(2) + ' ' +
+		( koala.version < 1 ? koala.version < 0.1 ? 'alpha' : 'beta' : '' );
+	
 	koala.services = {
 		layout: new GridLayout( $("content"), $("float"), $("footer"), 1000 ),
 		lexer: new Lexer(),
