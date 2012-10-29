@@ -36,7 +36,7 @@ function Panel( panel, layout ){
 	minimize.innerHTML = '-';
 
 	close.onclick = function(){ panel.onclose && panel.onclose(); };
-	//maximize.onclick = maximizePanel;
+	maximize.onclick = function(){ layout.maximizePanel(panel); };
 	minimize.onclick = function(){ layout.minimizePanel(panel); };
 	titlebar.appendChild(close);
 	titlebar.appendChild(maximize);

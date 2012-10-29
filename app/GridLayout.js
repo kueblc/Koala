@@ -274,6 +274,17 @@ function GridLayout( container, float, dock, animationTime ){
 		dock.appendChild(panel.icon);
 	};
 
+	layout.maximizePanel = function(panel){
+		// minimize everything except panel
+		var toMin = [];
+		grid.forEachCell( function(row){
+			var p = row.children[0];
+			if( p !== panel ) toMin.push( p );
+		} );
+		for( var i = 0; i < toMin.length; i++ )
+			layout.minimizePanel( toMin[i] );
+	};
+
 	layout.restorePanel = function(panel){
 		// detach the restore button
 		dock.removeChild(panel.icon);
