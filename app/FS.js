@@ -107,6 +107,20 @@ function FS(root){
 		return root[id];
 	};
 	
+	// returns the file contents or undefined
+	api.read = function( id ){
+		if( root[id] ) return root[id]._data;
+	};
+	
+	// overwrites the file contents, returns true on error
+	api.write = function( id, data ){
+		if( root[id] ){
+			root[id]._data = data;
+			return false;
+		}
+		return true;
+	};
+	
 	api.serialize = function(){ return JSON.stringify(root); };
 	api.deserialize = function(data){ root = JSON.parse(data); };
 
