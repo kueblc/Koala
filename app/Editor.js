@@ -29,7 +29,8 @@ function Editor( lexer, stage ){
 		var filename = prompt("Save as");
 		if( !filename ) return;
 		// try to create a new file with the name and type
-		var file = fs.add( '/', filename, 'application/javascript' );
+		var folder = fs.resolve('/');
+		var file = fs.touch( folder, filename, 'application/javascript' );
 		// abort on failure
 		if( !file ) return alert("FILENAME IS TAKEN");
 		fs.write( file,
@@ -98,7 +99,8 @@ function Editor( lexer, stage ){
 			var filename = prompt("Save as");
 			if( !filename ) return;
 			// try to create a new file with the name and type
-			file = fs.add( '/', filename, 'text/koala' );
+			var folder = fs.resolve('/');
+			file = fs.touch( folder, filename, 'text/koala' );
 			// abort on failure
 			if( !file ) return alert("FILENAME IS TAKEN");
 			// update tab and records

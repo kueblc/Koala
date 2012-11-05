@@ -107,7 +107,7 @@ function FileBrowser(fs,defaultApps){
 			'_Open': container.ondblclick,
 			'_Delete': function(){
 				if( confirm("Are you sure you want to delete this file?") ){
-					fs.rmnode(id);
+					fs.remove(id);
 					api.update();
 				}
 			},
@@ -139,7 +139,8 @@ function FileBrowser(fs,defaultApps){
 		var n = prompt("Filename");
 		if( !n ) return;
 		var ext = n.suffix('.') || 'dir';
-		newdir = fs.add( cwd.join('/'), n, ext );
+		var folder = fs.resolve( cwd.join('/') );
+		newdir = fs.touch( folder, n, ext );
 		newdir && addIcon(newdir);
 	};
 	
@@ -148,7 +149,7 @@ function FileBrowser(fs,defaultApps){
 		// clear the file display
 		display.innerHTML = '';
 		// add each file to the display
-		var folder = fs.read( fs.resolvePath(cwd.join('/')) );
+		var folder = fs.read( fs.resolve(cwd.join('/')) );
 		if( !folder ) return;
 		for( var filename in folder.data ){
 			var file = folder.data[filename];
@@ -175,7 +176,8 @@ function FileBrowser(fs,defaultApps){
 		if( file.size > 100*1024 )
 			return alert("FILE TOO BIG");
 		// try to create a new file with the name and type
-		var id = fs.add( dest, file.name, file.type );
+		var folder = fs.resolve(dest);
+		var id = fs.touch( folder, file.name, file.type );
 		// abort on failure
 		if( !id ) return alert("FILENAME IS TAKEN");
 		// create a FileReader
@@ -190,7 +192,7 @@ function FileBrowser(fs,defaultApps){
 			alert("FILE UPLOAD ERROR");
 			console.log(e);
 			// remove failed upload file
-			fs.rmnode(id);
+			fs.remove(id);
 		};
 		// begin the upload, upload text documents as text
 		if( file.type.split('/',1)[0] === 'text' ||
