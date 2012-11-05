@@ -12,7 +12,13 @@ function FS(root){
 	var root = root || {
 		id: 1,
 		size: 1,
-		0: { _name: '/', _type: 'dir', _parent: null, _data: {} }
+		0: {
+			_name: '/',
+			_type: 'dir',
+			_parent: null,
+			_data: {},
+			listeners: {}
+		}
 	};
 	
 	// resolves a file name to the file id or null
@@ -21,19 +27,33 @@ function FS(root){
 		var id = 0;
 		for( var i = 0; i < path.length; i++ ){
 			if( path[i] === '' ) continue;
-			if( !( id && root[id]._type === 'dir' ) )
-				return null;
+			if( !api.isFolder(id) ) return null;
 			id = root[id]._data[ path[i] ];
+			if( !id ) return null;
 		}
 		return id;
 	};
+	
+	api.isFolder = function( id ){
+		if( !root[id] ) return;
+		return !( root[id]._data.length || root[id]._data.length === 0 );
+	};
+	
+	// returns the size in bytes for files, number of items for folders
+	api.size = function( id ){
+		if( !root[id] ) return;
+		if( !api.isFolder(id) ) return root[id]._data.length;
+		var items = 0;
+		for( var f in root[id]._data ) items++;
+		return items;
+	}
 	
 	// adds a new file to the FS
 	api.touch = function( parentId, name, type, data ){
 		// return null if parent does not exist
 		if( !root[parentId] ) return null;
 		// return null if parent is not a directory
-		if( root[parentId]._data instanceof String ) return null;
+		if( !api.isFolder(parentId) ) return null;
 		// return null if parent has child with name
 		if( root[parentId]._data[name] ) return null;
 		// update size and get a new file id
@@ -44,15 +64,19 @@ function FS(root){
 			_name: name,
 			_type: type,
 			_parent: parentId,
-			_data: (type === 'dir') ? {} : data || ''
+			_data: (type === 'dir') ? {} : data || '',
+			listeners: {}
 		};
 		// be sure to inform parent of the new child node
 		root[parentId]._data[name] = file;
+		api.notify( parentId, 'touch', file );
 		return file;
 	};
 	
 	// removes a file from the FS
 	api.remove = function( id ){
+		// notify relevant nodes
+		api.notify( id, 'remove' );
 		// recursive remove if it is a folder
 		if( root[id]._type === 'dir' )
 			for( file in root[id]._data )
@@ -75,7 +99,8 @@ function FS(root){
 	// renames and moves the file, returns true on error
 	api.rename = function( id, newName, newDirId ){
 		if( root[id] ){
-			newDirId = newDirId || root[id]._parent;
+			var oldDirId = root[id]._parent;
+			newDirId = newDirId || oldDirId;
 			// remove old reference
 			delete root[ root[id]._parent ]._data[ root[id]._name ];
 			// update file name and parent
@@ -83,6 +108,12 @@ function FS(root){
 			root[id]._parent = newDirId;
 			// add new reference
 			root[newDirId]._data[newName] = id;
+			// notify relevant nodes
+			if( oldDirId !== newDirId ){
+				api.notify( oldDirId, 'remove', id );
+				api.notify( newDirId, 'touch', id );
+			}
+			api.notify( id, 'rename' );
 			return false;
 		}
 		return true;
@@ -92,9 +123,33 @@ function FS(root){
 	api.write = function( id, data ){
 		if( root[id] ){
 			root[id]._data = data;
+			// notify relevant nodes
+			api.notify( id, 'write' );
 			return false;
 		}
 		return true;
+	};
+	
+	/* event system */
+	var listenRefs = {},
+		refCount = 0;
+	
+	// listens for changes to id
+	api.listen = function( id, cb ){
+		root[id].listeners[ refCount ] = cb;
+		listenRefs[ refCount ] = id;
+		return refCount++;
+	};
+	
+	// stops listening for changes to id
+	api.unlisten = function( ref ){
+		delete root[ listenRefs[ref] ].listeners[ref];
+	};
+	
+	// notify all the listeners for id
+	api.notify = function( id ){
+		for( cb in root[id].listeners )
+			root[id].listeners[cb].apply(this,arguments);
 	};
 	
 	api.serialize = function(){ return JSON.stringify(root); };

@@ -85,13 +85,12 @@ function Stage(){
 		// abort if no file exists
 		if( !file ) return true;
 		// if this is a regular file
-		if( file.data instanceof String ){
-			// TODO check type
-			// load the sandbox
-			api.reset();
-			panel.setTitle( file.name );
-			api.js( file.data );
-		}
+		if( fs.isFolder(id) ) return true;
+		// TODO check type
+		// load the sandbox
+		api.reset();
+		panel.setTitle( file.name );
+		api.js( file.data );
 	};
 	
 	api.watch = function( id ){

@@ -59,7 +59,8 @@ function Editor( lexer, stage ){
 			// read the file or return error
 			var file = fs.read(id);
 			if( !file ) return true;
-			if(!( file.data instanceof String )) return true;
+			// ensure this is a regular file
+			if( fs.isFolder(id) ) return true;
 			name = file.name;
 			data = file.data;
 		} else {
@@ -86,6 +87,16 @@ function Editor( lexer, stage ){
 		} );
 		tab._id = id;
 		tab._data = data;
+		// add a listener
+		tab.listen = function( id, action, s ){
+			if( action === 'rename' ){
+				tab.textContent = tab.innerText = fs.read( id ).name;
+			} else if( action === 'remove' ){
+				tabFocus = tab;
+				api.close();
+			}
+		};
+		tab.listener = id ? fs.listen( id, tab.listen ) : null;
 		// finally, focus on the new tab
 		tab.click();
 	};
@@ -101,6 +112,8 @@ function Editor( lexer, stage ){
 			// try to create a new file with the name and type
 			var folder = fs.resolve('/');
 			file = fs.touch( folder, filename, 'text/koala' );
+			// add a rename listener
+			tabFocus.listener = fs.listen( file, tabFocus.listen );
 			// abort on failure
 			if( !file ) return alert("FILENAME IS TAKEN");
 			// update tab and records
@@ -113,6 +126,8 @@ function Editor( lexer, stage ){
 	
 	api.close = function(){
 		if( !tabFocus ) return;
+		// remove the listener
+		if( tabFocus.listener !== null ) fs.unlisten( tabFocus.listener );
 		if( tabs.length === 1 ){
 			// if this is the last document, open a blank one after closing
 			tabFocus.parentNode.removeChild( tabFocus );

@@ -51,6 +51,21 @@ function FileBrowser(fs,defaultApps){
 		image.src = data;
 	};
 	
+	function about( id ){
+		var file = fs.read(id);
+		if( fs.isFolder(id) ){
+			alert( "Folder: " + file.name +
+				"\n" + fs.size(id) + " items" );
+		} else {
+			alert( "Name: " + file.name +
+				"\nType: " + file.type +
+				"\nSize: " + fs.size(id) + " bytes"
+			);
+		}
+	};
+	
+	var listeners = [];
+	
 	function addIcon( id ){
 		/* get file info */
 		var file = fs.read(id);
@@ -58,31 +73,34 @@ function FileBrowser(fs,defaultApps){
 		/* create the dom elements */
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
-			title = document.createElement('input');
+			title = document.createElement('input'),
+			thumbnail = document.createElement('pre');
 		/* set the icon image */
-		if( filetype === 'text' && file.data !== '' ){
-			icon.className = '';
-			var thumbnail = document.createElement('pre');
-			// get a 5x10 text preview
-			var data = file.data;
-			var previewLines = data.split('\n',5);
-			var preview = '';
-			for( var i = 0; i < previewLines.length; i++ )
-				preview += previewLines[i].substr(0,10) + '\n';
-			thumbnail.innerText =
-				thumbnail.textContent = preview;
-			icon.appendChild(thumbnail);
-		} else if( filetype === 'image' ){
-			scaleImage( file.data, 48, 48, function(img){
-				var thumbnail = new Image;
-				thumbnail.src = img;
-				thumbnail.draggable = false;
-				icon.className = 'blank';
-				icon.appendChild(thumbnail);
-			});
-		} else {
-			icon.className = filetype;
+		function updateThumb(){
+			var file = fs.read(id);
+			if( filetype === 'text' && file.data !== '' ){
+				icon.className = '';
+				// get a 5x10 text preview
+				var data = file.data;
+				var previewLines = data.split('\n',5);
+				var preview = '';
+				for( var i = 0; i < previewLines.length; i++ )
+					preview += previewLines[i].substr(0,10) + '\n';
+				thumbnail.innerText =
+					thumbnail.textContent = preview;
+			} else if( filetype === 'image' ){
+				scaleImage( file.data, 48, 48, function(img){
+					thumbnail = new Image;
+					thumbnail.src = img;
+					thumbnail.draggable = false;
+					icon.className = 'blank';
+				});
+			} else {
+				icon.className = filetype;
+			}
 		}
+		updateThumb();
+		icon.appendChild(thumbnail);
 		
 		/* set the icon title */
 		title.type = 'text';
@@ -108,15 +126,9 @@ function FileBrowser(fs,defaultApps){
 			'_Delete': function(){
 				if( confirm("Are you sure you want to delete this file?") ){
 					fs.remove(id);
-					api.update();
 				}
 			},
-			'_About': function(){
-				alert( "Name: " + file.name +
-					"\nType: " + file.type +
-					"\nSize: " + file.data.length + " bytes"
-				);
-			}
+			'_About': function(){ about(id); }
 		});
 		/* drag to desktop download */
 		container.draggable = true;
@@ -133,6 +145,15 @@ function FileBrowser(fs,defaultApps){
 		container.appendChild(icon);
 		container.appendChild(title);
 		display.appendChild(container);
+		/* add fs listener */
+		listeners.push( fs.listen( id, function( id, action, s ){
+			if( action === 'remove' && s !== null ){
+				display.removeChild(container);
+			} else if( action === 'write' ){
+				// update thumbnail
+				updateThumb();
+			}
+		} ) );
 	};
 	
 	api.addFolder = function(){
@@ -141,20 +162,33 @@ function FileBrowser(fs,defaultApps){
 		var ext = n.suffix('.') || 'dir';
 		var folder = fs.resolve( cwd.join('/') );
 		newdir = fs.touch( folder, n, ext );
-		newdir && addIcon(newdir);
+		newdir || alert("FILENAME TAKEN");
 	};
+	
+	var currentFolder = fs.resolve(cwd.join('/')),
+		folderListener = null;
 	
 	// updates the display
 	api.update = function(){
 		// clear the file display
 		display.innerHTML = '';
-		// add each file to the display
-		var folder = fs.read( fs.resolve(cwd.join('/')) );
+		// fetch the folder from the FS
+		currentFolder = fs.resolve(cwd.join('/'));
+		var folder = fs.read(currentFolder);
 		if( !folder ) return;
-		for( var filename in folder.data ){
-			var file = folder.data[filename];
-			addIcon( file );
-		}
+		// remove old listeners
+		if( folderListener !== null )
+			fs.unlisten( folderListener );
+		for( var i = 0; i < listeners.length; i++ )
+			fs.unlisten( listeners[i] );
+		listeners = [];
+		// listen for file additions
+		folderListener = fs.listen( currentFolder, function( id, action, s ){
+			if( action === 'touch' ) addIcon(s);
+		} );
+		// add each file to the display
+		for( var filename in folder.data )
+			addIcon( folder.data[filename] );
 		// update the addressbar
 		locationBar.innerHTML = '';
 		for( var i = 0; i < cwd.length; i++ ){
@@ -232,7 +266,7 @@ function FileBrowser(fs,defaultApps){
 		'Cu_t': function(){ console.log('context cut'); },
 		'_Copy': function(){ console.log('context copy'); },
 		'_Paste': function(){ console.log('context paste'); },
-		'_About': function(){ console.log('context about'); }
+		'_About': function(){ about(currentFolder); }
 	});
 	
 	return api;
