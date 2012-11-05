@@ -27,33 +27,22 @@ function FS(root){
 		var id = 0;
 		for( var i = 0; i < path.length; i++ ){
 			if( path[i] === '' ) continue;
-			if( !api.isFolder(id) ) return null;
+			if( !isFolder(id) ) return null;
 			id = root[id]._data[ path[i] ];
 			if( !id ) return null;
 		}
 		return id;
 	};
 	
-	api.isFolder = function( id ){
-		if( !root[id] ) return;
+	function isFolder( id ){
+		if( !root[id] ) return false;
 		return !( root[id]._data.length || root[id]._data.length === 0 );
 	};
 	
-	// returns the size in bytes for files, number of items for folders
-	api.size = function( id ){
-		if( !root[id] ) return;
-		if( !api.isFolder(id) ) return root[id]._data.length;
-		var items = 0;
-		for( var f in root[id]._data ) items++;
-		return items;
-	}
-	
 	// adds a new file to the FS
 	api.touch = function( parentId, name, type, data ){
-		// return null if parent does not exist
-		if( !root[parentId] ) return null;
 		// return null if parent is not a directory
-		if( !api.isFolder(parentId) ) return null;
+		if( !isFolder(parentId) ) return null;
 		// return null if parent has child with name
 		if( root[parentId]._data[name] ) return null;
 		// update size and get a new file id
@@ -78,7 +67,7 @@ function FS(root){
 		// notify relevant nodes
 		api.notify( id, 'remove' );
 		// recursive remove if it is a folder
-		if( root[id]._type === 'dir' )
+		if( isFolder(id) )
 			for( file in root[id]._data )
 				api.remove( root[id]._data[file] )
 		// remove the reference and file
@@ -89,11 +78,24 @@ function FS(root){
 	
 	// returns the file contents or undefined
 	api.read = function( id ){
-		if( root[id] ) return {
+		if( !root[id] ) return;
+		// determine if this is a regular file or directory
+		var regular = root[id]._data.length || root[id]._data.length === 0;
+		// compute size
+		var size = 0;
+		if( regular ){
+			size = root[id]._data.length;
+		} else {
+			for( var f in root[id]._data ) size++;
+		}
+		// return file properties
+		return {
 			name: root[id]._name,
 			type: root[id]._type,
 			parent: root[id]._parent,
-			data: root[id]._data };
+			data: root[id]._data,
+			size: size,
+			dir: !regular };
 	};
 	
 	// renames and moves the file, returns true on error

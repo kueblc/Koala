@@ -53,13 +53,16 @@ function FileBrowser(fs,defaultApps){
 	
 	function about( id ){
 		var file = fs.read(id);
-		if( fs.isFolder(id) ){
-			alert( "Folder: " + file.name +
-				"\n" + fs.size(id) + " items" );
+		if( file.dir ){
+			alert( "Name: " + file.name +
+				"\nContents: " + file.size + " item" +
+				( file.size === 1 ? '' : 's' )
+			);
 		} else {
 			alert( "Name: " + file.name +
 				"\nType: " + file.type +
-				"\nSize: " + fs.size(id) + " bytes"
+				"\nSize: " + file.size + " byte" +
+				( file.size === 1 ? '' : 's' )
 			);
 		}
 	};

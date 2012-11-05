@@ -60,7 +60,7 @@ function Editor( lexer, stage ){
 			var file = fs.read(id);
 			if( !file ) return true;
 			// ensure this is a regular file
-			if( fs.isFolder(id) ) return true;
+			if( file.dir ) return true;
 			name = file.name;
 			data = file.data;
 		} else {
