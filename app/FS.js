@@ -109,7 +109,20 @@ function FS(root){
 	
 	// returns the file contents or undefined
 	api.read = function( id ){
-		if( root[id] ) return root[id]._data;
+		if( root[id] ) return {
+			name: root[id]._name,
+			type: root[id]._type,
+			data: root[id]._data };
+	};
+	
+	// renames the file, returns true on error
+	api.rename = function( id, newName, newDirId ){
+		if( root[id] ){
+			newDirId = newDirId || root[id]._parent;
+			api.mvnode( id, newDirId, newName );
+			return false;
+		}
+		return true;
 	};
 	
 	// overwrites the file contents, returns true on error

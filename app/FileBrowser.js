@@ -53,18 +53,18 @@ function FileBrowser(fs,defaultApps){
 	
 	function addIcon( id ){
 		/* get file info */
-		var file = fs.get(id);
-		var filetype = file._type.split('/',1)[0];
+		var file = fs.read(id);
+		var filetype = file.type.split('/',1)[0];
 		/* create the dom elements */
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
 			title = document.createElement('input');
 		/* set the icon image */
-		if( filetype === 'text' && file._data !== '' ){
+		if( filetype === 'text' && file.data !== '' ){
 			icon.className = '';
 			var thumbnail = document.createElement('pre');
 			// get a 5x10 text preview
-			var data = file._data;
+			var data = file.data;
 			var previewLines = data.split('\n',5);
 			var preview = '';
 			for( var i = 0; i < previewLines.length; i++ )
@@ -73,7 +73,7 @@ function FileBrowser(fs,defaultApps){
 				thumbnail.textContent = preview;
 			icon.appendChild(thumbnail);
 		} else if( filetype === 'image' ){
-			scaleImage( file._data, 48, 48, function(img){
+			scaleImage( file.data, 48, 48, function(img){
 				var thumbnail = new Image;
 				thumbnail.src = img;
 				thumbnail.draggable = false;
@@ -86,19 +86,19 @@ function FileBrowser(fs,defaultApps){
 		
 		/* set the icon title */
 		title.type = 'text';
-		title.value = file._name;
+		title.value = file.name;
 		/* select on focus */
 		title.onfocus = function(){ title.select(); };
 		/* renames file */
 		title.onchange = function(){
-			fs.mvnode( id, file._parent, title.value );
+			fs.rename( id, title.value );
 		};
 		
 		/* double click opens folders and files */
-		container.ondblclick = (file._type === 'dir') ?
-			function(){ cwd.push(file._name); api.update(); } :
+		container.ondblclick = (file.type === 'dir') ?
+			function(){ cwd.push(file.name); api.update(); } :
 			function(){
-				var handler = api.defaultApps[file._type] ||
+				var handler = api.defaultApps[file.type] ||
 					api.defaultApps[filetype];
 				handler && handler(id);
 			};
@@ -112,9 +112,9 @@ function FileBrowser(fs,defaultApps){
 				}
 			},
 			'_About': function(){
-				alert( "Name: " + file._name +
-					"\nType: " + file._type +
-					"\nSize: " + file._data.length + " bytes"
+				alert( "Name: " + file.name +
+					"\nType: " + file.type +
+					"\nSize: " + file.data.length + " bytes"
 				);
 			}
 		});
@@ -123,9 +123,9 @@ function FileBrowser(fs,defaultApps){
 		if( container.addEventListener ){
 			container.addEventListener( 'dragstart', function(e){
 				e.dataTransfer.setData( "DownloadURL",
-					file._type + ':' + file._name + ':' +
+					file.type + ':' + file.name + ':' +
 					//'data:' + file._type + ';base64,' +
-					file._data );
+					file.data );
 			}, false );
 		}
 		
@@ -148,9 +148,10 @@ function FileBrowser(fs,defaultApps){
 		// clear the file display
 		display.innerHTML = '';
 		// add each file to the display
-		var folder = fs.get( fs.resolvePath(cwd.join('/')) );
-		for( var filename in folder._data ){
-			var file = folder._data[filename];
+		var folder = fs.read( fs.resolvePath(cwd.join('/')) );
+		if( !folder ) return;
+		for( var filename in folder.data ){
+			var file = folder.data[filename];
 			addIcon( file );
 		}
 		// update the addressbar
@@ -181,7 +182,7 @@ function FileBrowser(fs,defaultApps){
 		var reader = new FileReader();
 		// on upload success
 		reader.onload = function(e){
-			fs.get(id)._data = e.target.result;
+			if( fs.write( id, e.target.result ) ) return;
 			addIcon(id);
 		};
 		// on upload failure

@@ -81,11 +81,23 @@ function Stage(){
 	
 	api.open = function( id ){
 		// read the file
-		var file = fs.get(id);
-		// load the sandbox
-		api.reset();
-		panel.setTitle( file._name );
-		api.js( file._data );
+		var file = fs.read(id);
+		// abort if no file exists
+		if( !file ) return true;
+		// if this is a regular file
+		if( file.data instanceof String ){
+			// TODO check type
+			// load the sandbox
+			api.reset();
+			panel.setTitle( file.name );
+			api.js( file.data );
+		}
+	};
+	
+	api.watch = function( id ){
+	};
+	
+	api.unwatch = function( watch ){
 	};
 	
 	api.interpret = function( str ){

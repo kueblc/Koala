@@ -29,11 +29,11 @@ function Editor( lexer, stage ){
 		var filename = prompt("Save as");
 		if( !filename ) return;
 		// try to create a new file with the name and type
-		file = fs.add( '/', filename, 'application/javascript' );
+		var file = fs.add( '/', filename, 'application/javascript' );
 		// abort on failure
 		if( !file ) return alert("FILENAME IS TAKEN");
-		fs.get(file)._data = 
-			compiler.compile( display.input.value ) + 'window.close();';
+		fs.write( file,
+			compiler.compile( display.input.value ) + 'window.close();' );
 	} );
 	
 	panel.footer.makeButton( 'save', function(){
@@ -56,10 +56,11 @@ function Editor( lexer, stage ){
 				if( tabs[i]._id === id )
 					return tabs[i].click();
 			// read the file or return error
-			var file = fs.get(id);
+			var file = fs.read(id);
 			if( !file ) return true;
-			name = file._name;
-			data = file._data;
+			if(!( file.data instanceof String )) return true;
+			name = file.name;
+			data = file.data;
 		} else {
 			// create a blank document
 			name = untitledPrefix +( untitled++ ? ' ' + untitled : '' );
@@ -104,8 +105,8 @@ function Editor( lexer, stage ){
 			tabFocus.textContent = tabFocus.innerText = filename;
 			tabFocus._id = file;
 		}
-		// update the fs
-		fs.get(file)._data = tabFocus._data;
+		// update the fs, alert on error
+		if( fs.write( file, tabFocus._data ) ) alert("Save failed!");
 	};
 	
 	api.close = function(){
