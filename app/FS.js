@@ -103,6 +103,8 @@ function FS(root){
 		if( root[id] ){
 			var oldDirId = root[id]._parent;
 			newDirId = newDirId || oldDirId;
+			// make sure the new filename is not taken
+			if( root[newDirId]._data[newName] ) return true;
 			// remove old reference
 			delete root[ root[id]._parent ]._data[ root[id]._name ];
 			// update file name and parent

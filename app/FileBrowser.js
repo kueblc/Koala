@@ -112,7 +112,9 @@ function FileBrowser(fs,defaultApps){
 		title.onfocus = function(){ title.select(); };
 		/* renames file */
 		title.onchange = function(){
-			fs.rename( id, title.value );
+			// if rename fails, reset the title
+			if( fs.rename( id, title.value ) )
+				title.value = fs.read(id).name;
 		};
 		
 		/* double click opens folders and files */
