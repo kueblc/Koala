@@ -1,0 +1,25 @@
+/* FS icons by franksouza183 released under GPL
+ * http://franksouza183.deviantart.com/art/FS-Icons-288489126
+ * Converted to CSS spritesheet for use with The Koala Project
+ */
+
+/* default icon should be at 0,0 */
+#panel_filebrowser .content div { background: url(fs.png) 0 0; }
+
+#panel_filebrowser .content .blank { background: 0; }
+#panel_filebrowser .content .dir { background-position: 0 -64px; }
+#panel_filebrowser .content .src { background-position: 0 -128px; }
+#panel_filebrowser .content .application { background-position: 0 -192px; }
+#panel_filebrowser .content .text { background-position: 0 -256px; }
+#panel_filebrowser .content .pkg { background-position: 0 -320px; }
+
+#footer button div {
+	width: 16px;
+	height: 16px;
+	background: url(apps.png) 0 0;
+}
+
+#footer button .exec { background-position: 0 -16px; }
+#footer button .file { background-position: 0 -32px; }
+#footer button .text { background-position: 0 -48px; }
+#footer button .dict { background-position: 0 -64px; }

@@ -40,6 +40,13 @@ function User( server ){
 		theme.href = "themes/" + this.value + ".css";
 	};
 	
+	var icon = $("icon");
+	icon.selector = $("icon_sel");
+	
+	icon.selector.onchange = function(){
+		icon.href = "icons/" + this.value + ".css";
+	};
+	
 	var user_field = $("login_username"),
 		pass_field = $("login_password");
 	
