@@ -21,8 +21,6 @@ function FileBrowser(fs,defaultApps){
 	
 	api.defaultApps = defaultApps || {};
 	
-	api.defaultApps['dir'] = function(id){ api.open(id); };
-	
 	// async method to scale an image to fit inside maxW x maxH
 	function scaleImage( data, maxW, maxH, cb ){
 		// create an image object to hold our data
@@ -114,7 +112,9 @@ function FileBrowser(fs,defaultApps){
 		};
 		
 		/* double click opens folders and files */
-		container.ondblclick = function(){
+		container.ondblclick = file.dir ? function(){
+			api.open(id);
+		} : function(){
 			var handler = api.defaultApps[file.type] ||
 				api.defaultApps[filetype];
 			handler && handler(id);
@@ -258,7 +258,9 @@ function FileBrowser(fs,defaultApps){
 	};
 	
 	panel.footer.makeButton( 'new', api.addFolder );
-	panel.footer.makeButton( 'refresh', api.update );
+	panel.footer.makeButton( 'refresh', function(){
+		api.open( currentFolder );
+	} );
 	
 	// context menu test
 	display.oncontextmenu = ContextMenu({
