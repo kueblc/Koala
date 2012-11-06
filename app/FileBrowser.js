@@ -14,16 +14,14 @@ function FileBrowser(fs,defaultApps){
 	var display = panel.content,
 		locationBar = panel.header;
 	
-	var cwd = [''];
+	var currentFolder = 0,
+		folderListener = null;
+	
+	var listeners = [];
 	
 	api.defaultApps = defaultApps || {};
 	
-	function seek(x){
-		return function(){
-			cwd = cwd.slice(0,x);
-			api.update();
-		};
-	};
+	api.defaultApps['dir'] = function(id){ api.open(id); };
 	
 	// async method to scale an image to fit inside maxW x maxH
 	function scaleImage( data, maxW, maxH, cb ){
@@ -66,8 +64,6 @@ function FileBrowser(fs,defaultApps){
 			);
 		}
 	};
-	
-	var listeners = [];
 	
 	function addIcon( id ){
 		/* get file info */
@@ -118,16 +114,11 @@ function FileBrowser(fs,defaultApps){
 		};
 		
 		/* double click opens folders and files */
-		container.ondblclick = file.dir ?
-			function(){
-				cwd.push(file.name);
-				api.update();
-			} :
-			function(){
-				var handler = api.defaultApps[file.type] ||
-					api.defaultApps[filetype];
-				handler && handler(id);
-			};
+		container.ondblclick = function(){
+			var handler = api.defaultApps[file.type] ||
+				api.defaultApps[filetype];
+			handler && handler(id);
+		};
 		/* register a context menu for this item */
 		container.oncontextmenu = ContextMenu({
 			'_Open': container.ondblclick,
@@ -172,22 +163,14 @@ function FileBrowser(fs,defaultApps){
 		var n = prompt("Filename");
 		if( !n ) return;
 		var ext = n.suffix('.') || 'dir';
-		var folder = fs.resolve( cwd.join('/') );
-		newdir = fs.touch( folder, n, ext );
-		newdir || alert("FILENAME TAKEN");
+		fs.touch( currentFolder, n, ext ) || alert("FILENAME TAKEN");
 	};
 	
-	var currentFolder = fs.resolve(cwd.join('/')),
-		folderListener = null;
-	
-	// updates the display
-	api.update = function(){
-		// clear the file display
-		display.innerHTML = '';
+	api.open = function( id ){
 		// fetch the folder from the FS
-		currentFolder = fs.resolve(cwd.join('/'));
-		var folder = fs.read(currentFolder);
-		if( !folder ) return;
+		var folder = fs.read(id);
+		if(!( folder && folder.dir )) return;
+		currentFolder = id;
 		// remove old listeners
 		if( folderListener !== null )
 			fs.unlisten( folderListener );
@@ -195,35 +178,41 @@ function FileBrowser(fs,defaultApps){
 			fs.unlisten( listeners[i] );
 		listeners = [];
 		// listen for file additions
-		folderListener = fs.listen( currentFolder, function( id, action, s ){
+		folderListener = fs.listen( id, function( id, action, s ){
 			if( action === 'touch' ) addIcon(s);
 		} );
+		// clear the file display
+		display.innerHTML = '';
 		// add each file to the display
 		for( var filename in folder.data )
 			addIcon( folder.data[filename] );
 		// update the addressbar
 		locationBar.innerHTML = '';
-		for( var i = 0; i < cwd.length; i++ ){
+		// compute file ancestry
+		var buttons = [];
+		do {
+			var file = fs.read(id);
 			var button = document.createElement('button');
-			button.onclick = seek(i+1);
-			button.innerHTML = cwd[i] || "/";
-			locationBar.appendChild(button);
-		}
+			button.onclick = (function(id){
+				return function(){ api.open(id); };
+			})(id);
+			button.innerHTML = file.name || "/";
+			buttons.push(button);
+			id = file.parent;
+		} while( id !== null );
+		// add the buttons to the addressbar
+		while( buttons.length )
+			locationBar.appendChild( buttons.pop() );
 	};
 	
-	api.pwd = function(){
-		return cwd.join('/');
-	}
-	
-	api.update();
+	api.open(0);
 	
 	function upload( file, dest ){
 		// filter out huge files (size in bytes)
 		if( file.size > 100*1024 )
 			return alert("FILE TOO BIG");
 		// try to create a new file with the name and type
-		var folder = fs.resolve(dest);
-		var id = fs.touch( folder, file.name, file.type );
+		var id = fs.touch( dest, file.name, file.type );
 		// abort on failure
 		if( !id ) return alert("FILENAME IS TAKEN");
 		// create a FileReader
@@ -255,9 +244,8 @@ function FileBrowser(fs,defaultApps){
 		//e.preventDefault();
 		// for each file dropped
 		var files = e.dataTransfer.files;
-		var dest = cwd.join('/');
 		for( var i = 0; i < files.length; i++ ){
-			upload( files[i], dest );
+			upload( files[i], currentFolder );
 		}
 		return false;
 	};
