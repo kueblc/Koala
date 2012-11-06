@@ -118,8 +118,11 @@ function FileBrowser(fs,defaultApps){
 		};
 		
 		/* double click opens folders and files */
-		container.ondblclick = (file.type === 'dir') ?
-			function(){ cwd.push(file.name); api.update(); } :
+		container.ondblclick = file.dir ?
+			function(){
+				cwd.push(file.name);
+				api.update();
+			} :
 			function(){
 				var handler = api.defaultApps[file.type] ||
 					api.defaultApps[filetype];
@@ -128,6 +131,7 @@ function FileBrowser(fs,defaultApps){
 		/* register a context menu for this item */
 		container.oncontextmenu = ContextMenu({
 			'_Open': container.ondblclick,
+			'_Rename': function(){ title.focus(); },
 			'_Delete': function(){
 				if( confirm("Are you sure you want to delete this file?") ){
 					fs.remove(id);
@@ -157,6 +161,9 @@ function FileBrowser(fs,defaultApps){
 			} else if( action === 'write' ){
 				// update thumbnail
 				updateThumb();
+			} else if( action === 'rename' ){
+				file = fs.read(id);
+				title.value = file.name;
 			}
 		} ) );
 	};
