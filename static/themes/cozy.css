@@ -6,10 +6,10 @@ button {
 	font-family: Helvetica;
 	text-shadow: 0 1px #fff;
 	border: 1px solid #aaa;
-	background: rgba(0,0,0,.05);
-	box-shadow: 0 1px 2px #ddd, 0 8px 16px #fff inset;
-	-moz-box-shadow: 0 1px 2px #ddd, 0 8px 16px #fff inset;
-	-webkit-box-shadow: 0 1px 2px #ddd, 0 8px 16px #fff inset;
+	background: none;
+	box-shadow: 0 1px 2px #ddd, 0 2px 2px #f5f5f5 inset;
+	-moz-box-shadow: 0 1px 2px #ddd, 0 2px 2px #f5f5f5 inset;
+	-webkit-box-shadow: 0 1px 2px #ddd, 0 2px 2px #f5f5f5 inset;
 	border-radius: 2px;
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;

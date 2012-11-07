@@ -13,13 +13,13 @@
 #panel_filebrowser .content .text { background-position: 0 -256px; }
 #panel_filebrowser .content .pkg { background-position: 0 -320px; }
 
-#footer button div {
+#header button div {
 	width: 16px;
 	height: 16px;
 	background: url(apps.png) 0 0;
 }
 
-#footer button .exec { background-position: 0 -16px; }
-#footer button .file { background-position: 0 -32px; }
-#footer button .text { background-position: 0 -48px; }
-#footer button .dict { background-position: 0 -64px; }
+#header button .exec { background-position: 0 -16px; }
+#header button .file { background-position: 0 -32px; }
+#header button .text { background-position: 0 -48px; }
+#header button .dict { background-position: 0 -64px; }

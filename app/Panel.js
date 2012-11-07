@@ -19,11 +19,11 @@ function Panel( panel, layout ){
 	panel.icon = icon;
 	panel.titlebar = titlebar;
 	
-	icon.innerHTML = title;
+	icon.title = title;
 	icon.set = function(i){
 		var s = document.createElement('div');
 		s.className = i;
-		icon.insertBefore( s, icon.firstChild );
+		icon.appendChild( s, icon.firstChild );
 	};
 	icon.onclick = function(){ layout.restorePanel(panel) };
 

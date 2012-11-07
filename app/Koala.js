@@ -15,7 +15,7 @@ window.onload = function(){
 		( koala.version < 1 ? koala.version < 0.1 ? 'alpha' : 'beta' : '' );
 	
 	koala.services = {
-		layout: new GridLayout( $("content"), $("float"), $("footer"), 1000 ),
+		layout: new GridLayout( $("content"), $("float"), $("header"), 1000 ),
 		lexer: new Lexer(),
 		server: new Server(),
 		animator: new Animator(),

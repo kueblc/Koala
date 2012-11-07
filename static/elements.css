@@ -196,6 +196,19 @@ h2 > button.close:hover {
 	margin-left: 4px;
 }
 
+#header > button {
+	float: right;
+	padding: 6px;
+	margin: 6px;
+	margin-left: 0;
+	color: #222;
+	font-family: "Trebuchet MS";
+}
+
+#header > button > div {
+	float: left;
+}
+
 #canvas {
 	position: relative;
 }
