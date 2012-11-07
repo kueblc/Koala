@@ -200,6 +200,8 @@ function FileBrowser(fs,defaultApps){
 			buttons.push(button);
 			id = file.parent;
 		} while( id !== null );
+		// highlight current location
+		buttons[0].className = 'active';
 		// add the buttons to the addressbar
 		while( buttons.length )
 			locationBar.appendChild( buttons.pop() );
