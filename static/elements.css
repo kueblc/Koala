@@ -98,6 +98,7 @@
 	background-position: center center;
 	color: transparent;
 	width: 28px;
+	text-indent: -4em;
 }
 
 #panel_dictionary input {
