@@ -21,6 +21,10 @@ body {
 	border-bottom: 1px solid #ccc;
 }
 
+.footer {
+	background: #f8f8f8;
+}
+
 button {
 	border: 1px solid #aaa;
 	background: #eee;
