@@ -127,9 +127,20 @@ button {
 	font-size: 14px;
 	padding: 2px 8px;
 	outline: none;
+	cursor: pointer;
 }
 
 button:hover {
+}
+
+button:focus {
+	outline: 1px dotted #555;
+}
+
+/* http://stackoverflow.com/a/199319/1200288
+ * disables extra focus outline in FF */
+button::-moz-focus-inner {
+	border: 0;
 }
 
 .tab {
