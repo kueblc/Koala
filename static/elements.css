@@ -330,6 +330,7 @@ span.code { font-family: monospace; }
 /* two column forms */
 form > label {
 	float: left;
+	clear: left;
 	width: 40%;
 	padding-right: 12px;
 	margin-bottom: 12px;
