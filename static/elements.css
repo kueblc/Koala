@@ -124,7 +124,7 @@
 }
 
 button {
-	font-size: 14px;
+	font-size: 16px;
 	padding: 2px 8px;
 	outline: none;
 	cursor: pointer;
@@ -145,15 +145,18 @@ button::-moz-focus-inner {
 
 .tab {
 	padding-bottom: 0;
+	clip: rect(-9px, 9999px, 30px, -9px);
 }
 
 .tab > button {
 	margin-top: 3px;
 	float: left;
 	margin-right: 4px;
+	position: relative;
 }
 
 .tab > button.current {
+	z-index: 1;
 }
 
 .tab > button:hover {
