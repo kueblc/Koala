@@ -270,8 +270,8 @@ function GridLayout( container, float, dock, animationTime ){
 		cell.removeChild(panel);
 		grid.removeCell(cell);
 		grid.updateResizeGrips();
-		// add the restore button
-		dock.appendChild(panel.icon);
+		// enable the restore button
+		panel.icon.disabled = false;
 	};
 
 	layout.maximizePanel = function(panel){
@@ -286,11 +286,11 @@ function GridLayout( container, float, dock, animationTime ){
 	};
 
 	layout.restorePanel = function(panel){
-		// detach the restore button
-		dock.removeChild(panel.icon);
 		// add the panel
 		grid.addRow(0).appendChild(panel);
 		grid.updateResizeGrips();
+		// disable the restore button
+		panel.icon.disabled = true;
 	};
 
 	layout.grabPanel = function(e,panel){
@@ -366,10 +366,16 @@ function GridLayout( container, float, dock, animationTime ){
 	layout.newPanel = function(panel,col,row){
 		Panel( panel, layout );
 		grid.addRow(col,row).appendChild(panel);
+		// add the restore button
+		dock.appendChild(panel.icon);
+		panel.icon.disabled = true;
 	};
 
 	grid.forEachCell( function(row){
-		Panel( row.children[0], layout );
+		var panel = Panel( row.children[0], layout );
+		// add the restore button
+		dock.appendChild(panel.icon);
+		panel.icon.disabled = true;
 	} );
 
 	return layout;

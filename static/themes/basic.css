@@ -36,6 +36,10 @@ button:hover {
 	color: #222;
 }
 
+button[disabled] > div {
+	opacity: 0.5;
+}
+
 .tab > button {
 	border: 1px solid #aaa;
 	border-bottom: 1px solid #ccc;
