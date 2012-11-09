@@ -304,8 +304,8 @@ function GridLayout( container, float, dock, animationTime ){
 		// get panel geometry and current cell
 		var x = panel.offsetLeft - 16,
 			y = panel.offsetTop - 16,
-			w = panel.clientWidth + 2,
-			h = panel.clientHeight + 2,
+			w = panel.offsetWidth,
+			h = panel.offsetHeight,
 			cell = panel.parentNode;
 		// store the starting position
 		diffX = x - e.clientX;
