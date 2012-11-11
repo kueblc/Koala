@@ -89,7 +89,7 @@ function GridLayout( container, float, dock, animationTime ){
 		var rows = column.children;
 		if( rows.length !== 1 ){
 			// update sizes of other rows
-			addHeight = row.height/(rows.length-1);
+			var addHeight = row.height/(rows.length-1);
 			for( var i = 0; i < rows.length; i++ ){
 				rows[i].height += addHeight;
 				rows[i].style.height = rows[i].height+'%';
@@ -293,6 +293,8 @@ function GridLayout( container, float, dock, animationTime ){
 		panel.icon.disabled = true;
 	};
 
+	/* panel dragging */
+	var diffX, diffY;
 	layout.grabPanel = function(e,panel){
 		// abort drag start if target was not the grip
 		var e = e || window.event;
