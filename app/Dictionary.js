@@ -17,7 +17,7 @@ function Dictionary(){
 	
 	var last = '';
 	
-	query.onkeyup = function(){
+	var update = query.onkeyup = function(){
 		if( query.value === last ) return;
 		last = query.value;
 		var regex = new RegExp( RegExp.escape(query.value), 'i' );
@@ -37,6 +37,13 @@ function Dictionary(){
 		} else {
 			panel.setStatus(count +' results');
 		}
+	};
+	
+	update();
+	
+	api.lookup = function(word){
+		query.value = word;
+		update();
 	};
 	
 	return api;
