@@ -23,7 +23,7 @@ JSON || (JSON = {
 		// literals
 		if( t !== "object" || obj === null ){
 			// quote strings
-			if( t === "string" ) obj = '"'+obj.replace(/"/g,'\\"')+'"';
+			if( t === "string" ) obj = obj.quote();
 			return String(obj);
 		// arrays
 		} else if( obj && obj.constructor === Array ){
@@ -74,6 +74,10 @@ String.prototype.contains = function(x){
 String.prototype.suffix = function(delim){
 	return this.substring( this.lastIndexOf(delim) + 1 || this.length );
 };
+
+String.quote || (String.prototype.quote = function(){
+	return '"'+this.replace(/"/g,'\\"')+'"';
+});
 
 function toHex(s){
 	var output = "";
