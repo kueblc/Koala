@@ -46,10 +46,9 @@ function ContextMenu( options ){
 	function openMenu(e){
 		// position the menu at the mouse position
 		e = e || window.event;
-		menu.style.left = ( e.pageX || e.clientX + document.body.scrollLeft
-			+ document.documentElement.scrollLeft )+'px';
-		menu.style.top = ( e.pageY || e.clientY + document.body.scrollTop
-			+ document.documentElement.scrollTop )+'px';
+		// clientX/Y are relative to window (we don't care about scrolling)
+		menu.style.left = e.clientX + 'px';
+		menu.style.top = e.clientY + 'px';
 		document.body.appendChild(menu);
 		// hide the menu on the next click
 		document.onmousedown = closeMenu;
