@@ -29,7 +29,7 @@ function Editor( lexer, stage ){
 		contextLayer.style.zIndex = 0;
 		if( target && target.parentNode === display.output ){
 			// get info on the target
-			var text = target.textContent || target.innerText,
+			var text = target.textContent,
 				type = target.className;
 			return {
 				'Lookup Type':
