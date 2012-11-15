@@ -18,14 +18,18 @@ function ContextMenu( options ){
 			return false;
 		};
 	var keyMap = {};
+	var selection = null;
 	for( var i in options ){
 		var item = document.createElement("li");
-			// underlines the first character following an underscore
-			item.innerHTML = i.replace( /_(.)/, function(_,x){
-				// make this character a shortcut to this menu item
-				keyMap[x.toUpperCase()] = options[i];
-				return '<u>'+x+'</u>';
-			} );
+			// maintain which item was last under the mouse
+			item.onmouseover = (function( newSelection ){
+				return function(){
+					selection && (selection.className = '');
+					selection = newSelection;
+					selection.className = 'current';
+				};
+			})( item );
+			// don't do anything just yet, wait for a click event
 			item.onmousedown = function(e){
 				// prevent other mousedown events from firing
 				e = e || window.event;
@@ -41,6 +45,12 @@ function ContextMenu( options ){
 					callback();
 				};
 			})( options[i] );
+			// underlines the first character following an underscore
+			item.innerHTML = i.replace( /_(.)/, function(_,x){
+				// make this character a shortcut to this menu item
+				keyMap[x.toUpperCase()] = item.onclick;
+				return '<u>'+x+'</u>';
+			} );
 		menu.appendChild(item);
 	}
 	function openMenu(e){
@@ -61,6 +71,10 @@ function ContextMenu( options ){
 		return false;
 	};
 	function closeMenu(){
+		if( selection ){
+			selection.className = '';
+			selection = null;
+		}
 		document.body.removeChild(menu);
 		document.onmousedown = null;
 		document.onkeydown = null;
@@ -68,10 +82,29 @@ function ContextMenu( options ){
 	// handles keyboard shortcuts in contextmenu
 	function shortcut(e){
 		e = e || window.event;
-		var key = String.fromCharCode( e.which || e.keyCode );
-		if( keyMap[key] ){
-			closeMenu();
-			keyMap[key]();
+		var key = e.which || e.keyCode;
+		switch( key ){
+			case 13: // enter
+				selection && selection.click();
+				break;
+			case 27: // escape
+				closeMenu();
+				break;
+			case 38: // up arrow
+				selection && (selection.className = '');
+				selection = (selection && selection.previousSibling)
+					|| menu.lastChild;
+				selection.className = 'current';
+				break;
+			case 40: // down arrow
+				selection && (selection.className = '');
+				selection = (selection && selection.nextSibling)
+					|| menu.firstChild;
+				selection.className = 'current';
+				break;
+			default: // possible hotkey
+				key = keyMap[ String.fromCharCode(key) ];
+				key && key();
 		}
 	};
 	return openMenu;

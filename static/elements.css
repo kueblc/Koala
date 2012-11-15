@@ -366,7 +366,7 @@ ul.contextmenu > li {
 	cursor: default;
 }
 
-ul.contextmenu > li:hover {
+ul.contextmenu > li.current {
 	background: Highlight;
 	color: HighlightText;
 }
