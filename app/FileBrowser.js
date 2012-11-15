@@ -264,7 +264,9 @@ function FileBrowser(fs,defaultApps){
 		api.open( currentFolder );
 	} );
 	
-	// context menu test
+	// enable keyboard focus
+	display.tabIndex = -1;
+	// setup the context menu
 	display.oncontextmenu = ContextMenu({
 		'_New': api.addFolder,
 		'Cu_t': function(){ console.log('context cut'); },
