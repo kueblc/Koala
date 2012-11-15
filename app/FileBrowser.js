@@ -222,7 +222,6 @@ function FileBrowser(fs,defaultApps){
 		// on upload success
 		reader.onload = function(e){
 			if( fs.write( id, e.target.result ) ) return;
-			addIcon(id);
 		};
 		// on upload failure
 		reader.onerror = function(e){
