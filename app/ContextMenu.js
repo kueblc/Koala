@@ -64,7 +64,7 @@ function ContextMenu(   ){
 		menu.innerHTML = '';
 		for( var i in sections ){
 			var section = sections[i];
-			if( section.call ) section = section(e);
+			if( typeof(section) === 'function' ) section = section(e);
 			menu.appendChild( generateMenuFragment(section) );
 		};
 		// position the menu at the mouse position
