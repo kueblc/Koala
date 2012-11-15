@@ -67,6 +67,8 @@ function ContextMenu(   ){
 			if( typeof(section) === 'function' ) section = section(e);
 			menu.appendChild( generateMenuFragment(section) );
 		};
+		// abort if there are no options
+		if( !menu.firstChild ) return;
 		// position the menu at the mouse position
 		// clientX/Y are relative to window (we don't care about scrolling)
 		menu.style.left = e.clientX + 'px';
@@ -118,6 +120,8 @@ function ContextMenu(   ){
 				key = keyMap[ String.fromCharCode(key) ];
 				key && key();
 		}
+		// cancel the default action
+		return false;
 	};
 	return openMenu;
 };
