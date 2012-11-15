@@ -75,17 +75,14 @@ String.prototype.suffix = function(delim){
 	return this.substring( this.lastIndexOf(delim) + 1 || this.length );
 };
 
-String.quote || (String.prototype.quote = function(){
+String.prototype.quote || (String.prototype.quote = function(){
 	return '"'+this.replace(/"/g,'\\"')+'"';
 });
 
 function toHex(s){
 	var output = "";
-	var b16 = "0123456789ABCDEF";
-	for( var i = 0; i < s.length; i++ ){
-		var c = s.charCodeAt(i);
-		output += b16.charAt(c>>4) + b16.charAt(c&15) + " ";
-	}
+	for( var i = 0; i < s.length; i++ )
+		output += ('0' + s.charCodeAt(i).toString(16)).slice(-2);
 	return output;
 };
 
