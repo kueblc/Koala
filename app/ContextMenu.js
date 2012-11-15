@@ -5,7 +5,8 @@
  */
 
 // creates a right click menu
-function ContextMenu( options ){
+function ContextMenu(   ){
+	var sections = arguments;
 	// generate the menu
 	var menu = document.createElement("ul");
 		menu.className = 'contextmenu';
@@ -19,43 +20,54 @@ function ContextMenu( options ){
 		};
 	var keyMap = {};
 	var selection = null;
-	for( var i in options ){
-		var item = document.createElement("li");
-			// maintain which item was last under the mouse
-			item.onmouseover = (function( newSelection ){
-				return function(){
-					selection && (selection.className = '');
-					selection = newSelection;
-					selection.className = 'current';
+	function generateMenuFragment( options ){
+		var menu = document.createDocumentFragment();
+		for( var i in options ){
+			var item = document.createElement("li");
+				// maintain which item was last under the mouse
+				item.onmouseover = (function( newSelection ){
+					return function(){
+						selection && (selection.className = '');
+						selection = newSelection;
+						selection.className = 'current';
+					};
+				})( item );
+				// don't do anything just yet, wait for a click event
+				item.onmousedown = function(e){
+					// prevent other mousedown events from firing
+					e = e || window.event;
+					e.cancelBubble = true;
+					e.stopPropagation && e.stopPropagation();
+					// don't highlight contextmenu text
+					return false;
 				};
-			})( item );
-			// don't do anything just yet, wait for a click event
-			item.onmousedown = function(e){
-				// prevent other mousedown events from firing
-				e = e || window.event;
-				e.cancelBubble = true;
-				e.stopPropagation && e.stopPropagation();
-				// don't highlight contextmenu text
-				return false;
-			};
-			// creates a closure to store callback
-			item.onclick = (function(callback){
-				return function(){
-					closeMenu();
-					callback();
-				};
-			})( options[i] );
-			// underlines the first character following an underscore
-			item.innerHTML = i.replace( /_(.)/, function(_,x){
-				// make this character a shortcut to this menu item
-				keyMap[x.toUpperCase()] = item.onclick;
-				return '<u>'+x+'</u>';
-			} );
-		menu.appendChild(item);
-	}
+				// creates a closure to store callback
+				item.onclick = (function(callback){
+					return function(){
+						closeMenu();
+						callback();
+					};
+				})( options[i] );
+				// underlines the first character following an underscore
+				item.innerHTML = i.replace( /_(.)/, function(_,x){
+					// make this character a shortcut to this menu item
+					keyMap[x.toUpperCase()] = item.onclick;
+					return '<u>'+x+'</u>';
+				} );
+			menu.appendChild(item);
+		}
+		return menu;
+	};
 	function openMenu(e){
-		// position the menu at the mouse position
 		e = e || window.event;
+		// update menu entries
+		menu.innerHTML = '';
+		for( var i in sections ){
+			var section = sections[i];
+			if( section.call ) section = section(e);
+			menu.appendChild( generateMenuFragment(section) );
+		};
+		// position the menu at the mouse position
 		// clientX/Y are relative to window (we don't care about scrolling)
 		menu.style.left = e.clientX + 'px';
 		menu.style.top = e.clientY + 'px';
