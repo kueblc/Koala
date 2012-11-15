@@ -20,7 +20,77 @@ function Editor( lexer, stage ){
 		tabs = tabBar.buttons;
 	
 	var display = new TextareaDecorator( $("rta_in"), lexer );
-		
+	
+	/* context menu stuff */
+	// generate the menu
+	var menu = document.createElement("ul");
+		menu.className = 'contextmenu';
+		// prevent spawning a context menu in a context menu
+		menu.oncontextmenu = function(e){
+			// prevent other contextmenu events from firing
+			e = e || window.event;
+			e.stopPropagation && e.stopPropagation();
+			// cancel the default action
+			return false;
+		};
+	function closeMenu(){
+		document.body.removeChild(menu);
+		document.onmousedown = null;
+		document.onkeydown = null;
+	};
+	function setMenu( options ){
+		menu.innerHTML = '';
+		for( var i in options ){
+			var item = document.createElement("li");
+				// underlines the first character following an underscore
+				item.innerHTML = i;
+				item.onmousedown = function(e){
+					// prevent other mousedown events from firing
+					e = e || window.event;
+					e.cancelBubble = true;
+					e.stopPropagation && e.stopPropagation();
+					// don't highlight contextmenu text
+					return false;
+				};
+				// creates a closure to store callback
+				item.onclick = (function(callback){
+					return function(){
+						closeMenu();
+						callback();
+					};
+				})( options[i] );
+			menu.appendChild(item);
+		}
+	}
+	display.input.parentNode.oncontextmenu = function(e){
+		e = e || window.event;
+		display.input.parentNode.style.zIndex = -1;
+		var target = document.elementFromPoint( e.clientX, e.clientY );
+		display.input.parentNode.style.zIndex = 0;
+		if( target && target.parentNode === display.output ){
+			// get info on the target
+			var text = target.textContent || target.innerText,
+				type = target.className;
+			setMenu({
+				'Lookup Type':
+					function(){ koala.apps.dictionary.lookup(type); },
+				'Lookup Text':
+					function(){ koala.apps.dictionary.lookup(text); }
+			});
+			// position the menu at the mouse position
+			menu.style.left = e.clientX + 'px';
+			menu.style.top = e.clientY + 'px';
+			document.body.appendChild(menu);
+			// hide the menu on the next click
+			document.onmousedown = closeMenu;
+			// prevent other contextmenu events from firing
+			e.cancelBubble = true;
+			e.stopPropagation && e.stopPropagation();
+			// cancel the default action
+			return false;
+		}
+	};
+	
 	panel.footer.makeButton( 'run', function(){
 		stage.interpret( compiler.compile( display.input.value ) );
 	} );
