@@ -132,9 +132,27 @@ function FileBrowser(fs,defaultApps){
 			},
 			'_About': function(){ about(id); }
 		});
-		/* drag to desktop download */
 		container.draggable = true;
-		if( container.addEventListener ){
+		if( file.dir ){
+			/* drop upload */
+			container.ondrop = function(e){
+				e.stopPropagation();
+				//e.preventDefault();
+				// for each file dropped
+				var files = e.dataTransfer.files;
+				for( var i = 0; i < files.length; i++ ){
+					upload( files[i], id );
+				}
+				return false;
+			};
+			container.ondragover = function(e){
+				e.stopPropagation();
+				//e.preventDefault();
+				e.dataTransfer.dropEffect = 'copy';
+				return false;
+			};
+		} else if( container.addEventListener ){
+			/* drag to desktop download */
 			container.addEventListener( 'dragstart', function(e){
 				var file = fs.read( id );
 				e.dataTransfer.setData( "DownloadURL",
