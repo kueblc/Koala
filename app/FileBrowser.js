@@ -70,13 +70,13 @@ function FileBrowser(fs,defaultApps){
 		/* create the dom elements */
 		var container = document.createElement('li'),
 			icon = document.createElement('div'),
-			title = document.createElement('input'),
-			thumbnail = document.createElement('pre');
+			title = document.createElement('input');
 		/* set the icon image */
 		function updateThumb(){
-			var file = fs.read(id);
+			icon.innerHTML = '';
+			var thumbnail, file = fs.read(id);
 			if( filetype === 'text' && file.data !== '' ){
-				icon.className = '';
+				thumbnail = document.createElement('pre');
 				// get a 5x10 text preview
 				var data = file.data;
 				var previewLines = data.split('\n',5);
@@ -85,19 +85,21 @@ function FileBrowser(fs,defaultApps){
 					preview += previewLines[i].substr(0,10) + '\n';
 				thumbnail.innerText =
 					thumbnail.textContent = preview;
+				icon.className = '';
+				icon.appendChild( thumbnail );
 			} else if( filetype === 'image' ){
-				scaleImage( file.data, 48, 48, function(img){
+				scaleImage( 'data:' + file.type + ';base64,' + btoa(file.data), 48, 48, function(img){
 					thumbnail = new Image;
 					thumbnail.src = img;
 					thumbnail.draggable = false;
 					icon.className = 'blank';
+					icon.appendChild( thumbnail );
 				});
 			} else {
 				icon.className = filetype;
 			}
 		}
 		updateThumb();
-		icon.appendChild(thumbnail);
 		
 		/* set the icon title */
 		title.type = 'text';
@@ -130,14 +132,32 @@ function FileBrowser(fs,defaultApps){
 			},
 			'_About': function(){ about(id); }
 		});
-		/* drag to desktop download */
 		container.draggable = true;
-		if( container.addEventListener ){
+		if( file.dir ){
+			/* drop upload */
+			container.ondrop = function(e){
+				e.stopPropagation();
+				//e.preventDefault();
+				// for each file dropped
+				var files = e.dataTransfer.files;
+				for( var i = 0; i < files.length; i++ ){
+					upload( files[i], id );
+				}
+				return false;
+			};
+			container.ondragover = function(e){
+				e.stopPropagation();
+				//e.preventDefault();
+				e.dataTransfer.dropEffect = 'copy';
+				return false;
+			};
+		} else if( container.addEventListener ){
+			/* drag to desktop download */
 			container.addEventListener( 'dragstart', function(e){
+				var file = fs.read( id );
 				e.dataTransfer.setData( "DownloadURL",
 					file.type + ':' + file.name + ':' +
-					//'data:' + file._type + ';base64,' +
-					file.data );
+					'data:' + file.type + ';base64,' + btoa(file.data) );
 			}, false );
 		}
 		
@@ -213,6 +233,7 @@ function FileBrowser(fs,defaultApps){
 		// filter out huge files (size in bytes)
 		if( file.size > 100*1024 )
 			return alert("FILE TOO BIG");
+		// TODO mimetype resolution and whitelist
 		// try to create a new file with the name and type
 		var id = fs.touch( dest, file.name, file.type );
 		// abort on failure
@@ -222,7 +243,6 @@ function FileBrowser(fs,defaultApps){
 		// on upload success
 		reader.onload = function(e){
 			if( fs.write( id, e.target.result ) ) return;
-			addIcon(id);
 		};
 		// on upload failure
 		reader.onerror = function(e){
@@ -231,13 +251,8 @@ function FileBrowser(fs,defaultApps){
 			// remove failed upload file
 			fs.remove(id);
 		};
-		// begin the upload, upload text documents as text
-		if( file.type.split('/',1)[0] === 'text' ||
-			file.type === 'application/javascript' ){
-			reader.readAsText(file);
-		} else {
-			reader.readAsDataURL(file);
-		}
+		// upload the file
+		reader.readAsBinaryString(file);
 	};
 	
 	/* drop handler for uploads */
