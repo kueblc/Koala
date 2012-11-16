@@ -136,10 +136,10 @@ function FileBrowser(fs,defaultApps){
 		container.draggable = true;
 		if( container.addEventListener ){
 			container.addEventListener( 'dragstart', function(e){
+				var file = fs.read( id );
 				e.dataTransfer.setData( "DownloadURL",
 					file.type + ':' + file.name + ':' +
-					//'data:' + file._type + ';base64,' +
-					file.data );
+					'data:' + file.type + ';base64,' + btoa(file.data) );
 			}, false );
 		}
 		
@@ -233,7 +233,7 @@ function FileBrowser(fs,defaultApps){
 			// remove failed upload file
 			fs.remove(id);
 		};
-		// begin the upload, upload text documents as text
+		// upload the file
 		reader.readAsBinaryString(file);
 	};
 	
