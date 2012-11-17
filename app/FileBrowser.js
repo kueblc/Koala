@@ -203,13 +203,6 @@ function FileBrowser(fs,defaultApps){
 		return id;
 	};
 	
-	api.addFolder = function(){
-		var n = prompt("Filename");
-		if( !n ) return;
-		var ext = n.suffix('.') || 'dir';
-		fs.touch( currentFolder, n, ext ) || alert("FILENAME TAKEN");
-	};
-	
 	api.open = function( id ){
 		// fetch the folder from the FS
 		var folder = fs.read(id);
@@ -298,7 +291,12 @@ function FileBrowser(fs,defaultApps){
 		return false;
 	};
 	
-	panel.footer.makeButton( 'new', api.addFolder );
+	panel.footer.makeButton( 'new', function(){
+		var n = prompt("Filename");
+		if( !n ) return;
+		var ext = n.suffix('.') || 'dir';
+		fs.touch( currentFolder, n, ext ) || alert("FILENAME TAKEN");
+	} );
 	panel.footer.makeButton( 'refresh', function(){
 		api.open( currentFolder );
 	} );
@@ -307,13 +305,13 @@ function FileBrowser(fs,defaultApps){
 	display.tabIndex = -1;
 	// setup the context menu
 	display.oncontextmenu = ContextMenu({
-		'_New': api.addFolder,
 		'New _Folder': function(){
 			nextAvailable(currentFolder,'Folder','dir');
 		},
 		'New _Script': function(){
 			nextAvailable(currentFolder,'Script','text/koala');
 		},
+		'_Refresh': function(){ api.open( currentFolder ); },
 		'_About': function(){ about(currentFolder); }
 	});
 	
