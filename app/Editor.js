@@ -20,7 +20,26 @@ function Editor( lexer, stage ){
 		tabs = tabBar.buttons;
 	
 	var display = new TextareaDecorator( $("rta_in"), lexer );
-		
+	
+	/* context menu stuff */
+	var contextLayer = display.input.parentNode;
+	contextLayer.oncontextmenu = ContextMenu( function(e){
+		contextLayer.style.zIndex = -1;
+		var target = document.elementFromPoint( e.clientX, e.clientY );
+		contextLayer.style.zIndex = 0;
+		if( target && target.parentNode === display.output ){
+			// get info on the target
+			var text = target.textContent,
+				type = target.className;
+			return {
+				'Lookup Type':
+					function(){ koala.apps.dictionary.lookup(type); },
+				'Lookup Text':
+					function(){ koala.apps.dictionary.lookup(text); }
+			};
+		}
+	} );
+	
 	panel.footer.makeButton( 'run', function(){
 		stage.interpret( compiler.compile( display.input.value ) );
 	} );
