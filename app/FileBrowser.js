@@ -179,6 +179,30 @@ function FileBrowser(fs,defaultApps){
 		} ) );
 	};
 	
+	// creates a new file with a suggested filename
+	function nextAvailable( parent, filename, type ){
+		// if filename is available, return it
+		var id = fs.touch( parent, filename, type );
+		if( id ) return id;
+		// otherwise find a suitable replacement
+		var ext = filename.lastIndexOf('.'), name, count = 1;
+		if( ext > 0 ){
+			// break the string into name and extension
+			name = filename.slice( 0, ext );
+			ext = filename.slice( ext );
+		} else {
+			// there is no file extension
+			name = filename;
+			ext = '';
+		}
+		// count increases until we find an available filename
+		while( !id ){
+			filename = name + ' ' + ++count + ext;
+			id = fs.touch( parent, filename, type );
+		}
+		return id;
+	};
+	
 	api.addFolder = function(){
 		var n = prompt("Filename");
 		if( !n ) return;
@@ -284,9 +308,12 @@ function FileBrowser(fs,defaultApps){
 	// setup the context menu
 	display.oncontextmenu = ContextMenu({
 		'_New': api.addFolder,
-		'Cu_t': function(){ console.log('context cut'); },
-		'_Copy': function(){ console.log('context copy'); },
-		'_Paste': function(){ console.log('context paste'); },
+		'New _Folder': function(){
+			nextAvailable(currentFolder,'Folder','dir');
+		},
+		'New _Script': function(){
+			nextAvailable(currentFolder,'Script','text/koala');
+		},
 		'_About': function(){ about(currentFolder); }
 	});
 	
