@@ -4,7 +4,7 @@
  * Responsible for laying out the panels in flexible tiled boxes
  */
 
-function GridLayout( container, float, dock, animationTime ){
+function GridLayout( container, floatLayer, dock, animationTime ){
 	var grid = {},
 		layout = this;
 
@@ -262,7 +262,7 @@ function GridLayout( container, float, dock, animationTime ){
 
 	/* LAYOUT */
 
-	float.style.display = 'none';
+	floatLayer.style.display = 'none';
 
 	layout.minimizePanel = function(panel){
 		// detach the panel
@@ -327,8 +327,8 @@ function GridLayout( container, float, dock, animationTime ){
 		style.width = w+'px';
 		style.height = h+'px';
 		// attach the panel to the floating layer
-		float.style.display = '';
-		float.appendChild(panel);
+		floatLayer.style.display = '';
+		floatLayer.appendChild(panel);
 		// add floating styles
 		panel.className = 'panel drag';
 	};
@@ -351,8 +351,8 @@ function GridLayout( container, float, dock, animationTime ){
 		var cell = grid.insertCellAt(x,y);
 		grid.updateResizeGrips();
 		// detach the panel from the floating layer
-		float.removeChild(panel);
-		float.style.display = 'none';
+		floatLayer.removeChild(panel);
+		floatLayer.style.display = 'none';
 		// reset the panel geometry
 		var style = panel.style;
 		style.left = '0';
