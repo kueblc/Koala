@@ -311,7 +311,9 @@ function FileBrowser(fs,defaultApps){
 		'New _Script': function(){
 			nextAvailable(currentFolder,'Script','text/koala');
 		},
-		'_Refresh': function(){ api.open( currentFolder ); },
+	}, { // separator
+		'_Refresh': function(){ api.open( currentFolder ); }
+	}, { // separator
 		'_About': function(){ about(currentFolder); }
 	});
 	

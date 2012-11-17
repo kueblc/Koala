@@ -65,7 +65,12 @@ function ContextMenu(   ){
 		for( var i in sections ){
 			var section = sections[i];
 			if( typeof(section) === 'function' ) section = section(e);
-			menu.appendChild( generateMenuFragment(section) );
+			if( section ){
+				// add a separator between each section
+				menu.firstChild &&
+					menu.appendChild(document.createElement('hr'));
+				menu.appendChild( generateMenuFragment(section) );
+			}
 		};
 		// abort if there are no options
 		if( !menu.firstChild ) return;
@@ -106,14 +111,22 @@ function ContextMenu(   ){
 				break;
 			case 38: // up arrow
 				selection && (selection.className = '');
+				// get the next element up, or go to the bottom
 				selection = (selection && selection.previousSibling)
 					|| menu.lastChild;
+				// skip over separators
+				if( selection.tagName === 'HR' )
+					selection = selection.previousSibling;
 				selection.className = 'current';
 				break;
 			case 40: // down arrow
 				selection && (selection.className = '');
+				// get the next element down, or go back to the top
 				selection = (selection && selection.nextSibling)
 					|| menu.firstChild;
+				// skip over separators
+				if( selection.tagName === 'HR' )
+					selection = selection.nextSibling;
 				selection.className = 'current';
 				break;
 			default: // possible hotkey

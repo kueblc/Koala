@@ -366,6 +366,13 @@ ul.contextmenu > li {
 	cursor: default;
 }
 
+ul.contextmenu > hr {
+	height: 0;
+	margin: 2px 0;
+	border: none;
+	border-top: 1px solid #ccc;
+}
+
 ul.contextmenu > li.current {
 	background: Highlight;
 	color: HighlightText;
