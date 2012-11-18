@@ -310,7 +310,7 @@ function FileBrowser(fs,defaultApps){
 		},
 		'New _Script': function(){
 			nextAvailable(currentFolder,'Script','text/koala');
-		},
+		}
 	}, { // separator
 		'_Refresh': function(){ api.open( currentFolder ); }
 	}, { // separator
