@@ -62,7 +62,7 @@ function ContextMenu(   ){
 		e = e || window.event;
 		// update menu entries
 		menu.innerHTML = '';
-		for( var i in sections ){
+		for( var i = 0, len = sections.length; i < len; i++ ){
 			var section = sections[i];
 			if( typeof(section) === 'function' ) section = section(e);
 			if( section ){
