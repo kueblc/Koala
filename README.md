@@ -1,12 +1,15 @@
 # The Koala Project
 ###### latest development version 0.04 alpha
 
+## NOTICE
+This project has been effectively defunct since mid 2013. The arrival of services like [Codecademy](http://www.codecademy.com/) and [code.org](https://code.org/) renders this project redundant, and as a project with one main developer with a day job, it was not sustainable to continue. I'm glad these services have come to be, filling the gap that this project aimed to fill. Several reusable components that may still prove useful were written in the course of Koala and will remain available here for the benefit of all.
+
 ## About
 In short, its a nice little scripting language (and accompanying IDE) to provide a stepping stone for beginners and non-programmers. It addresses a number of issues encountered by newcomers in hopes that those newcomers won't be scared away by the big world of computers.
 
 ## FAQ
 ### How do I try it out?
-Beware as we are still in alpha (see below). Development builds are occasionally posted to [ http://kueblc.myrpi.org/koala ].
+Beware as we are still in alpha (see below). ~~Development builds are occasionally posted to [ http://kueblc.myrpi.org/koala ].~~
 
 ### Why doesn't _X_ work?
 The Koala Project is still in early development, known as alpha, so no guarantees. We will go beta once most of the core features are in place.
