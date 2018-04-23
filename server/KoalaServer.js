@@ -28,6 +28,7 @@ var STATIC_FILES = [
 	'themes/koalaplex.css',
 	'themes/koalarch.css',
 	'themes/silver.css',
+	'icons/apps.png',
 	'icons/faenza.css',
 	'icons/faenza.png',
 	'images/home.png' ];
@@ -37,14 +38,19 @@ var STATIC_PATH = 'static/';
 var JS_FILES = [
 	'app/Animator.js',
 	'app/Compiler.js',
+	'app/ContextMenu.js',
+	'app/Dictionary.js',
 	'app/Editor.js',
 	'app/FileBrowser.js',
 	'app/FS.js',
+	'app/GridLayout.js',
 	'app/Koala.js',
-	'app/PanelManager.js',
-	'app/Parser.js',
+	'app/Lexer.js',
+	'app/Panel.js',
 	'app/Server.js',
+	'app/Stage.js',
 	'app/TextareaDecorator.js',
+	'app/Trie.js',
 	'app/User.js',
 	'app/Utils.js' ];
 
